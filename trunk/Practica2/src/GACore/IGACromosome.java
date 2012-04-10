@@ -25,6 +25,7 @@ public abstract class IGACromosome <T> {
 	}	
 	
 	public abstract IGACromosome<T> clone();
+	public abstract boolean equals(IGACromosome<T> c);
 	
 	//---- Getters & Setters ------------------------------------------------------//
 	public double getAptitude() {
