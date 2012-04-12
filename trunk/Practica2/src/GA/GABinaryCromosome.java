@@ -83,6 +83,12 @@ public class GABinaryCromosome extends IGACromosome<Boolean> implements Cloneabl
 	public Boolean mutateGen(int gen,double prob) {
 		return genes[gen].mutate(prob,cromosome_Lenght);	
 	}
+
+	@Override
+	public boolean equals(IGACromosome<Boolean> c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 
 }
