@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
@@ -34,6 +35,10 @@ import javax.swing.event.ChangeListener;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.math.plot.Plot2DPanel;
 
 import de.javasoft.plaf.synthetica.SyntheticaBlackEyeLookAndFeel;
@@ -44,10 +49,11 @@ import GACore.IGAEngine;
  * @author Ricardo Pragnell, Carlos Gabriel
  */
 
-
 public class GAGUI extends JFrame implements PropertyChangeListener{
 	
 	private static final long serialVersionUID = 5393378737313833016L;
+	private JPanel panelGenetics;
+	private JPanel panelPruebas;
 	private boolean inputFieldsOK;	// datos de entrada correctos
 	private GAStepThread stepThread;
 	private double[] dataAbsoluteBest;
@@ -55,13 +61,20 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	private double[] dataGenerationAverage;
 	private double[] dataGenerationCount;
 	private Plot2DPanel pGraphic;
+	private Plot2DPanel pGraphicResults;
 	private JProgressBar progBar;
-	public String configData;	
+	public String configData;
 	
 	@SuppressWarnings("rawtypes")
 	public GAGUI(final IGAEngine<?> gaEngine) {
 		super("Programación Evolutiva - Práctica 1");
 		pGraphic = new Plot2DPanel();
+		pGraphicResults = new Plot2DPanel();
+		panelGenetics = new JPanel();
+		panelGenetics.setLayout(new MigLayout("", "[center]"));
+		panelPruebas = new JPanel();
+		panelPruebas.setLayout(new MigLayout("", "[center]"));
+		
 		//WARN: No usar EXIT_ON_CLOSE, threads petan con Plot2DPanel y bugs del JVM
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -83,11 +96,11 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	    }
 		});
 		
-		setLayout(new MigLayout("", "[center]"));
+		JTabbedPane tabPanePrincipal = new JTabbedPane();
 		JPanel panelCentral = new JPanel(new MigLayout("", "[left]"));
-	
-		add(new JLabel("General"), "split, gaptop 10");
-		add(new JSeparator(), "growx, wrap, gaptop 10");
+
+		panelGenetics.add(new JLabel("General"), "split, gaptop 10");
+		panelGenetics.add(new JSeparator(), "growx, wrap, gaptop 10");
 		
 		// crea un panel central y lo asocia con la primera figura
 		final ConfigPanel<IGAEngine> cp = creaPanelConfiguracion();
@@ -95,10 +108,10 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		cp.setTarget(gaEngine);
 		// carga los valores de la figura en el panel
 		cp.initialize();
-		add(cp, "growx, wrap");
+		panelGenetics.add(cp, "growx, wrap");
 		
-		add(new JLabel("Probabilidad Cruce"), "split, gaptop 10");
-		add(new JSeparator(), "growx, wrap, gaptop 10");
+		panelGenetics.add(new JLabel("Probabilidad Cruce"), "split, gaptop 10");
+		panelGenetics.add(new JSeparator(), "growx, wrap, gaptop 10");
 		
 		// Slider prob cruce
 		JSlider crossSlider = new JSlider(0,100,40);
@@ -106,7 +119,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		crossSlider.setMinorTickSpacing(5);
 		crossSlider.setPaintTicks(true);
 		crossSlider.setPaintLabels(true);
-		add(crossSlider, "wrap, growx");
+		panelGenetics.add(crossSlider, "wrap, growx");
 		
 		crossSlider.addChangeListener(new ChangeListener() {
 		    // This method is called whenever the slider's value is changed
@@ -120,8 +133,8 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		    }
 		});
 		
-		add(new JLabel("Probabilidad Mutación"), "split, gaptop 10");
-		add(new JSeparator(), "growx, wrap, gaptop 10");
+		panelGenetics.add(new JLabel("Probabilidad Mutación"), "split, gaptop 10");
+		panelGenetics.add(new JSeparator(), "growx, wrap, gaptop 10");
 		
 		// Slider prob mutación
 		JSlider mutationSlider = new JSlider(0,100,40);
@@ -129,7 +142,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		mutationSlider.setMinorTickSpacing(5);
 		mutationSlider.setPaintTicks(true);
 		mutationSlider.setPaintLabels(true);
-		add(mutationSlider, "wrap, growx");
+		panelGenetics.add(mutationSlider, "wrap, growx");
 		
 		mutationSlider.addChangeListener(new ChangeListener() {
 		    public void stateChanged(ChangeEvent evt) {
@@ -148,10 +161,10 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 				gaEngine.setUseElitism(cb.isSelected());
 			}
 		});
-		add(checkBoxElite, "wrap, gaptop 11");
+		panelGenetics.add(checkBoxElite, "wrap, gaptop 11");
 		
-		add(new JLabel("Mensajes"), "split, gaptop 10");
-		add(new JSeparator(), "growx, wrap, gaptop 10");
+		panelGenetics.add(new JLabel("Mensajes"), "split, gaptop 10");
+		panelGenetics.add(new JSeparator(), "growx, wrap, gaptop 10");
 		
 		// crea una etiqueta que dice si todo es valido
 		final String textoTodoValido = "Todos los campos OK";
@@ -164,12 +177,12 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 				valido.setText(isConfigValid ? textoTodoValido: textoHayErrores);
 			}
 		});
-		add(valido, "wrap, gap 10");
+		panelGenetics.add(valido, "wrap, gap 10");
 				
-		add(new JSeparator(), "wrap, growx, gaptop 10");
+		panelGenetics.add(new JSeparator(), "wrap, growx, gaptop 10");
 		
 		// crea una etiqueta que indica la figura que se esta editando
-		final JLabel panelEnEdicion = new JLabel("Presione Run");
+		final JLabel panelEnEdicion = new JLabel("Presione Run:");
 		panelCentral.add(panelEnEdicion, "wrap, span");
 		
 		progBar = new JProgressBar();
@@ -251,13 +264,74 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 			}
 		});
 		panelCentral.add(boton);
-		add(panelCentral, "bottom");
+		
+		panelGenetics.add(panelCentral, "bottom");
 		
 		// Gráfica
 		pGraphic.addLegend("SOUTH");
 		pGraphic.setSize(600, 600);
 		pGraphic.setPreferredSize(new Dimension(600, 600));
-		add(pGraphic, "split, grow, gaptop 11, gapleft 20, gapbottom 11, gapright 11, dock east");
+		panelGenetics.add(pGraphic, "split, grow, gaptop 11, gapleft 20, gapbottom 11, gapright 11, dock east");
+		
+		// grafica results
+		
+		        
+        // row keys...
+        final String series1 = "First";
+        final String series2 = "Second";
+        final String series3 = "Third";
+
+        // column keys...
+        final String category1 = "Category 1";
+        final String category2 = "Category 2";
+        final String category3 = "Category 3";
+        final String category4 = "Category 4";
+        final String category5 = "Category 5";
+
+        // create the dataset...
+        final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+        dataset.addValue(1.0, series1, category1);
+        dataset.addValue(4.0, series1, category2);
+        dataset.addValue(3.0, series1, category3);
+        dataset.addValue(5.0, series1, category4);
+        dataset.addValue(5.0, series1, category5);
+
+        dataset.addValue(5.0, series2, category1);
+        dataset.addValue(7.0, series2, category2);
+        dataset.addValue(6.0, series2, category3);
+        dataset.addValue(8.0, series2, category4);
+        dataset.addValue(4.0, series2, category5);
+
+        dataset.addValue(4.0, series3, category1);
+        dataset.addValue(3.0, series3, category2);
+        dataset.addValue(2.0, series3, category3);
+        dataset.addValue(3.0, series3, category4);
+        dataset.addValue(6.0, series3, category5);
+        
+        CategoryDataset dataseto = dataset;
+		JFreeChart chart = createChart(dataseto);
+		
+		JFreeChart chart = ChartFactory.createStackedBarChart(
+	            "Bar Chart Demo",         // chart title
+	            "Category",               // domain axis label
+	            "Value",                  // range axis label
+	            dataset,                  // data
+	            PlotOrientation.VERTICAL, // orientation
+	            true,                     // include legend
+	            true,                     // tooltips?
+	            false                     // URLs?
+	        );
+		
+		ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(500, 270));
+		panelPruebas.add(chartPanel);
+		
+		// Tabs
+		tabPanePrincipal.add(panelGenetics, "Algoritmo Genético");		
+		tabPanePrincipal.add(panelPruebas, "Pruebas Automáticas");
+		
+		add(tabPanePrincipal);
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -300,7 +374,23 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 						 configData = "8";
 				}
 			}
-		});		
+		});
+		
+		/*GridBagConstraints gbc = new GridBagConstraints();
+
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		gbc.insets = new Insets(2, 4, 2, 2);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.gridx = 0;
+		gbc.gridy = GridBagConstraints.RELATIVE;
+		
+		JTextArea evalParams = new JTextArea("lpplp");
+		evalParams.setBorder(BorderFactory.createLineBorder(Color.green, 2));
+		config.add(evalParams, gbc);
+		JTextArea evalParams2 = new JTextArea("loooo");
+		evalParams2.setBorder(BorderFactory.createLineBorder(Color.yellow, 2));
+		config.add(evalParams2);*/
 		
 		config.addOption(new ChoiceOption<IGAEngine>(	 // -- eleccion de objeto no-configurable
 			    "Función de selección",						// etiqueta 
