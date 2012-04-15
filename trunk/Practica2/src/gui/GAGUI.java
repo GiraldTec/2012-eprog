@@ -36,7 +36,9 @@ import javax.swing.event.ChangeListener;
 import net.miginfocom.swing.MigLayout;
 
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.math.plot.Plot2DPanel;
@@ -277,16 +279,16 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		
 		        
         // row keys...
-        final String series1 = "First";
-        final String series2 = "Second";
-        final String series3 = "Third";
+        final String series1 = "Listo";
+        final String series2 = "Normal";
+        final String series3 = "Subnormal";
 
         // column keys...
-        final String category1 = "Category 1";
-        final String category2 = "Category 2";
-        final String category3 = "Category 3";
-        final String category4 = "Category 4";
-        final String category5 = "Category 5";
+        final String category1 = "Grupo 1";
+        final String category2 = "Grupo 2";
+        final String category3 = "Grupo 3";
+        final String category4 = "Grupo 4";
+        final String category5 = "Grupo 5";
 
         // create the dataset...
         final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -310,12 +312,11 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         dataset.addValue(6.0, series3, category5);
         
         CategoryDataset dataseto = dataset;
-		JFreeChart chart = createChart(dataseto);
 		
 		JFreeChart chart = ChartFactory.createStackedBarChart(
-	            "Bar Chart Demo",         // chart title
-	            "Category",               // domain axis label
-	            "Value",                  // range axis label
+	            "Grupos Solución",         // chart title
+	            "Número de grupo",               // domain axis label
+	            "Valor",                  // range axis label
 	            dataset,                  // data
 	            PlotOrientation.VERTICAL, // orientation
 	            true,                     // include legend
