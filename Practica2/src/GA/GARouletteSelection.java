@@ -7,16 +7,23 @@ import GACore.IGARandom;
 import GACore.IGASelector;
 
 
-public class GARouletteSelection<T> extends IGASelector<T>{
+/*PENDIENTE DE ADAPTACIÓN
+ * 
+ * */
+
+
+public class GARouletteSelection extends IGASelector{
 	@SuppressWarnings("unused")
-	private Class<T> classofT;
+	private Class classofT;
 	
 	@SuppressWarnings("unchecked")
-	public IGACromosome<T>[] select(IGACromosome<T>[] pop, int pop_size) throws InstantiationException, IllegalAccessException {
+	public IGACromosome[] select(IGACromosome[] pop, int pop_size) 
+								throws InstantiationException, IllegalAccessException {
+		
 		int sel_super[];				// seleccionados para sobrevivir
 		double prob; 					// probabilidad de seleccion
 		int pos_super; 					// posición del superviviente
-		IGACromosome<T>[] new_pop;		// nueva población seleccionada
+		IGACromosome[] new_pop;		// nueva población seleccionada
 		
 		sel_super = new int[pop_size];
 		
@@ -24,6 +31,8 @@ public class GARouletteSelection<T> extends IGASelector<T>{
 		for(int i=0; i < pop_size; i++) {
 			prob = IGARandom.getRDouble();
 			pos_super = 0;
+			
+			//REALMENTE UN CROMOSOMA TENDRÍA SCORE???
 			while ((prob > pop[pos_super].getAcum_Score()) && (pos_super < pop_size)) {
 				pos_super++;
 				sel_super[i] = pos_super;

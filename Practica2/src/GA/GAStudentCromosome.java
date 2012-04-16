@@ -8,25 +8,20 @@ import GACore.IGAEvalFunction;
 import GACore.IGAEvalFunctionNum;
 import GACore.IGARandom;
 
-public class GABinaryCromosome extends IGACromosome<Boolean> implements Cloneable{
+public class GAStudentCromosome extends IGACromosome implements Cloneable{
 	
-	public GABinaryCromosome(IGAEvalFunction evalFunct) {
+	public GAStudentCromosome(IGAEvalFunction evalFunct) {
 		super(evalFunct);
 	}
 	
-	public GABinaryCromosome clone() {
-		GABinaryCromosome clone = new GABinaryCromosome(null);
-		//clone.genes = (Boolean[])genes.clone();
-		clone.acum_Score = acum_Score;
-		clone.aptitude = aptitude;
-		clone.numberGenes = numberGenes;
-		clone.genes = (GABinaryGene[])Array.newInstance(GABinaryGene.class, numberGenes);
-		clone.fenotype = new Double[numberGenes];
-		for(int i=0;i<numberGenes;i++){
-			clone.genes[i]=new GABinaryGene((Boolean[])genes[i].getGen());
-			clone.fenotype[i] = new Double(fenotype[i]);
-		}
-		clone.score = score;
+	public GAStudentCromosome clone() {
+		GAStudentCromosome clone = new GAStudentCromosome(null);
+		
+		clone.setGene((GAStudentGene)gen.clone());
+
+		clone.setUnbalance(unbalance);
+		clone.setEvalFunct(evalFunct);
+		
 		return clone;
 	}
 
