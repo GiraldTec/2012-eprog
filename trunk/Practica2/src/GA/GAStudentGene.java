@@ -3,10 +3,10 @@ package GA;
 import GACore.IGAGene;
 import GACore.IGARandom;
 
-public class GABinaryGene extends IGAGene{
+public class GAStudentGene extends IGAGene{
 
-	public GABinaryGene(Boolean[] b){
-		super(b);
+	public GAStudentGene(ArrayList<GAStudent> students){
+		super(students);
 	}
 	
 	@Override

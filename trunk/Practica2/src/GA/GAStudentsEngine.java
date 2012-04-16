@@ -4,7 +4,7 @@ import java.lang.reflect.Array;
 
 import GACore.IGAEngine;
 
-public final class GABinaryEngine extends IGAEngine<Boolean> {
+public final class GAStudentsEngine extends IGAEngine<Boolean> {
 	private int fun5_N = 8;		// valor n de la Función 5, actualizada via loadConfig 
 	
 	public void init()
@@ -29,16 +29,15 @@ public final class GABinaryEngine extends IGAEngine<Boolean> {
 		// inicializar generación
 		current_Generation = 0;
 		
-		// calcular tamaño del cromosoma binario segun la precisión
-		cromosome_Lenght = evalFunct.calcCromLenght(precision);
+
 		
 		// inicializar array de población
 		population = (GABinaryCromosome[])Array.newInstance(GABinaryCromosome.class, population_Size);
 		
 		// crear población inicial
 		for (int i = 0; i < population_Size; i++) {
-			population[i] = new GABinaryCromosome(evalFunct);
-			((GABinaryCromosome)population[i]).initCromosome(cromosome_Lenght);
+			population[i] = new GAStudentCromosome(evalFunct);
+			((GAStudentCromosome)population[i]).initCromosome(cromosome_Lenght);
 		}
 		
 		// asignar un individuo elite inicial
