@@ -1,5 +1,5 @@
 package GACore;
 
-public abstract class IGASelector<T>{
-	public abstract IGACromosome<T>[] select (IGACromosome<T>[] pop, int pop_size) throws InstantiationException, IllegalAccessException;
+public abstract class IGASelector{
+	public abstract IGACromosome[] select (IGACromosome[] pop, int pop_size) throws InstantiationException, IllegalAccessException;
 }

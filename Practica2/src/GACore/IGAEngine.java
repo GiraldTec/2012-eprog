@@ -1,32 +1,35 @@
 package GACore;
+import GA.GAStudent;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.logging.Logger;
 
 public abstract class IGAEngine<T> {
-	protected IGACromosome<T>[] population; 		// población
-	protected IGACromosome<T>[] auxiliar_population; // población auxiliar(para la selección)
-	protected IGACromosome<T> generationBest;		// mejor especimen de la generación actual
-	protected IGACromosome<T> elite; 	// mejor individuo de todas las generaciones
+	protected IGACromosome[] population; 		// población
+	protected IGACromosome[] auxiliar_population; // población auxiliar(para la selección)
+	protected IGACromosome generationBest;		// mejor especimen de la generación actual
+	protected IGACromosome elite; 	// mejor individuo de todas las generaciones
 	protected int population_Size;		// tamaño población
 	protected int num_Max_Gen; 			// número máximo de generaciones
 	protected int pos_Best; 			// posición del mejor cromosoma
 	protected double population_Average;// media de la aptitud de la población
 	protected double prob_Cross=0.5;	// probabilidad de cruce
 	protected double prob_Mut=0.2;		// probabilidad de mutación
-	protected double precision=0.01;	// tolerancia de la representación
-	protected int cromosome_Lenght;		// tamaño del cromosoma
 	protected boolean evol_Complete;	// indica si se ha alcanzado el objetivo
 	protected int current_Generation;	// generación en la que estamos
-	protected IGASelector<T> selector;	// método de selección
+	protected IGASelector selector;	// método de selección
 	protected IGAEvalFunction evalFunct;// función de evaluación
-	protected IGAMonoPointCross<T> cruzador;
+	protected IGACross<T> cruzador;
 	
 	protected String functionName; 		// funcion de evaluación seleccionada en GUI
 	protected String selectorName; 		// funcion de selección seleccionada en GUI
 	protected String crossName; 		// funcion de cruce seleccionada en GUI
 	protected boolean useElitism=true;  // si usamos elitismo o no (via GUI)
+	
+	protected ArrayList<GAStudent> students;
+	
 	public static Logger log = Logger.getLogger("Engine");
 	
 	public abstract void init();
@@ -115,11 +118,11 @@ public abstract class IGAEngine<T> {
 		// se cruzan los individuos elegidos en un punto al azar
 		
 		for (int i=0; i<num_Sel_Cross; i+=2){
-			IGACromosome<T>[] parents = (IGACromosome[])Array.newInstance(IGACromosome.class, 2);
+			IGACromosome[] parents = (IGACromosome[])Array.newInstance(IGACromosome.class, 2);
 			parents[0] = auxiliar_population[sel_Cross[i]];
 			parents[1] = auxiliar_population[sel_Cross[i+1]];
 			log.info("Engine: evaluatePopulationA");
-			IGACromosome<T>[] descendientes = cruzador.cross(parents);
+			IGACromosome[] descendientes = cruzador.cross(parents);
 			// los nuevos individuos sustituyen a sus progenitores
 			auxiliar_population[sel_Cross[i]] = descendientes[0];
 			auxiliar_population[sel_Cross[i+1]] = descendientes[1];
@@ -185,13 +188,9 @@ public abstract class IGAEngine<T> {
 		log.info("Engine: mutate");
 		
 		for (int i=0; i < population_Size; i++) {
-			hasMutated = false;
-			for (int j=0; j < ((IGAEvalFunctionNum)evalFunct).getNumVars() ; j++) {
-				// se genera un numero aleatorio en [0 1)
-				hasMutated = hasMutated || population[i].mutateGen(j,prob_Mut);
-			}
-			if (hasMutated) {
-				population[i].calcFenotype();
+			//METER EL TIPO DE LA MUTACIÓN Y LOS ESTUDIANTES
+			if (population[i].mutateGen(type)) {
+				population[i].calcBalance(students);
 				population[i].evaluate();
 			}
 		}
