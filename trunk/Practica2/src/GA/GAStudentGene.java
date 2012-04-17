@@ -1,5 +1,7 @@
 package GA;
 
+import java.util.ArrayList;
+
 import GACore.IGAGene;
 import GACore.IGARandom;
 
@@ -8,26 +10,17 @@ public class GAStudentGene extends IGAGene{
 	public GAStudentGene(ArrayList<GAStudent> students){
 		super(students);
 	}
-	
-	@Override
-	public void replace(int pos, IGAGene other) {
-		((Boolean[])this.gen)[pos]=((GABinaryGene)other).getBit(pos);
-	}
-	
-	public Boolean mutate(double prob,int genLenght){
+
+	public Boolean mutate(int type){
 		boolean hasmutated = false;
-		for(int pos=0;pos<genLenght;pos++){
-			double rand_prob_Mutate = IGARandom.getRDouble();
-			if(rand_prob_Mutate<prob){
-				hasmutated=true;
-				((Boolean[])this.gen)[pos]=!((Boolean[])this.gen)[pos];
-			}
-		}
+			
 		return hasmutated;
 	}
+
+	public double calcBalance(ArrayList<GAStudent> students) {
 	
-	public Boolean getBit(int pos){
-		return ((Boolean[])this.gen)[pos];
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }
