@@ -38,9 +38,14 @@ import net.miginfocom.swing.MigLayout;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.ItemLabelAnchor;
+import org.jfree.chart.labels.ItemLabelPosition;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.category.CategoryDataset;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.ui.TextAnchor;
 import org.math.plot.Plot2DPanel;
 
 import de.javasoft.plaf.synthetica.SyntheticaBlackEyeLookAndFeel;
@@ -63,7 +68,6 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	private double[] dataGenerationAverage;
 	private double[] dataGenerationCount;
 	private Plot2DPanel pGraphic;
-	private Plot2DPanel pGraphicResults;
 	private JProgressBar progBar;
 	public String configData;
 	
@@ -71,7 +75,6 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	public GAGUI(final IGAEngine<?> gaEngine) {
 		super("Programación Evolutiva - Práctica 1");
 		pGraphic = new Plot2DPanel();
-		pGraphicResults = new Plot2DPanel();
 		panelGenetics = new JPanel();
 		panelGenetics.setLayout(new MigLayout("", "[center]"));
 		panelPruebas = new JPanel();
@@ -310,9 +313,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         dataset.addValue(2.0, series3, category3);
         dataset.addValue(3.0, series3, category4);
         dataset.addValue(6.0, series3, category5);
-        
-        CategoryDataset dataseto = dataset;
-		
+        		
 		JFreeChart chart = ChartFactory.createStackedBarChart(
 	            "Grupos Solución",         // chart title
 	            "Número de grupo",               // domain axis label
@@ -324,6 +325,14 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	            false                     // URLs?
 	        );
 		
+		final CategoryPlot plot = chart.getCategoryPlot();
+        plot.setBackgroundPaint(Color.white);
+        plot.setRangeGridlinePaint(Color.lightGray);
+        
+        CategoryItemRenderer renderer = plot.getRenderer();
+        renderer.setSeriesItemLabelsVisible(0, false);
+        
+        		
 		ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(500, 270));
 		panelPruebas.add(chartPanel);
