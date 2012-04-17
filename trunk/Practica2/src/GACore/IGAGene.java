@@ -4,15 +4,17 @@ import java.util.ArrayList;
 
 import GA.GAStudent;
 
-public abstract class IGAGene {
+public abstract class IGAGene implements Cloneable {
 	protected int[] gen;
 	
-	public abstract Boolean mutate(int type);
+	public abstract Boolean mutate(IGAMutator mutator);
 	public abstract double calcBalance(ArrayList<GAStudent> students);
 	
-	public IGAGene(ArrayList<GAStudent> students){
-		//Colocar una permutacion de los indices de Student
-		gen = null;
+	public IGAGene(int numberStudents){
+		gen = new int[numberStudents];
+		for (int i=0;i<numberStudents;i++){
+			gen[i]=i;
+		}
 	}
 	
 	public Object getGen() {
@@ -21,6 +23,8 @@ public abstract class IGAGene {
 	public void setGen(int[] students) {
 		this.gen = students;
 	}
+	
+	public abstract IGAGene clone();
 
 	
 	

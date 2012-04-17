@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.logging.Logger;
 
-public abstract class IGAEngine<T> {
+public abstract class IGAEngine {
 	protected IGACromosome[] population; 		// población
 	protected IGACromosome[] auxiliar_population; // población auxiliar(para la selección)
 	protected IGACromosome generationBest;		// mejor especimen de la generación actual
@@ -21,7 +21,7 @@ public abstract class IGAEngine<T> {
 	protected int current_Generation;	// generación en la que estamos
 	protected IGASelector selector;	// método de selección
 	protected IGAEvalFunction evalFunct;// función de evaluación
-	protected IGACross<T> cruzador;
+	protected IGACross cruzador;
 	
 	protected String functionName; 		// funcion de evaluación seleccionada en GUI
 	protected String selectorName; 		// funcion de selección seleccionada en GUI
@@ -29,68 +29,48 @@ public abstract class IGAEngine<T> {
 	protected boolean useElitism=true;  // si usamos elitismo o no (via GUI)
 	
 	protected ArrayList<GAStudent> students;
+	protected int incompatibilities;
+	protected double alfaValue;
+	protected IGAMutator mutador;   
 	
 	public static Logger log = Logger.getLogger("Engine");
 	
 	public abstract void init();
 	public abstract void loadConfig(String config);	// carga configuración adicional (si es necesario)
-	public abstract Object getAbsoluteBest();		// devuelve el mejor resultado obtenido hasta el momento
-	public abstract Object getGenerationBest();		// devuelve el mejor resultado de la generación actual
+	public abstract IGACromosome getAbsoluteBest();		// devuelve el mejor resultado obtenido hasta el momento
+	public abstract IGACromosome getGenerationBest();		// devuelve el mejor resultado de la generación actual
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void evaluatePopulation()	{
 		double acum_Score = 0; 		// puntuación acumulada
-		double best_Aptitude = 0; 	// mejor aptitud
-		double sum_Aptitude = 0;	// suma de la aptitud
+		double best_EvaluatedValue = 0; 	// mejor aptitud
+		double sum_EvaluatedValue = 0;	// suma de la aptitud
 		
 		log.info("Engine: evaluatePopulation");
 		
-		if(evalFunct.getType()==1 || evalFunct.getType()==2){
-			for (int i=0; i<population_Size; i++) {
-				sum_Aptitude = sum_Aptitude + population[i].getAptitude();	
-				if (population[i].getAptitude() > best_Aptitude){
-					pos_Best = i;
-					best_Aptitude = population[i].getAptitude();
-					if(best_Aptitude > elite.getAptitude())
-						elite = (IGACromosome)population[i].clone();
-				}
-			}
-			//sum_Aptitude += population_Size*best_Aptitude;
-			population_Average = sum_Aptitude/population_Size;
-			
-			for (int i=0; i<population_Size; i++) {
-				//double aptitud_revised = population[i].getAptitude()+best_Aptitude;
-				population[i].setScore(population[i].getAptitude() / sum_Aptitude);
-				population[i].setAcum_Score(population[i].getScore() + acum_Score);
-				acum_Score = acum_Score + population[i].getScore();
-				log.info("Cromosome "+i+": "+"Aptitud="+population[i].getAptitude()+" | Score="+population[i].getScore()+
-						" | Fenotype="+population[i].getFenotype(0));
+		
+		for (int i=0; i<population_Size; i++) {
+			sum_EvaluatedValue = sum_EvaluatedValue + population[i].getEvaluatedValue();	
+			if (population[i].getEvaluatedValue() < best_EvaluatedValue){
+				pos_Best = i;
+				best_EvaluatedValue = population[i].getEvaluatedValue();
+				if(best_EvaluatedValue < elite.getEvaluatedValue())
+					elite = (IGACromosome)population[i].clone();
 			}
 		}
+		//sum_Aptitude += population_Size*best_Aptitude;
+		population_Average = sum_EvaluatedValue/population_Size;
 		
-		if(evalFunct.getType()==3||evalFunct.getType()==4||evalFunct.getType()==5){
-			for (int i=0; i<population_Size; i++) {
-				sum_Aptitude = sum_Aptitude + population[i].getAptitude();	
-				if (population[i].getAptitude() < best_Aptitude){
-					pos_Best = i;
-					best_Aptitude = population[i].getAptitude();
-					if(best_Aptitude < elite.getAptitude())
-						elite = (IGACromosome)population[i].clone();
-				}
-			}
-			//sum_Aptitude += population_Size*best_Aptitude;
-			population_Average = sum_Aptitude/population_Size;
-			
-			for (int i=0; i<population_Size; i++) {
-				//double aptitud_revised = population[i].getAptitude()+best_Aptitude;
-				population[i].setScore(population[i].getAptitude() / sum_Aptitude);
-				population[i].setAcum_Score(population[i].getScore() + acum_Score);
-				acum_Score = acum_Score + population[i].getScore();
-				log.info("Cromosome "+i+": "+"Aptitud="+population[i].getAptitude()+" | Score="+population[i].getScore()+
-						" | FenotypeX="+population[i].getFenotype(0)) ;
-			}
+		for (int i=0; i<population_Size; i++) {
+			//double aptitud_revised = population[i].getAptitude()+best_Aptitude;
+			population[i].setScore(population[i].getEvaluatedValue() / sum_EvaluatedValue);
+			population[i].setAcum_Score(population[i].getScore() + acum_Score);
+			acum_Score = acum_Score + population[i].getScore();
+			log.info("Cromosome "+i+": "+"Aptitud="+population[i].getEvaluatedValue()+
+					" | Score="+population[i].getScore()) ;
 		}
 	}
+	
 	
 	@SuppressWarnings("unchecked")
 	protected void reproducePopulation(){
@@ -160,7 +140,7 @@ public abstract class IGAEngine<T> {
 	
 			PriorityQueue<Struct> rank = new PriorityQueue<Struct>();
 			for (int i=0; i<population_Size;i++){
-				rank.add(new Struct(population[i].aptitude,i));
+				rank.add(new Struct(population[i].getEvaluatedValue(),i));
 			}
 			for(int i=0;i<num_Sel_Cross;i++){
 				population[rank.poll().possition]=auxiliar_population[sel_Cross[i]];
@@ -189,9 +169,9 @@ public abstract class IGAEngine<T> {
 		
 		for (int i=0; i < population_Size; i++) {
 			//METER EL TIPO DE LA MUTACIÓN Y LOS ESTUDIANTES
-			if (population[i].mutateGen(type)) {
+			if (population[i].mutate(mutador)) {
 				population[i].calcBalance(students);
-				population[i].evaluate();
+				population[i].evaluate(incompatibilities);
 			}
 		}
 	}
@@ -207,8 +187,8 @@ public abstract class IGAEngine<T> {
 		generationBest = population[pos_Best];
 		
 		log.info("Generation -> "+current_Generation+" <- Results");
-		log.info("Generation best: "+generationBest.getAptitude()+" ref pointer "+generationBest);
-		log.info("Elite: "+elite.getAptitude()+" ref pointer "+elite);
+		log.info("Generation best: "+generationBest.getEvaluatedValue()+" ref pointer "+generationBest);
+		log.info("Elite: "+elite.getEvaluatedValue()+" ref pointer "+elite);
 		current_Generation++;
 	}
 	
@@ -227,11 +207,11 @@ public abstract class IGAEngine<T> {
 	public void setFunctionName(String functionName) {
 		this.functionName = functionName;
 	}	
-	public double getPrecision() {
-		return precision;
+	public double getAlfa() {
+		return alfaValue;
 	}
-	public void setPrecision(double precision) {
-		this.precision = precision;
+	public void setAlfa(double alfaValue) {
+		this.alfaValue = alfaValue;
 	}
 	public int getNum_Max_Gen() {
 		return num_Max_Gen;
