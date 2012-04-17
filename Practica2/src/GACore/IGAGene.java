@@ -7,8 +7,8 @@ import GA.GAStudent;
 public abstract class IGAGene {
 	protected int[] gen;
 	
-	public abstract void replace(int pos, IGAGene other);
 	public abstract Boolean mutate(int type);
+	public abstract double calcBalance(ArrayList<GAStudent> students);
 	
 	public IGAGene(ArrayList<GAStudent> students){
 		//Colocar una permutacion de los indices de Student

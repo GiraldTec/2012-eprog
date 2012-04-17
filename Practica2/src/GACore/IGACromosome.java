@@ -2,6 +2,8 @@ package GACore;
 
 import java.util.ArrayList;
 
+import GA.GAStudent;
+
 public abstract class IGACromosome{
 	protected IGAGene gen; 					// permutacion de alumnos
 	protected Double unbalance;			// desequilibrio
@@ -30,6 +32,7 @@ public abstract class IGACromosome{
 
 	public void calcBalance(ArrayList<GAStudent> students){
 		//A RELLENAR
+		unbalance = gen.calcBalance(students);
 	}
 	
 	public double getUnbalance() {
@@ -39,7 +42,7 @@ public abstract class IGACromosome{
 	public void setUnbalance(double unbalance) {
 		this.unbalance = unbalance;
 	}
-
+	
 	public IGAGene getGenes() {
 		return gen;
 	}
