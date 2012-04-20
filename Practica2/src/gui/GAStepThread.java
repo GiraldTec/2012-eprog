@@ -45,8 +45,8 @@ class GAStepThread extends SwingWorker<Void, Void> {
 					e.printStackTrace();
 				}		
 				// actualizar resultados
-				dataAbsoluteBest[currGeneration] = (Double)gaEngine.getAbsoluteBest();
-				dataGenerationBest[currGeneration] = (Double)gaEngine.getGenerationBest();
+				dataAbsoluteBest[currGeneration] = gaEngine.getAbsoluteBest().getEvaluatedValue();
+				dataGenerationBest[currGeneration] = gaEngine.getGenerationBest().getEvaluatedValue();
 				dataGenerationAverage[currGeneration] = gaEngine.getPopulation_Average();
 				
 				dataGenerationCount[currGeneration] = currGeneration;

@@ -372,7 +372,7 @@ public class ConfigPanel<T> extends JPanel {
 		public String getTooltip() { return tooltip; }
 		/** set the target model-object to operate on  */
 		public void setTarget(T target) { /* by default, do nothing */ }
-		public JComponent getControlRef() { return control; };
+		public JComponent getControlRef() { return control; };	
 		
 		// ------------- to be implemented by the actual option
 
@@ -414,6 +414,8 @@ public class ConfigPanel<T> extends JPanel {
 		protected String fieldName;
 		/** property descriptor for the corresponding property */
 		protected PropertyDescriptor pd;
+		/** ref to the label **/
+		protected JLabel labelRef;
 		
 		public SimpleOption(String label, String tooltip, String fieldName) {
 			super(label, tooltip);
@@ -435,8 +437,8 @@ public class ConfigPanel<T> extends JPanel {
 		/** adds this option to a config panel's gridbaglayout */
 		@Override
 		protected void addToConfigPanel(ConfigPanel<T> cp) {
-			JLabel jl = new JLabel(label);
-			jl.setToolTipText(tooltip);
+			labelRef = new JLabel(label);
+			labelRef.setToolTipText(tooltip);
 			GridBagConstraints gbc = new GridBagConstraints();
 
 			gbc.gridheight = 1;
@@ -445,7 +447,7 @@ public class ConfigPanel<T> extends JPanel {
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			gbc.gridx = 0;
 			gbc.gridy = GridBagConstraints.RELATIVE;
-			cp.add(jl, gbc);
+			cp.add(labelRef, gbc);
 
 			getControl();
 			gbc.insets = new Insets(2, 2, 2, 4);
@@ -546,7 +548,11 @@ public class ConfigPanel<T> extends JPanel {
 			} catch (Exception e) {
 				throw new RuntimeException("Error writing field " + fieldName, e);				
 			}
-		}		
+		}	
+		
+		public JLabel getLabelRef(){
+			return labelRef;
+		}			
 	}
 	
 	/**
@@ -715,6 +721,8 @@ public class ConfigPanel<T> extends JPanel {
 	 * A simple text option
 	 */
 	public static class TextOption<T> extends SimpleOption<T> {
+		protected JTextField textFieldRef;
+		
 		public TextOption(String nombre, String tooltip, String fieldName) {
 			super(nombre, tooltip, fieldName);
 		}		
@@ -723,12 +731,12 @@ public class ConfigPanel<T> extends JPanel {
 		}		
 		@Override
 		public JComponent getControlComponent() {
-			JTextField jtf = new JTextField();
-			jtf.addCaretListener(new CaretListener() {
+			textFieldRef = new JTextField();
+			textFieldRef.addCaretListener(new CaretListener() {
 				@Override
 				public void caretUpdate(CaretEvent evt) { cp.rootPanel.update(); }
 			});
-			return jtf;
+			return textFieldRef;
 		}
 		@Override
 		protected void writeControl(Object o) {
@@ -741,6 +749,9 @@ public class ConfigPanel<T> extends JPanel {
 		@Override
 		protected boolean isValid(Object v) {
 			return true;
+		}
+		public JTextField getTextFieldRef() {
+			return textFieldRef;
 		}
 	}
 	

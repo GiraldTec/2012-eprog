@@ -38,19 +38,16 @@ import net.miginfocom.swing.MigLayout;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.labels.ItemLabelAnchor;
-import org.jfree.chart.labels.ItemLabelPosition;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.ui.TextAnchor;
 import org.math.plot.Plot2DPanel;
 
 import de.javasoft.plaf.synthetica.SyntheticaBlackEyeLookAndFeel;
 
 import GACore.IGAEngine;
+import GACore.IGARandom;
 
 /**
  * @author Ricardo Pragnell, Carlos Gabriel
@@ -69,10 +66,15 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	private double[] dataGenerationCount;
 	private Plot2DPanel pGraphic;
 	private JProgressBar progBar;
+	private ChoiceOption<IGAEngine> functChoiceOpt;
+	private DoubleOption<IGAEngine> paramsSelecDouble;
+	private DoubleOption<IGAEngine> paramsCrossDouble;
+	private DoubleOption<IGAEngine> paramsMutDouble;
 	public String configData;
 	
-	@SuppressWarnings("rawtypes")
-	public GAGUI(final IGAEngine<?> gaEngine) {
+	
+	
+	public GAGUI(final IGAEngine gaEngine) {
 		super("Programación Evolutiva - Práctica 1");
 		pGraphic = new Plot2DPanel();
 		panelGenetics = new JPanel();
@@ -86,15 +88,10 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	    @Override
 	    public void windowClosed(WindowEvent e) {
 	        PrintStream nullStream = new PrintStream(new OutputStream() {
-	            public void write(int b) throws IOException {
-	            }
-
-	            public void write(byte b[]) throws IOException {
-	            }
-
-	            public void write(byte b[], int off, int len) throws IOException {
-	            }
-	        });
+	            public void write(int b) throws IOException {}
+	            public void write(byte b[]) throws IOException {}
+	            public void write(byte b[], int off, int len) throws IOException {}
+	        });	        
 	        System.setErr(nullStream);
 	        System.setOut(nullStream);
 	        System.exit(0);
@@ -278,45 +275,23 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		pGraphic.setPreferredSize(new Dimension(600, 600));
 		panelGenetics.add(pGraphic, "split, grow, gaptop 11, gapleft 20, gapbottom 11, gapright 11, dock east");
 		
-		// grafica results
+		// Grafica results
 		
-		        
-        // row keys...
-        final String series1 = "Listo";
-        final String series2 = "Normal";
-        final String series3 = "Subnormal";
-
-        // column keys...
-        final String category1 = "Grupo 1";
-        final String category2 = "Grupo 2";
-        final String category3 = "Grupo 3";
-        final String category4 = "Grupo 4";
-        final String category5 = "Grupo 5";
-
-        // create the dataset...
+		// create the dataset...
         final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-
-        dataset.addValue(1.0, series1, category1);
-        dataset.addValue(4.0, series1, category2);
-        dataset.addValue(3.0, series1, category3);
-        dataset.addValue(5.0, series1, category4);
-        dataset.addValue(5.0, series1, category5);
-
-        dataset.addValue(5.0, series2, category1);
-        dataset.addValue(7.0, series2, category2);
-        dataset.addValue(6.0, series2, category3);
-        dataset.addValue(8.0, series2, category4);
-        dataset.addValue(4.0, series2, category5);
-
-        dataset.addValue(4.0, series3, category1);
-        dataset.addValue(3.0, series3, category2);
-        dataset.addValue(2.0, series3, category3);
-        dataset.addValue(3.0, series3, category4);
-        dataset.addValue(6.0, series3, category5);
+        
+        // Set random data for now
+        String category;
+        for (int i=1; i<15; i++){
+        	category = "G" + i;
+        	dataset.addValue(IGARandom.getRInt(10), "Listo", category);
+        	dataset.addValue(IGARandom.getRInt(10), "Normal", category);
+        	dataset.addValue(IGARandom.getRInt(10), "Subnormal", category);
+        }
         		
 		JFreeChart chart = ChartFactory.createStackedBarChart(
-	            "Grupos Solución",         // chart title
-	            "Número de grupo",               // domain axis label
+	            "Grupos Solución",        // chart title
+	            "Número de grupo",        // domain axis label
 	            "Valor",                  // range axis label
 	            dataset,                  // data
 	            PlotOrientation.VERTICAL, // orientation
@@ -334,7 +309,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         
         		
 		ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(500, 270));
+        chartPanel.setPreferredSize(new Dimension(600, 270));
 		panelPruebas.add(chartPanel);
 		
 		// Tabs
@@ -344,11 +319,11 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		add(tabPanePrincipal);
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public ConfigPanel<IGAEngine> creaPanelConfiguracion() {
-		String[] functionNames = new String[] { "Función 1", "Función 2", "Función 3", "Función 4", "Función 5" };
-		String[] selectorNames = new String[] { "Ruleta", "Torneo Det", "Torneo Prob" };
-		String[] crossNames = new String[] { "Monopunto", "Bipunto" };
+		//String[] functionNames = new String[] { "Alumnos" };
+		String[] selectorNames = new String[] { "Ruleta", "Torneo Det", "Torneo Prob", "Ranking", "Método Propio" };
+		String[] crossNames = new String[] { "PMX", "OX", "Variante OX", "Ordinal", "Método Propio" };
+		String[] mutNames = new String[] { "Inserción", "Intercambio", "Inversión", "Heurística" };
 	
 		ConfigPanel<IGAEngine> config = new ConfigPanel<IGAEngine>();
 		
@@ -364,55 +339,112 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 				"num_Max_Gen",  						     // campo (espera que haya un getGrosor y un setGrosor)
 				1, 10000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
 			    config.addOption(new DoubleOption<IGAEngine>(  
-				"Precisión", 									// texto a usar como etiqueta del campo
-				"Precisión del resultado",       				// texto a usar como 'tooltip' cuando pasas el puntero
-				"precision",  						    		// campo (espera que haya un getGrosor y un setGrosor)
-				0.001, 0.99));							// min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
+				"Parámetro Alfa", 						// texto a usar como etiqueta del campo
+				"Parámetro Alfa",       				// texto a usar como 'tooltip' cuando pasas el puntero
+				"alfaValue",  						    // campo (espera que haya un getGrosor y un setGrosor)
+				0.0, 1.0));								// min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
 		
-		// añadimos funcionalidad para manejar la n de la función 5
-		ChoiceOption<IGAEngine> functChoiceOpt = new ChoiceOption<IGAEngine>("Función de evaluación","Función a evolucionar","functionName",functionNames);
+		/*functChoiceOpt = new ChoiceOption<IGAEngine>(
+				"Función de evaluación",
+				"Función a evolucionar",
+				"functionName",
+				functionNames);
+		config.addOption(functChoiceOpt);*/
+
+		// Selection
+		functChoiceOpt = new ChoiceOption<IGAEngine>(
+				"Función de selección",
+				"Función selección",
+				"selectorName",
+				selectorNames);	
 		config.addOption(functChoiceOpt);
+		
+		paramsSelecDouble = new DoubleOption<IGAEngine>(
+				"Parametros Seleccion",
+				"Parametros Seleccion",
+				"selecParams", 1.0, 100.0);
+		config.addOption(paramsSelecDouble);
+		
 		((JComboBox)functChoiceOpt.getControlRef()).addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JComboBox combo = (JComboBox)e.getSource();
 		        String funcName = (String)combo.getSelectedItem();
-				if(funcName == "Función 5")	{
-					String str = JOptionPane.showInputDialog(null, "Introduzca un valor para n : ", "Configuración Función 5", 1);
-					 if(str != null)
-						 configData = str;
-					 else
-						 configData = "8";
+				if(funcName == "Ruleta")
+					paramsSelecDouble.getLabelRef().setText("Params Ruleta");
+				else if(funcName == "Torneo Prob")
+					paramsSelecDouble.getLabelRef().setText("Params Torneo Prob");
+				else if(funcName == "Torneo Det")
+					paramsSelecDouble.getLabelRef().setText("Params Torneo Det");
+				else if(funcName == "Ranking")
+					paramsSelecDouble.getLabelRef().setText("Params Ranking");
+				else if(funcName == "Método Propio")
+					paramsSelecDouble.getLabelRef().setText("Params Método Propio");
+			}
+		});
+		
+		// Cross
+		functChoiceOpt = new ChoiceOption<IGAEngine>(
+				"Función de cruce",
+				"Función cruce",
+				"crossName",
+				crossNames);
+		config.addOption(functChoiceOpt);
+		
+		paramsCrossDouble = new DoubleOption<IGAEngine>(
+				"Parametros Cruce",
+				"Parametros Cruce",
+				"crossParams", 1.0, 100.0);
+		config.addOption(paramsCrossDouble);
+		
+		((JComboBox)functChoiceOpt.getControlRef()).addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JComboBox combo = (JComboBox)e.getSource();
+		        String funcName = (String)combo.getSelectedItem();
+				if(funcName == "PMX")
+					paramsCrossDouble.getLabelRef().setText("Params PMX");
+				else if(funcName == "OX")
+					paramsCrossDouble.getLabelRef().setText("Params OX");
+				else if(funcName == "Variante OX")
+					paramsCrossDouble.getLabelRef().setText("Params Variante OX");
+				else if(funcName == "Ordinal")
+					paramsCrossDouble.getLabelRef().setText("Params Ordinal");
+				else if(funcName == "Método Propio")
+					paramsCrossDouble.getLabelRef().setText("Params Método Propio");
+			}
+		});
+		
+		// Mutation
+		functChoiceOpt = new ChoiceOption<IGAEngine>(
+				"Función de mutación",
+				"Función mutación",
+				"mutName",
+				mutNames);
+		config.addOption(functChoiceOpt);
+		
+		paramsMutDouble = new DoubleOption<IGAEngine>(
+				"Parametros Mutación",
+				"Parametros Mutación",
+				"mutParams", 1.0, 100.0);
+		config.addOption(paramsMutDouble);
+		
+		((JComboBox)functChoiceOpt.getControlRef()).addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JComboBox combo = (JComboBox)e.getSource();
+		        String funcName = (String)combo.getSelectedItem();
+				if(funcName == "Inserción")
+					paramsMutDouble.getLabelRef().setText("Params Inserción");
+				else if(funcName == "Intercambio")
+					paramsMutDouble.getLabelRef().setText("Params Intercambio");
+				else if(funcName == "Inversión")
+					paramsMutDouble.getLabelRef().setText("Params Inversión");
+				else if(funcName == "Heurística")
+				{
+					paramsMutDouble.getLabelRef().setText("Params Heurística");
+					paramsMutDouble.getTextFieldRef().disable();
 				}
 			}
 		});
 		
-		/*GridBagConstraints gbc = new GridBagConstraints();
-
-		gbc.gridheight = 1;
-		gbc.gridwidth = 1;
-		gbc.insets = new Insets(2, 4, 2, 2);
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.gridx = 0;
-		gbc.gridy = GridBagConstraints.RELATIVE;
-		
-		JTextArea evalParams = new JTextArea("lpplp");
-		evalParams.setBorder(BorderFactory.createLineBorder(Color.green, 2));
-		config.add(evalParams, gbc);
-		JTextArea evalParams2 = new JTextArea("loooo");
-		evalParams2.setBorder(BorderFactory.createLineBorder(Color.yellow, 2));
-		config.add(evalParams2);*/
-		
-		config.addOption(new ChoiceOption<IGAEngine>(	 // -- eleccion de objeto no-configurable
-			    "Función de selección",						// etiqueta 
-			    "Función selección", 						// tooltip
-			    "selectorName",   							 		// campo (debe haber un getColor y un setColor)
-			    selectorNames))
-			    .addOption(new ChoiceOption<IGAEngine>(	 // -- eleccion de objeto no-configurable
-			    "Función de cruce",						// etiqueta 
-			    "Función cruce", 						// tooltip
-			    "crossName",   							// campo (debe haber un getColor y un setColor)
-			    crossNames));
-	
 		return config;
 	}
 	
