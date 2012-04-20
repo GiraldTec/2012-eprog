@@ -6,15 +6,12 @@ import GACore.IGACromosome;
 import GACore.IGARandom;
 import GACore.IGASelector;
 
-public class GATournametSelectionDet<T> extends IGASelector<T>{
-	@SuppressWarnings("unused")
-	private Class<T> classofT;
-	
-	@SuppressWarnings("unchecked")
-	public IGACromosome<T>[] select(IGACromosome<T>[] pop, int pop_size) throws InstantiationException, IllegalAccessException {
+public class GATournametSelectionDet extends IGASelector{
+
+	public IGACromosome[] select(IGACromosome[] pop, int pop_size) throws InstantiationException, IllegalAccessException {
 		int sel_winners[];				// seleccionados para sobrevivir
 		int pos_sel1, pos_sel2; 		// individuos a competir
-		IGACromosome<T>[] new_pop;		// nueva población seleccionada
+		IGACromosome[] new_pop;		// nueva población seleccionada
 		
 		sel_winners = new int[pop_size];
 		
@@ -26,7 +23,7 @@ public class GATournametSelectionDet<T> extends IGASelector<T>{
 			pos_sel2 = IGARandom.getRInt(pop_size);
 						
 			// seleccionamos el mejor
-			sel_winners[i] = pop[pos_sel1].getAptitude() > pop[pos_sel2].getAptitude() ? pos_sel1 : pos_sel2;
+			sel_winners[i] = pop[pos_sel1].getEvaluatedValue() > pop[pos_sel2].getEvaluatedValue() ? pos_sel1 : pos_sel2;
 		}
 		
 		// se genera la poblacion intermedia

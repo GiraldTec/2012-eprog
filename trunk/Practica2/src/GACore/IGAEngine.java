@@ -19,19 +19,23 @@ public abstract class IGAEngine {
 	protected double prob_Mut=0.2;		// probabilidad de mutación
 	protected boolean evol_Complete;	// indica si se ha alcanzado el objetivo
 	protected int current_Generation;	// generación en la que estamos
-	protected IGASelector selector;	// método de selección
 	protected IGAEvalFunction evalFunct;// función de evaluación
-	protected IGACross cruzador;
+	protected IGASelector selector;		// método de selección
+	protected IGACross cruzador;		// método de cruzado
+	protected IGAMutator mutador; 		// método de mutación
 	
 	protected String functionName; 		// funcion de evaluación seleccionada en GUI
 	protected String selectorName; 		// funcion de selección seleccionada en GUI
 	protected String crossName; 		// funcion de cruce seleccionada en GUI
+	protected String mutName; 			// funcion de mutación seleccionada en GUI
 	protected boolean useElitism=true;  // si usamos elitismo o no (via GUI)
 	
 	protected ArrayList<GAStudent> students;
 	protected int incompatibilities;
 	protected double alfaValue;
-	protected IGAMutator mutador;   
+	protected double selecParams;
+	protected double crossParams;
+	protected double mutParams;
 	
 	public static Logger log = Logger.getLogger("Engine");
 	
@@ -40,7 +44,6 @@ public abstract class IGAEngine {
 	public abstract IGACromosome getAbsoluteBest();		// devuelve el mejor resultado obtenido hasta el momento
 	public abstract IGACromosome getGenerationBest();		// devuelve el mejor resultado de la generación actual
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void evaluatePopulation()	{
 		double acum_Score = 0; 		// puntuación acumulada
 		double best_EvaluatedValue = 0; 	// mejor aptitud
@@ -70,9 +73,7 @@ public abstract class IGAEngine {
 					" | Score="+population[i].getScore()) ;
 		}
 	}
-	
-	
-	@SuppressWarnings("unchecked")
+
 	protected void reproducePopulation(){
 		int[] sel_Cross = new int[population_Size];	//seleccionados para reproducir
 		int num_Sel_Cross = 0;						//contador seleccionados			
@@ -257,5 +258,35 @@ public abstract class IGAEngine {
 	}
 	public void setUseElitism(boolean useElitism) {
 		this.useElitism = useElitism;
+	}
+	public double getAlfaValue() {
+		return alfaValue;
+	}
+	public void setAlfaValue(double alfaValue) {
+		this.alfaValue = alfaValue;
+	}
+	public String getMutName() {
+		return mutName;
+	}
+	public void setMutName(String mutName) {
+		this.mutName = mutName;
+	}
+	public double getSelecParams() {
+		return selecParams;
+	}
+	public void setSelecParams(double selecParams) {
+		this.selecParams = selecParams;
+	}
+	public double getCrossParams() {
+		return crossParams;
+	}
+	public void setCrossParams(double crossParams) {
+		this.crossParams = crossParams;
+	}
+	public double getMutParams() {
+		return mutParams;
+	}
+	public void setMutParams(double mutParams) {
+		this.mutParams = mutParams;
 	}
 }
