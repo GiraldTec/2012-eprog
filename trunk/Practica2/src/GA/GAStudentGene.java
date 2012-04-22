@@ -14,6 +14,10 @@ public class GAStudentGene extends IGAGene{
 		shuffle(gen);
 	}
 
+	public GAStudentGene(int[] students){
+		super(students);
+	}
+
 	public Boolean mutate(IGAMutator mutator){
 		return mutator.mutate(this);
 	}
