@@ -33,7 +33,7 @@ public abstract class IGACromosome{
 
 	//GEN
 	public IGAGene getGene() {
-		return gen;
+		return this.gen;
 	}
 	public void setGene(IGAGene gen) {
 		this.gen = gen;

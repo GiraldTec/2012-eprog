@@ -17,15 +17,15 @@ public abstract class IGAGene implements Cloneable {
 		}
 	}
 	
-	public Object getGen() {
+	public IGAGene(int[] students){
+		this.gen=students;
+	}
+	
+	public int[] getGen() {
 		return gen;
 	}
 	public void setGen(int[] students) {
 		this.gen = students;
 	}
-	
-	public abstract IGAGene clone();
-
-	
 	
 }
