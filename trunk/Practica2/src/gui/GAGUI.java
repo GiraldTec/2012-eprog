@@ -5,8 +5,10 @@ import gui.ConfigPanel.ConfigListener;
 import gui.ConfigPanel.DoubleOption;
 import gui.ConfigPanel.IntegerOption;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -16,6 +18,7 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.text.NumberFormat;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -38,16 +41,17 @@ import net.miginfocom.swing.MigLayout;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
+import org.jfree.chart.plot.CategoryMarker;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.math.plot.Plot2DPanel;
 
-import de.javasoft.plaf.synthetica.SyntheticaBlackEyeLookAndFeel;
-
 import GACore.IGAEngine;
 import GACore.IGARandom;
+import de.javasoft.plaf.synthetica.SyntheticaBlackEyeLookAndFeel;
 
 /**
  * @author Ricardo Pragnell, Carlos Gabriel
@@ -58,6 +62,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	private static final long serialVersionUID = 5393378737313833016L;
 	private JPanel panelGenetics;
 	private JPanel panelPruebas;
+	private JPanel panelResultados;
 	private boolean inputFieldsOK;	// datos de entrada correctos
 	private GAStepThread stepThread;
 	private double[] dataAbsoluteBest;
@@ -79,6 +84,8 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		pGraphic = new Plot2DPanel();
 		panelGenetics = new JPanel();
 		panelGenetics.setLayout(new MigLayout("", "[center]"));
+		panelResultados = new JPanel();
+		panelResultados.setLayout(new MigLayout("", "[center]"));
 		panelPruebas = new JPanel();
 		panelPruebas.setLayout(new MigLayout("", "[center]"));
 		
@@ -276,17 +283,19 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		panelGenetics.add(pGraphic, "split, grow, gaptop 11, gapleft 20, gapbottom 11, gapright 11, dock east");
 		
 		// Grafica results
+		panelResultados.add(new JLabel("Solución encontrada"), "split, gaptop 10");
+		panelResultados.add(new JSeparator(), "growx, wrap, gaptop 10");
 		
 		// create the dataset...
         final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         
         // Set random data for now
         String category;
-        for (int i=1; i<15; i++){
+        for (int i=1; i<=20; i++){
         	category = "G" + i;
-        	dataset.addValue(IGARandom.getRInt(10), "Listo", category);
-        	dataset.addValue(IGARandom.getRInt(10), "Normal", category);
-        	dataset.addValue(IGARandom.getRInt(10), "Subnormal", category);
+        	dataset.addValue(IGARandom.getRInt(10)+5, "Listo", category);
+        	dataset.addValue(IGARandom.getRInt(10)+5, "Normal", category);
+        	dataset.addValue(IGARandom.getRInt(10)+5, "Subnormal", category);
         }
         		
 		JFreeChart chart = ChartFactory.createStackedBarChart(
@@ -305,15 +314,38 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         plot.setRangeGridlinePaint(Color.lightGray);
         
         CategoryItemRenderer renderer = plot.getRenderer();
-        renderer.setSeriesItemLabelsVisible(0, false);
+        //renderer.setSeriesItemLabelsVisible(0, false);
         
-        		
+        plot.getRenderer().setSeriesPaint(0, new Color(65, 105, 225));
+        plot.getRenderer().setSeriesPaint(1, new Color(0, 191, 255));
+        plot.getRenderer().setSeriesPaint(2, new Color(135, 206, 250));
+               
+        /* Esto por si interesa más tarde
+        final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+        rangeAxis.setRange(0.0, 100.0);
+        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        
+        Marker marker = new ValueMarker(5.0);
+        marker.setPaint(Color.red);
+        plot.addRangeMarker(marker);*/
+        
+        Stroke stroke = new BasicStroke();
+        plot.addDomainMarker(new CategoryMarker("G3", Color.red, stroke, Color.black, stroke, 0.4f)); 
+        plot.addDomainMarker(new CategoryMarker("G14", Color.red, stroke, Color.black, stroke, 0.4f));
+        
+        renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+        
+        NumberFormat format = NumberFormat.getNumberInstance();
+        format.setMaximumFractionDigits(2);
+        renderer.setBaseItemLabelsVisible(true);
+
 		ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(600, 270));
-		panelPruebas.add(chartPanel);
+        chartPanel.setPreferredSize(new Dimension(850, 270));
+        panelResultados.add(chartPanel, "gaptop 20");
 		
 		// Tabs
 		tabPanePrincipal.add(panelGenetics, "Algoritmo Genético");		
+		tabPanePrincipal.add(panelResultados, "Grupos Resultado");
 		tabPanePrincipal.add(panelPruebas, "Pruebas Automáticas");
 		
 		add(tabPanePrincipal);
