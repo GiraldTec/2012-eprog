@@ -1,4 +1,4 @@
-package practica1;
+package practica2;
 
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
