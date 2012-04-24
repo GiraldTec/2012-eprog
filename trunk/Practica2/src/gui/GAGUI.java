@@ -79,7 +79,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	
 	
 	public GAGUI(final IGAEngine gaEngine) {
-		super("Programación Evolutiva - Práctica 1");
+		super("Programación Evolutiva - Práctica 2");
 		pGraphic = new Plot2DPanel();
 		panelGenetics = new JPanel();
 		panelGenetics.setLayout(new MigLayout("", "[center]"));

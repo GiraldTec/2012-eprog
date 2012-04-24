@@ -1,32 +1,26 @@
 package GA;
 
+import java.util.ArrayList;
+
 public class GAStudent {
-	
-	protected int[] haters;
-	protected double result;
-	protected int people;  //#de gente que odia
-	
-	public GAStudent(int populationSize, double result){
-		haters = new int[populationSize];
-		people = 0;
+	private int id;
+	private double result;
+	private ArrayList<Integer> haters;
+		
+	public GAStudent(int id, double result){
+		this.id = id;
 		this.result = result;
 	}
-	
-	public void addHater(int haterID){
-		people++;
-		haters[people] = haterID;
-	}
-	
+		
 	public double getResult(){
 		return result;
 	}
 	
-	public int[] getHaters(){
+	public ArrayList<Integer> getHaters(){
 		return haters;
 	}
-	
-	public int getPeople(){
-		return people;
-	}
 
+	public Integer getId() {
+		return id;
+	}
 }
