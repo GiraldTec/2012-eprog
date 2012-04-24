@@ -4,17 +4,22 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.PriorityQueue;
 
 import GACore.IGACromosome;
 import GACore.IGAEngine;
+import GACore.IGARandom;
 
 public final class GAStudentsEngine extends IGAEngine {
 	private ArrayList<GAStudent> students;
 	private HashMap<Integer, Integer> studentMap;
 	private int groupSize = 6;
 	private int fillerId = -1;
+	protected int incompatibilities;
+	
 	
 	public void init()
 	{
@@ -42,7 +47,7 @@ public final class GAStudentsEngine extends IGAEngine {
 		
 		// crear población inicial
 		for (int i = 0; i < population_Size; i++) {
-			population[i] = new GAStudentCromosome(evalFunct);
+			population[i] = new GAStudentCromosome();
 			((GAStudentCromosome)population[i]).initCromosome(students,incompatibilities);
 		}
 		
@@ -134,6 +139,102 @@ public final class GAStudentsEngine extends IGAEngine {
 		ga.loadStudents("data/1.txt");
 	}*/
 
+	
+	 protected void mutate(){
+			boolean hasMutated;
+
+			log.info("Engine: mutate");
+			
+			for (int i=0; i < population_Size; i++) {
+				//METER EL TIPO DE LA MUTACIÓN Y LOS ESTUDIANTES
+				if (population[i].mutate(mutador)) {
+					population[i].calcBalance(students);
+					population[i].evaluate(incompatibilities);
+				}
+			}
+		}
+	 
+	 protected void reproducePopulation(){
+			int[] sel_Cross = new int[population_Size];	//seleccionados para reproducir
+			int num_Sel_Cross = 0;						//contador seleccionados			
+			double rand_prob_Cross;						//probabilidad de producirse un cruce
+			
+			log.info("Engine: reproducePopulation");
+			
+			//Se eligen los individuos a cruzar
+			for (int i=0; i<population_Size; i++) {
+				//se generan tam_pob números aleatorios en [0 1)
+				rand_prob_Cross = IGARandom.getRDouble();
+				//se eligen los individuos de las posiciones i si prob < prob_cruce
+				if (rand_prob_Cross < prob_Cross){
+					sel_Cross[num_Sel_Cross] = i;
+					num_Sel_Cross++;
+				}
+			}
+			log.info("Engine: reproducePopulation1");
+			// el numero de seleccionados se hace par
+			if ((num_Sel_Cross % 2) == 1)
+				num_Sel_Cross--;
+			
+			// se cruzan los individuos elegidos en un punto al azar
+			
+			for (int i=0; i<num_Sel_Cross; i+=2){
+				GAStudentCromosome[] parents = new GAStudentCromosome[2];
+				parents[0] = (GAStudentCromosome) auxiliar_population[sel_Cross[i]];
+				parents[1] = (GAStudentCromosome) auxiliar_population[sel_Cross[i+1]];
+				log.info("Engine: evaluatePopulationA");
+				GAStudentCromosome[] descendientes = (GAStudentCromosome[]) cruzador.cross(parents);
+				// los nuevos individuos sustituyen a sus progenitores
+				auxiliar_population[sel_Cross[i]] = descendientes[0];
+				auxiliar_population[sel_Cross[i+1]] = descendientes[1];
+			}
+			log.info("Engine: reproducePopulation2");
+			
+			// si usamos elitismo sustituir a los peores individuos de la población por los hijos
+			if (useElitism) {
+				@SuppressWarnings("rawtypes")
+				class Struct implements Comparable {
+					private double aptitud;
+					private int possition;
+		
+					public Struct(double apt, int pos) {
+						aptitud = apt;
+						possition = pos;
+					}
+		
+					public int compareTo(Object o) {
+		
+						if (this.aptitud == ((Struct) o).getAptitude())
+							return 0;
+						else {
+							if (this.aptitud < ((Struct) o).getAptitude()) {
+								return -1;
+							} else
+								return 1;
+						}
+					}
+		
+					public double getAptitude() {
+						return aptitud;
+					}
+				}
+		
+				PriorityQueue<Struct> rank = new PriorityQueue<Struct>();
+				for (int i=0; i<population_Size;i++){
+					rank.add(new Struct(population[i].getEvaluatedValue(),i));
+				}
+				for(int i=0;i<num_Sel_Cross;i++){
+					population[rank.poll().possition]=auxiliar_population[sel_Cross[i]];
+				}
+			}
+			// si no usamos elitismo sustituir padres por hijos directamente
+			else {
+				for(int i=0;i<num_Sel_Cross;i++){
+					population[sel_Cross[i]]=auxiliar_population[sel_Cross[i]];
+				}
+			}
+			log.info("Engine: reproducePopulation3");
+		}	
 	
 	// Getters Setters ....
 	public IGACromosome getAbsoluteBest() {

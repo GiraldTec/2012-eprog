@@ -40,15 +40,13 @@ public class GAStudentOrderCross extends IGACross {
 		}
 		
 		GAStudentCromosome[] descendientes= new GAStudentCromosome[2];
-		descendientes[0]= new GAStudentCromosome(parent1.getEvalFunct());
+		descendientes[0]= new GAStudentCromosome();
 		descendientes[0].setGene(new GAStudentGene(genD1));
-		descendientes[1]= new GAStudentCromosome(parent1.getEvalFunct());
+		descendientes[1]= new GAStudentCromosome();
 		descendientes[1].setGene(new GAStudentGene(genD2));
 		
 		// TODO Auto-generated method stub
 		return descendientes;
 	}
-
-
 
 }

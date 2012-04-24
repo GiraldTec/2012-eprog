@@ -8,7 +8,6 @@ public abstract class IGACromosome{
 	protected IGAGene gen; 					// permutacion de alumnos
 	protected double unbalance;			// desequilibrio
 	protected double evaluatedValue;     // valor de la funcion de evaluacion
-	protected IGAEvalFunction evalFunct;    // referencia a la funcion de evaluacion
 	protected double score;
 	protected double acum_score;
 	
@@ -20,10 +19,6 @@ public abstract class IGACromosome{
 	public Boolean mutate(IGAMutator mutator){
 		return gen.mutate(mutator);
 	}
-	
-	public IGACromosome (IGAEvalFunction evalFunct) {
-		this.evalFunct = evalFunct;
-	}	
 	
 	public void calcBalance(ArrayList<GAStudent> students){
 		unbalance = gen.calcBalance(students);
@@ -55,16 +50,6 @@ public abstract class IGACromosome{
 	public void setEvaluatedValue(double evaluatedValue) {
 		this.evaluatedValue = evaluatedValue;
 	}
-	
-	
-	// FUNCION DE EVALUACION
-	public IGAEvalFunction getEvalFunct() {
-		return evalFunct;
-	}
-	public void setEvalFunct(IGAEvalFunction evalFunct) {
-		this.evalFunct = evalFunct;
-	}
-
 	
 	//SCORE & ACUM-SCORE
 	

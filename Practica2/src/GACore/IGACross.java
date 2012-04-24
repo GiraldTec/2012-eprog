@@ -2,7 +2,7 @@ package GACore;
 
 public abstract class IGACross {
 	public abstract IGACromosome[] cross(IGACromosome[] parents);
-	
+		
 	protected boolean pertenece (int x,int[] l){
 		int i=0;
 		boolean res=false;
@@ -21,4 +21,6 @@ public abstract class IGACross {
 		}
 		return i;
 	}
+	
+	
 }
