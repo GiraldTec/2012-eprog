@@ -78,7 +78,6 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	public String configData;
 	
 	
-	
 	public GAGUI(final IGAEngine gaEngine) {
 		super("Programación Evolutiva - Práctica 1");
 		pGraphic = new Plot2DPanel();
@@ -87,7 +86,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		panelResultados = new JPanel();
 		panelResultados.setLayout(new MigLayout("", "[center]"));
 		panelPruebas = new JPanel();
-		panelPruebas.setLayout(new MigLayout("", "[center]"));
+		panelPruebas.setLayout(new MigLayout("debug,flowy", "[left]"));
 		
 		//WARN: No usar EXIT_ON_CLOSE, threads petan con Plot2DPanel y bugs del JVM
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -342,6 +341,28 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(850, 270));
         panelResultados.add(chartPanel, "gaptop 20");
+        
+        // panel pruebas automaticas
+        /*final ConfigPanel<IGAEngine> cpauto = creaPanelConfiguracion();
+		// asocia el panel con la figura
+        cpauto.setTarget(gaEngine);
+		// carga los valores de la figura en el panel
+        cpauto.initialize();
+		panelPruebas.add(cpauto, "split, wrap");
+		
+		// botón para ejecutar la evolucion
+		boton = new JButton("Run");
+		panelPruebas.add(boton, " wrap");
+		boton = new JButton("Run");
+		panelPruebas.add(boton, "split, wrap");
+		boton = new JButton("Run");
+		panelPruebas.add(boton, "split, wrap");
+		boton = new JButton("Run");
+		panelPruebas.add(boton, "split, wrap");
+		boton = new JButton("Run");
+		panelPruebas.add(boton, "split, wrap");
+		boton = new JButton("Run");
+		panelPruebas.add(boton, "");*/
 		
 		// Tabs
 		tabPanePrincipal.add(panelGenetics, "Algoritmo Genético");		
@@ -401,6 +422,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 			public void actionPerformed(ActionEvent e) {
 				JComboBox combo = (JComboBox)e.getSource();
 		        String funcName = (String)combo.getSelectedItem();
+		        paramsSelecDouble.getTextFieldRef().enable();
 				if(funcName == "Ruleta")
 					paramsSelecDouble.getLabelRef().setText("Params Ruleta");
 				else if(funcName == "Torneo Prob")
@@ -432,6 +454,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 			public void actionPerformed(ActionEvent e) {
 				JComboBox combo = (JComboBox)e.getSource();
 		        String funcName = (String)combo.getSelectedItem();
+		        paramsCrossDouble.getTextFieldRef().enable();
 				if(funcName == "PMX")
 					paramsCrossDouble.getLabelRef().setText("Params PMX");
 				else if(funcName == "OX")
@@ -463,6 +486,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 			public void actionPerformed(ActionEvent e) {
 				JComboBox combo = (JComboBox)e.getSource();
 		        String funcName = (String)combo.getSelectedItem();
+		        paramsMutDouble.getTextFieldRef().enable();
 				if(funcName == "Inserción")
 					paramsMutDouble.getLabelRef().setText("Params Inserción");
 				else if(funcName == "Intercambio")
