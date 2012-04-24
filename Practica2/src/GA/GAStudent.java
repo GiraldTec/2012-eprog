@@ -10,6 +10,7 @@ public class GAStudent {
 	public GAStudent(int id, double result){
 		this.id = id;
 		this.result = result;
+		this.haters = new ArrayList<Integer>();
 	}
 		
 	public double getResult(){
