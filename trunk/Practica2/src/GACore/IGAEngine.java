@@ -11,8 +11,8 @@ public abstract class IGAEngine {
 	protected IGACromosome[] auxiliar_population; // población auxiliar(para la selección)
 	protected IGACromosome generationBest;		// mejor especimen de la generación actual
 	protected IGACromosome elite; 	// mejor individuo de todas las generaciones
-	protected int population_Size;		// tamaño población
-	protected int num_Max_Gen; 			// número máximo de generaciones
+	protected int population_Size=10;		// tamaño población
+	protected int num_Max_Gen=50; 			// número máximo de generaciones
 	protected int pos_Best; 			// posición del mejor cromosoma
 	protected double population_Average;// media de la aptitud de la población
 	protected double prob_Cross=0.5;	// probabilidad de cruce
@@ -30,12 +30,11 @@ public abstract class IGAEngine {
 	protected String mutName; 			// funcion de mutación seleccionada en GUI
 	protected boolean useElitism=true;  // si usamos elitismo o no (via GUI)
 	
-	protected ArrayList<GAStudent> students;
 	protected int incompatibilities;
-	protected double alfaValue;
-	protected double selecParams;
-	protected double crossParams;
-	protected double mutParams;
+	protected double alfaValue=0.5;
+	protected double selecParams=1.0;
+	protected double crossParams=1.0;
+	protected double mutParams=1.0;
 	
 	public static Logger log = Logger.getLogger("Engine");
 	
@@ -168,13 +167,13 @@ public abstract class IGAEngine {
 
 		log.info("Engine: mutate");
 		
-		for (int i=0; i < population_Size; i++) {
+		/*for (int i=0; i < population_Size; i++) {
 			//METER EL TIPO DE LA MUTACIÓN Y LOS ESTUDIANTES
 			if (population[i].mutate(mutador)) {
 				population[i].calcBalance(students);
 				population[i].evaluate(incompatibilities);
 			}
-		}
+		}*/
 	}
 	
 	public void runEvolutionStep() throws InstantiationException, IllegalAccessException {

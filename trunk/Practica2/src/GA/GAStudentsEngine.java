@@ -11,13 +11,18 @@ import GACore.IGACromosome;
 import GACore.IGAEngine;
 
 public final class GAStudentsEngine extends IGAEngine {
-	private ArrayList<GAStudent> studentList;
+	private ArrayList<GAStudent> students;
 	private HashMap<Integer, Integer> studentMap;
-	private int groupSize;
+	private int groupSize = 6;
+	private int fillerId = -1;
 	
 	public void init()
 	{
 		int id;
+		
+		students = new ArrayList<GAStudent>();
+		studentMap = new HashMap<Integer, Integer>();
+		fillerId = -1;
 		
 	/*	// crear función de selección
 		if (selectorName.equals("Ruleta"))
@@ -27,13 +32,8 @@ public final class GAStudentsEngine extends IGAEngine {
 		else if (selectorName.equals("Torneo Prob"))
 			selector = new GATournamentSelectionProb<Boolean>();
 		else 
-			System.err.println("Error al elegir función de selección");*/
-		
-		// crear función de evaluación		
-		//GANumericEvalFuncs numericEvalFuncts = new GANumericEvalFuncs(fun5_N);
-		//id = Character.getNumericValue((functionName.charAt(functionName.length()-1)));
-		//evalFunct = numericEvalFuncts.getEvaluatorFunction(id);
-				
+			System.err.println("Error al elegir función de selección");
+						
 		// inicializar generación
 		current_Generation = 0;
 		
@@ -50,7 +50,7 @@ public final class GAStudentsEngine extends IGAEngine {
 		elite = (GAStudentCromosome)population[0].clone();
 		
 		//crear el cruzador
-		/*if (crossName.equals("Monopunto"))
+		if (crossName.equals("Monopunto"))
 			cruzador = new GABinaryMonoPointCross();
 		else if (crossName.equals("Bipunto"))
 			cruzador = new GABinaryBiPointCross();
@@ -79,7 +79,9 @@ public final class GAStudentsEngine extends IGAEngine {
 		  // Read first line: | Num Students | Num restrictions | 
 		  strLine = br.readLine();
 		  data = strLine.split(" ");
-		  System.out.println(data);
+		  
+		  //log.info("Num estudiantes: "+ data[0] + "\nNum restricciones: " + data[1]);
+		  System.out.println("Num estudiantes: "+ data[0] + "\nNum restricciones: " + data[1]);
 		  
 		  population_Size = Integer.parseInt(data[0]);
 		  numRestrictions = Integer.parseInt(data[1]);
@@ -88,10 +90,11 @@ public final class GAStudentsEngine extends IGAEngine {
 		  for (int i=0; i<population_Size; i++) {
 			  strLine = br.readLine();
 			  data = strLine.split(" ");
-			  System.out.println(data);
+			  
+			  System.out.println("Id : "+ data[0] + " Result: " + data[1]);
 			  
 			  // Create student and load id + result
-			  student = new GAStudent(Integer.parseInt(data[0]), Integer.parseInt(data[1]));
+			  student = new GAStudent(Integer.parseInt(data[0]), Double.parseDouble(data[1]));
 			  studentMap.put(student.getId(), students.size());
 			  students.add(student);
 		  }
@@ -102,12 +105,21 @@ public final class GAStudentsEngine extends IGAEngine {
 			  strLine = br.readLine();
 			  data = strLine.split(" ");
 			  
+			  System.out.println("Student : "+ data[0] + " hates " + data[1]);
+			  
 			  student = students.get(studentMap.get(Integer.parseInt(data[0])));
-			  student.getHaters().add(Integer.parseInt(data[1]));			  
+			  student.getHaters().add(Integer.parseInt(data[1]));
 		  }
 		  
 		  // Add filler students
-		  
+		  while (population_Size % groupSize != 0){
+			  student = new GAStudent(fillerId, 0.0);
+			  studentMap.put(student.getId(), students.size());
+			  students.add(student);
+			  System.out.println("Num filler student: " + fillerId);
+			  fillerId--;
+			  population_Size++;
+		  }
 		  
 		  // Close the input stream
 		  in.close();
@@ -115,6 +127,12 @@ public final class GAStudentsEngine extends IGAEngine {
 		  System.err.println("Error: " + e.getMessage());
 		  }
 	}
+	
+	/*public static void main(String[] args) {
+		GAStudentsEngine ga = new GAStudentsEngine();
+		ga.init();
+		ga.loadStudents("data/1.txt");
+	}*/
 
 	
 	// Getters Setters ....

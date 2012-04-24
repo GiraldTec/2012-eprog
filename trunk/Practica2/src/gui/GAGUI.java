@@ -297,7 +297,8 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         	dataset.addValue(IGARandom.getRInt(10)+5, "Subnormal", category);
         }
         		
-		JFreeChart chart = ChartFactory.createStackedBarChart(
+        JFreeChart chart = ChartFactory.createStackedBarChart(
+		//JFreeChart chart = ChartFactory.createStackedBarChart3D (
 	            "Grupos Solución",        // chart title
 	            "Número de grupo",        // domain axis label
 	            "Valor",                  // range axis label
@@ -380,22 +381,26 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	
 		ConfigPanel<IGAEngine> config = new ConfigPanel<IGAEngine>();
 		
-		config.addOption(
-				new IntegerOption<IGAEngine>(  // -- entero
-				"Tamaño población", 					// texto a usar como etiqueta del campo
-				"Número de individuos que forman la población",  // texto a usar como 'tooltip' cuando pasas el puntero
-				"population_Size",  						     // campo (espera que haya un getGrosor y un setGrosor)
-				1, 1000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
-				config.addOption(new IntegerOption<IGAEngine>(
-				"Num Generaciones", 					// texto a usar como etiqueta del campo
-				"Número de generaciones que dura la evolución",  // texto a usar como 'tooltip' cuando pasas el puntero
-				"num_Max_Gen",  						     // campo (espera que haya un getGrosor y un setGrosor)
-				1, 10000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
-			    config.addOption(new DoubleOption<IGAEngine>(  
-				"Parámetro Alfa", 						// texto a usar como etiqueta del campo
-				"Parámetro Alfa",       				// texto a usar como 'tooltip' cuando pasas el puntero
-				"alfaValue",  						    // campo (espera que haya un getGrosor y un setGrosor)
-				0.0, 1.0));								// min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
+		config.addOption(new IntegerOption<IGAEngine>(  // -- entero
+			"Tamaño grupos", 					// texto a usar como etiqueta del campo
+			"Número de estudiantes que forman cada grupo",  // texto a usar como 'tooltip' cuando pasas el puntero
+			"groupSize",  						     // campo (espera que haya un getGrosor y un setGrosor)
+			1, 500));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
+		config.addOption(new IntegerOption<IGAEngine>(  // -- entero
+			"Tamaño población", 					// texto a usar como etiqueta del campo
+			"Número de individuos que forman la población",  // texto a usar como 'tooltip' cuando pasas el puntero
+			"population_Size",  						     // campo (espera que haya un getGrosor y un setGrosor)
+			1, 1000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
+		config.addOption(new IntegerOption<IGAEngine>(
+			"Num Generaciones", 					// texto a usar como etiqueta del campo
+			"Número de generaciones que dura la evolución",  // texto a usar como 'tooltip' cuando pasas el puntero
+			"num_Max_Gen",  						     // campo (espera que haya un getGrosor y un setGrosor)
+			1, 10000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
+	    config.addOption(new DoubleOption<IGAEngine>(  
+			"Parámetro Alfa", 						// texto a usar como etiqueta del campo
+			"Parámetro Alfa",       				// texto a usar como 'tooltip' cuando pasas el puntero
+			"alfaValue",  						    // campo (espera que haya un getGrosor y un setGrosor)
+			0.0, 1.0));								// min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
 		
 		/*functChoiceOpt = new ChoiceOption<IGAEngine>(
 				"Función de evaluación",
