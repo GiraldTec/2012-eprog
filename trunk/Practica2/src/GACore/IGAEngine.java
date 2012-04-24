@@ -1,5 +1,6 @@
 package GACore;
 import GA.GAStudent;
+import GA.GAStudentCromosome;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -19,7 +20,6 @@ public abstract class IGAEngine {
 	protected double prob_Mut=0.2;		// probabilidad de mutación
 	protected boolean evol_Complete;	// indica si se ha alcanzado el objetivo
 	protected int current_Generation;	// generación en la que estamos
-	protected IGAEvalFunction evalFunct;// función de evaluación
 	protected IGASelector selector;		// método de selección
 	protected IGACross cruzador;		// método de cruzado
 	protected IGAMutator mutador; 		// método de mutación
@@ -30,6 +30,7 @@ public abstract class IGAEngine {
 	protected String mutName; 			// funcion de mutación seleccionada en GUI
 	protected boolean useElitism=true;  // si usamos elitismo o no (via GUI)
 	
+	protected ArrayList<GAStudent> students;
 	protected int incompatibilities;
 	protected double alfaValue=0.5;
 	protected double selecParams=1.0;
@@ -73,87 +74,9 @@ public abstract class IGAEngine {
 		}
 	}
 
-	protected void reproducePopulation(){
-		int[] sel_Cross = new int[population_Size];	//seleccionados para reproducir
-		int num_Sel_Cross = 0;						//contador seleccionados			
-		double rand_prob_Cross;						//probabilidad de producirse un cruce
-		
-		log.info("Engine: reproducePopulation");
-		
-		//Se eligen los individuos a cruzar
-		for (int i=0; i<population_Size; i++) {
-			//se generan tam_pob números aleatorios en [0 1)
-			rand_prob_Cross = IGARandom.getRDouble();
-			//se eligen los individuos de las posiciones i si prob < prob_cruce
-			if (rand_prob_Cross < prob_Cross){
-				sel_Cross[num_Sel_Cross] = i;
-				num_Sel_Cross++;
-			}
-		}
-		log.info("Engine: reproducePopulation1");
-		// el numero de seleccionados se hace par
-		if ((num_Sel_Cross % 2) == 1)
-			num_Sel_Cross--;
-		
-		// se cruzan los individuos elegidos en un punto al azar
-		
-		for (int i=0; i<num_Sel_Cross; i+=2){
-			IGACromosome[] parents = (IGACromosome[])Array.newInstance(IGACromosome.class, 2);
-			parents[0] = auxiliar_population[sel_Cross[i]];
-			parents[1] = auxiliar_population[sel_Cross[i+1]];
-			log.info("Engine: evaluatePopulationA");
-			IGACromosome[] descendientes = cruzador.cross(parents);
-			// los nuevos individuos sustituyen a sus progenitores
-			auxiliar_population[sel_Cross[i]] = descendientes[0];
-			auxiliar_population[sel_Cross[i+1]] = descendientes[1];
-		}
-		log.info("Engine: reproducePopulation2");
-		
-		// si usamos elitismo sustituir a los peores individuos de la población por los hijos
-		if (useElitism) {
-			@SuppressWarnings("rawtypes")
-			class Struct implements Comparable {
-				private double aptitud;
-				private int possition;
+	protected abstract void mutate();
 	
-				public Struct(double apt, int pos) {
-					aptitud = apt;
-					possition = pos;
-				}
-	
-				public int compareTo(Object o) {
-	
-					if (this.aptitud == ((Struct) o).getAptitude())
-						return 0;
-					else {
-						if (this.aptitud < ((Struct) o).getAptitude()) {
-							return -1;
-						} else
-							return 1;
-					}
-				}
-	
-				public double getAptitude() {
-					return aptitud;
-				}
-			}
-	
-			PriorityQueue<Struct> rank = new PriorityQueue<Struct>();
-			for (int i=0; i<population_Size;i++){
-				rank.add(new Struct(population[i].getEvaluatedValue(),i));
-			}
-			for(int i=0;i<num_Sel_Cross;i++){
-				population[rank.poll().possition]=auxiliar_population[sel_Cross[i]];
-			}
-		}
-		// si no usamos elitismo sustituir padres por hijos directamente
-		else {
-			for(int i=0;i<num_Sel_Cross;i++){
-				population[sel_Cross[i]]=auxiliar_population[sel_Cross[i]];
-			}
-		}
-		log.info("Engine: reproducePopulation3");
-	}	
+	protected abstract void reproducePopulation();
 	
 	protected void selectPopulation() throws InstantiationException, IllegalAccessException
 	{
@@ -161,21 +84,7 @@ public abstract class IGAEngine {
 		
 		auxiliar_population = selector.select(population, population_Size);
 	}
-	
-	protected void mutate(){
-		boolean hasMutated;
 
-		log.info("Engine: mutate");
-		
-		/*for (int i=0; i < population_Size; i++) {
-			//METER EL TIPO DE LA MUTACIÓN Y LOS ESTUDIANTES
-			if (population[i].mutate(mutador)) {
-				population[i].calcBalance(students);
-				population[i].evaluate(incompatibilities);
-			}
-		}*/
-	}
-	
 	public void runEvolutionStep() throws InstantiationException, IllegalAccessException {
 		log.info("Engine: runEvolutionStep");
 		

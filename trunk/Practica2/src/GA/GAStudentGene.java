@@ -7,15 +7,18 @@ import GACore.IGAGene;
 import GACore.IGAMutator;
 import GACore.IGARandom;
 
-public class GAStudentGene extends IGAGene{
+public class GAStudentGene extends IGAGene implements Cloneable{
 
 	public GAStudentGene(int numberStudents){
-		super(numberStudents);
+		gen = new int[numberStudents];
+		for (int i=0;i<numberStudents;i++){
+			gen[i]=i;
+		}
 		shuffle(gen);
 	}
 
 	public GAStudentGene(int[] students){
-		super(students);
+		this.gen=students;
 	}
 
 	public Boolean mutate(IGAMutator mutator){
@@ -29,9 +32,8 @@ public class GAStudentGene extends IGAGene{
 	}
 	
 	public GAStudentGene clone(){
-		return null;
+		return new GAStudentGene(this.gen.clone());
 	}
-
 	
 	/**
 	* Desordena el array 'a'. Funcionaría con cualquier tipo de array.

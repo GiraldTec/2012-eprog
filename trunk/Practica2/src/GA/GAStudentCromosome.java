@@ -4,29 +4,22 @@ package GA;
 import java.util.ArrayList;
 
 import GACore.IGACromosome;
-import GACore.IGAEvalFunction;
 import GA.GAStudentGene;
 
 public class GAStudentCromosome extends IGACromosome implements Cloneable{
 	
-	public GAStudentCromosome(IGAEvalFunction evalFunct) {
-		super(evalFunct);
-	}
-	
 	public GAStudentCromosome clone() {
-		GAStudentCromosome clone = new GAStudentCromosome(null);
+		GAStudentCromosome clone = new GAStudentCromosome();
 		GAStudentGene newGene = ((GAStudentGene) gen).clone();
 		clone.setGene(newGene);
 
 		clone.setUnbalance(unbalance);
-		clone.setEvalFunct(evalFunct);
 		
 		return clone;
 	}
 
 	public void initCromosome(ArrayList<GAStudent> students, int incompatibilities) {
 		gen = new GAStudentGene(students.size());
-		
 		// calcular balance
 		calcBalance(students);
 		// calcular la funcion de evaluacion
