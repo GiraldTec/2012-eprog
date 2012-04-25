@@ -8,6 +8,7 @@ import gui.ConfigPanel.IntegerOption;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,22 +16,27 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.text.NumberFormat;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
@@ -49,6 +55,7 @@ import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.math.plot.Plot2DPanel;
 
+import GA.GAStudentsEngine;
 import GACore.IGAEngine;
 import GACore.IGARandom;
 import de.javasoft.plaf.synthetica.SyntheticaBlackEyeLookAndFeel;
@@ -76,7 +83,6 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	private DoubleOption<IGAEngine> paramsCrossDouble;
 	private DoubleOption<IGAEngine> paramsMutDouble;
 	public String configData;
-	
 	
 	public GAGUI(final IGAEngine gaEngine) {
 		super("Programación Evolutiva - Práctica 2");
@@ -195,11 +201,32 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		
 		progBar = new JProgressBar();
 		progBar.setStringPainted(true);
-		panelCentral.add(progBar, "wrap, span, gaptop 15, gapbottom 10");
+		panelCentral.add(progBar, "wrap, span, gaptop 15, gapbottom 10, center");
 		
 		// usado por todos los botones
 		JButton boton;
+		
+		// pedir el path del archivo alumnos
+		boton = new JButton("Cargar");
+		boton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				final JFileChooser fc = new JFileChooser();
+				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				int returnVal = fc.showOpenDialog(GAGUI.this);			
 
+		        if (returnVal == JFileChooser.APPROVE_OPTION) {
+		            File file = fc.getSelectedFile();
+		            //This is where a real application would open the file.
+		            ((GAStudentsEngine) gaEngine).setStudentPath(file.getName());
+		            System.out.println("Opening: " + file.getName() + ".");
+		        } else {
+		        	System.out.println("Open command cancelled by user.");
+		        }
+			}
+		});
+		panelCentral.add(boton);
+		
 		// botón para ejecutar la evolucion
 		boton = new JButton("Run");
 		boton.addActionListener(new ActionListener() {
@@ -255,7 +282,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 				}
 			}
 		});
-		panelCentral.add(boton, "bottom, gapright 15, gapleft 7");
+		panelCentral.add(boton);
 
 		boton = new JButton("Stop");
 		boton.addActionListener(new ActionListener() {
@@ -289,8 +316,9 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         
         // Set random data for now
+        int numGroups = 20;
         String category;
-        for (int i=1; i<=20; i++){
+        for (int i=1; i<=numGroups; i++){
         	category = "G" + i;
         	dataset.addValue(IGARandom.getRInt(10)+5, "Listo", category);
         	dataset.addValue(IGARandom.getRInt(10)+5, "Normal", category);
@@ -316,10 +344,10 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         CategoryItemRenderer renderer = plot.getRenderer();
         //renderer.setSeriesItemLabelsVisible(0, false);
         
-        plot.getRenderer().setSeriesPaint(0, new Color(65, 105, 225));
-        plot.getRenderer().setSeriesPaint(1, new Color(0, 191, 255));
-        plot.getRenderer().setSeriesPaint(2, new Color(135, 206, 250));
-               
+        plot.getRenderer().setSeriesPaint(0, linearGradient(new Color(65, 105, 225), new Color(135, 206, 250), 3, 0));
+        plot.getRenderer().setSeriesPaint(1, linearGradient(new Color(65, 105, 225), new Color(135, 206, 250), 3, 1));
+        plot.getRenderer().setSeriesPaint(2, linearGradient(new Color(65, 105, 225), new Color(135, 206, 250), 3, 2));
+        
         /* Esto por si interesa más tarde
         final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setRange(0.0, 100.0);
@@ -343,27 +371,83 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         chartPanel.setPreferredSize(new Dimension(850, 270));
         panelResultados.add(chartPanel, "gaptop 20");
         
-        // panel pruebas automaticas
-        /*final ConfigPanel<IGAEngine> cpauto = creaPanelConfiguracion();
-		// asocia el panel con la figura
+        final ConfigPanel<IGAEngine> cpauto = creaPanelPruebasAuto();
+        // asocia el panel con la figura
         cpauto.setTarget(gaEngine);
 		// carga los valores de la figura en el panel
         cpauto.initialize();
-		panelPruebas.add(cpauto, "split, wrap");
-		
-		// botón para ejecutar la evolucion
-		boton = new JButton("Run");
-		panelPruebas.add(boton, " wrap");
-		boton = new JButton("Run");
-		panelPruebas.add(boton, "split, wrap");
-		boton = new JButton("Run");
-		panelPruebas.add(boton, "split, wrap");
-		boton = new JButton("Run");
-		panelPruebas.add(boton, "split, wrap");
-		boton = new JButton("Run");
-		panelPruebas.add(boton, "split, wrap");
-		boton = new JButton("Run");
-		panelPruebas.add(boton, "");*/
+        panelPruebas.add(cpauto, "split, wrap, growy");
+        
+        final JPanel panelIntervalText = new JPanel();
+        panelIntervalText.setLayout(new GridLayout(10,1,0,11));
+        
+        JTextArea tamGruposText = new JTextArea("LOL");
+        panelIntervalText.add(tamGruposText);
+        JTextArea tamPobText = new JTextArea("LOL");
+        panelIntervalText.add(tamPobText);
+        JTextArea numGenText = new JTextArea("LOL");
+        panelIntervalText.add(numGenText);
+        JTextArea alfaText = new JTextArea("LOL");
+        panelIntervalText.add(alfaText);
+        JTextArea blankText = new JTextArea("LOL");
+        panelIntervalText.add(blankText);
+        blankText.setVisible(false);
+        JTextArea selecText = new JTextArea("LOL");
+        panelIntervalText.add(selecText);
+        JTextArea blankText2 = new JTextArea("LOL");
+        panelIntervalText.add(blankText2);
+        blankText2.setVisible(false);
+        JTextArea crossText = new JTextArea("LOL");
+        panelIntervalText.add(crossText);
+        JTextArea blankText3 = new JTextArea("LOL");
+        panelIntervalText.add(blankText3);  
+        blankText3.setVisible(false);
+        JTextArea mutText = new JTextArea("LOL");
+        panelIntervalText.add(mutText);
+        
+        panelPruebas.add(panelIntervalText, "gaptop 3, wrap");
+        
+        final JPanel panleRadioBut = new JPanel();
+        panleRadioBut.setLayout(new GridLayout(10,1,0,-4));
+        
+        JRadioButton tamGruposBut = new JRadioButton();
+        panleRadioBut.add(tamGruposBut);
+        JRadioButton tamPobBut = new JRadioButton();
+        panleRadioBut.add(tamPobBut);
+        JRadioButton numGenBut = new JRadioButton();
+        panleRadioBut.add(numGenBut);
+        JRadioButton alfaBut = new JRadioButton();
+        panleRadioBut.add(alfaBut);
+        JRadioButton blankBut = new JRadioButton();
+        panleRadioBut.add(blankBut);
+        blankBut.setVisible(false);
+        JRadioButton selecBut = new JRadioButton();
+        panleRadioBut.add(selecBut);
+        JRadioButton blankBut2 = new JRadioButton();
+        panleRadioBut.add(blankBut2);
+        blankBut2.setVisible(false);
+        JRadioButton crossBut = new JRadioButton();
+        panleRadioBut.add(crossBut);
+        JRadioButton blankBut3 = new JRadioButton();
+        panleRadioBut.add(blankBut3);  
+        blankBut3.setVisible(false);
+        JRadioButton mutBut = new JRadioButton();
+        panleRadioBut.add(mutBut);        
+        
+        //Group the radio buttons.
+        ButtonGroup group = new ButtonGroup();
+        group.add(tamGruposBut);
+        group.add(tamPobBut);
+        group.add(numGenBut);
+        group.add(alfaBut);
+        group.add(selecBut);
+        group.add(crossBut);
+        group.add(mutBut);
+        
+        panelPruebas.add(panleRadioBut, "gaptop 3");
+        
+        
+        
 		
 		// Tabs
 		tabPanePrincipal.add(panelGenetics, "Algoritmo Genético");		
@@ -374,7 +458,6 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	}
 	
 	public ConfigPanel<IGAEngine> creaPanelConfiguracion() {
-		//String[] functionNames = new String[] { "Alumnos" };
 		String[] selectorNames = new String[] { "Ruleta", "Torneo Det", "Torneo Prob", "Ranking", "Método Propio" };
 		String[] crossNames = new String[] { "PMX", "OX", "Variante OX", "Ordinal", "Método Propio" };
 		String[] mutNames = new String[] { "Inserción", "Intercambio", "Inversión", "Heurística" };
@@ -401,13 +484,6 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 			"Parámetro Alfa",       				// texto a usar como 'tooltip' cuando pasas el puntero
 			"alfaValue",  						    // campo (espera que haya un getGrosor y un setGrosor)
 			0.0, 1.0));								// min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
-		
-		/*functChoiceOpt = new ChoiceOption<IGAEngine>(
-				"Función de evaluación",
-				"Función a evolucionar",
-				"functionName",
-				functionNames);
-		config.addOption(functChoiceOpt);*/
 
 		// Selection
 		functChoiceOpt = new ChoiceOption<IGAEngine>(
@@ -507,6 +583,84 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		});
 		
 		return config;
+	}
+	
+	public ConfigPanel<IGAEngine> creaPanelPruebasAuto() {
+		String[] selectorNames = new String[] { "Ruleta", "Torneo Det", "Torneo Prob", "Ranking", "Método Propio" };
+		String[] crossNames = new String[] { "PMX", "OX", "Variante OX", "Ordinal", "Método Propio" };
+		String[] mutNames = new String[] { "Inserción", "Intercambio", "Inversión", "Heurística" };
+	
+		ConfigPanel<IGAEngine> config = new ConfigPanel<IGAEngine>();
+		
+		config.addOption(new IntegerOption<IGAEngine>(  // -- entero
+			"Tamaño grupos", 					// texto a usar como etiqueta del campo
+			"Número de estudiantes que forman cada grupo",  // texto a usar como 'tooltip' cuando pasas el puntero
+			"groupSize",  						     // campo (espera que haya un getGrosor y un setGrosor)
+			1, 500));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
+		config.addOption(new IntegerOption<IGAEngine>(  // -- entero
+			"Tamaño población", 					// texto a usar como etiqueta del campo
+			"Número de individuos que forman la población",  // texto a usar como 'tooltip' cuando pasas el puntero
+			"population_Size",  						     // campo (espera que haya un getGrosor y un setGrosor)
+			1, 1000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
+		config.addOption(new IntegerOption<IGAEngine>(
+			"Num Generaciones", 					// texto a usar como etiqueta del campo
+			"Número de generaciones que dura la evolución",  // texto a usar como 'tooltip' cuando pasas el puntero
+			"num_Max_Gen",  						     // campo (espera que haya un getGrosor y un setGrosor)
+			1, 10000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
+	    config.addOption(new DoubleOption<IGAEngine>(  
+			"Parámetro Alfa", 						// texto a usar como etiqueta del campo
+			"Parámetro Alfa",       				// texto a usar como 'tooltip' cuando pasas el puntero
+			"alfaValue",  						    // campo (espera que haya un getGrosor y un setGrosor)
+			0.0, 1.0));								// min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
+
+		// Selection
+			
+		config.addOption(new ChoiceOption<IGAEngine>(
+				"Función de selección",
+				"Función selección",
+				"selectorName",
+				selectorNames));
+		
+		config.addOption(new DoubleOption<IGAEngine>(
+				"Parametros Seleccion",
+				"Parametros Seleccion",
+				"selecParams", 1.0, 100.0));
+		
+		// Cross
+		config.addOption(new ChoiceOption<IGAEngine>(
+				"Función de cruce",
+				"Función cruce",
+				"crossName",
+				crossNames));
+		
+		config.addOption(new DoubleOption<IGAEngine>(
+				"Parametros Cruce",
+				"Parametros Cruce",
+				"crossParams", 1.0, 100.0));
+		
+		// Mutation
+		config.addOption(new ChoiceOption<IGAEngine>(
+				"Función de mutación",
+				"Función mutación",
+				"mutName",
+				mutNames));
+		
+		config.addOption(new DoubleOption<IGAEngine>(
+				"Parametros Mutación",
+				"Parametros Mutación",
+				"mutParams", 1.0, 100.0));
+		
+		return config;
+	}
+	
+	private Color linearGradient(Color c1, Color c2, int max, int level)
+	{		
+		float ratio = (float)level / (float)max;
+        int red = (int)(c2.getRed() * ratio + c1.getRed() * (1 - ratio));
+        int green = (int)(c2.getGreen() * ratio +  c1.getGreen() * (1 - ratio));
+        int blue = (int)(c2.getBlue() * ratio + c1.getBlue() * (1 - ratio));
+        Color c = new Color(red, green, blue);
+        return c;
 	}
 	
 		
