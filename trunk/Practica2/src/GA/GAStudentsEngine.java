@@ -18,8 +18,8 @@ public final class GAStudentsEngine extends IGAEngine {
 	private HashMap<Integer, Integer> studentMap;
 	private int groupSize = 6;
 	private int fillerId = -1;
-	protected int incompatibilities;
-	
+	private String studentPath;
+	protected int incompatibilities;	
 	
 	public void init()
 	{
@@ -74,7 +74,7 @@ public final class GAStudentsEngine extends IGAEngine {
 	{
 		try{
 		  // Open the file
-		  FileInputStream fstream = new FileInputStream(path);
+		  FileInputStream fstream = new FileInputStream("data/" + path);
 		  DataInputStream in = new DataInputStream(fstream);
 		  BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		  String strLine, data[];
@@ -248,5 +248,8 @@ public final class GAStudentsEngine extends IGAEngine {
 	}
 	public void setGroupSize(int groupSize) {
 		this.groupSize = groupSize;
+	}
+	public void setStudentPath(String studentPath) {
+		this.studentPath = studentPath;
 	}
 }

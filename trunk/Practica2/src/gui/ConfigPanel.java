@@ -497,7 +497,7 @@ public class ConfigPanel<T> extends JPanel {
 			boolean written = false;
 			boolean wasValid = ! cp.invalidOptions.contains(this);
 
-			control.setBorder(ok ?  goodBorder :
+			control.setBorder(ok ? BorderFactory.createLineBorder(Color.gray, 1):
 				BorderFactory.createLineBorder(Color.red, 2));
 			if ( ! isUpToDate() && ok) {
 				write(readControl());

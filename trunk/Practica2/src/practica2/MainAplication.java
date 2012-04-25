@@ -22,7 +22,7 @@ public class MainAplication {
 		public synchronized String format(LogRecord record) {
 		return ""+record.getLevel() + " -- " + record.getMessage() + "\n";
 		}
-	}; 
+	};
 	
 	public static void main(String[] args) {
 		IGARandom.setSeed(55);					// damos valor a la semilla
