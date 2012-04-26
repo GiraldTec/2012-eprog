@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.text.NumberFormat;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -382,21 +383,19 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         JLabel titleLabel = new JLabel("Pruebas Automáticas:");
         Font font = new Font("Verdana", Font.BOLD, 15);
         titleLabel.setFont(font);
-        panelPruebas.add(titleLabel, "span, wrap, gapbottom 5, gaptop 5");
-        
-        titleLabel = new JLabel("                                      Valor inicial:                   Valor final:     Incremento:       Selección:");
-        panelPruebas.add(titleLabel, "wrap, span, gapleft 5");
-                
+        panelPruebas.add(titleLabel, "span, wrap, gapbottom 5, gaptop 5");       
         
         final ConfigPanel<IGAEngine> cpauto = creaPanelPruebasAuto();
+        cpauto.setBorder(BorderFactory.createTitledBorder("Valor inicial:"));
         // asocia el panel con la figura
         cpauto.setTarget(gaEngine);
 		// carga los valores de la figura en el panel
         cpauto.initialize();
-        panelPruebas.add(cpauto, "split, wrap, growy, gapright 10, gapleft 5");
+        panelPruebas.add(cpauto, "split, wrap, growy, gapright 5, gapleft 5");
         
         final JPanel panelInterval = new JPanel();
         panelInterval.setLayout(new GridLayout(10,1,0,-1));
+        panelInterval.setBorder(BorderFactory.createTitledBorder("Valor final:"));
         
         JSpinner tamGruposText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         tamGruposText.setMinimumSize(new Dimension(30,5));
@@ -423,41 +422,42 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         JSpinner mutText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         panelInterval.add(mutText);
         
-        panelPruebas.add(panelInterval, "gapbottom 2, wrap, gapright 10");
+        panelPruebas.add(panelInterval, "gapbottom 2, wrap");
         
         final JPanel panelIncrements = new JPanel();
         panelIncrements.setLayout(new GridLayout(10,1,0,-1));
+        panelIncrements.setBorder(BorderFactory.createTitledBorder("Incremento"));
         
         JSpinner tamGruposIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        tamGruposText.setMinimumSize(new Dimension(30,5));
-        panelInterval.add(tamGruposIncr);
+        tamGruposIncr.setMinimumSize(new Dimension(30,5));
+        panelIncrements.add(tamGruposIncr);
         JSpinner tamPobIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelInterval.add(tamPobIncr);
+        panelIncrements.add(tamPobIncr);
         JSpinner numGenIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelInterval.add(numGenIncr);
+        panelIncrements.add(numGenIncr);
         JSpinner alfaIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelInterval.add(alfaIncr);
-        JSpinner blankIncr = new JSpinner();
-        panelInterval.add(blankIncr);
-        blankText.setVisible(false);
+        panelIncrements.add(alfaIncr);
+        JSpinner blankIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        panelIncrements.add(blankIncr);
+        blankIncr.setVisible(false);
         JSpinner selecIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelInterval.add(selecIncr);
-        JSpinner blankIncr2 = new JSpinner();
-        panelInterval.add(blankIncr2);
-        blankText2.setVisible(false);
+        panelIncrements.add(selecIncr);
+        JSpinner blankIncr2 = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        panelIncrements.add(blankIncr2);
+        blankIncr2.setVisible(false);
         JSpinner crossIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelInterval.add(crossIncr);
-        JSpinner blankIncr3 = new JSpinner();
-        panelInterval.add(blankIncr3);  
-        blankText3.setVisible(false);
+        panelIncrements.add(crossIncr);
+        JSpinner blankIncr3 = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        panelIncrements.add(blankIncr3);  
+        blankIncr3.setVisible(false);
         JSpinner mutIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelInterval.add(mutIncr);
-       
+        panelIncrements.add(mutIncr);  
         
         panelPruebas.add(panelIncrements, "gapbottom 2, wrap");
         
         final JPanel panleRadioBut = new JPanel();
         panleRadioBut.setLayout(new GridLayout(10,1,0,-8));
+        panleRadioBut.setBorder(BorderFactory.createTitledBorder("Select"));
         
         JRadioButton tamGruposBut = new JRadioButton();
         panleRadioBut.add(tamGruposBut);
@@ -493,7 +493,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         radioButGroup.add(crossBut);
         radioButGroup.add(mutBut);
                 
-        panelPruebas.add(panleRadioBut, "gaptop 0");
+        panelPruebas.add(panleRadioBut);
 		
 		// Tabs
 		tabPanePrincipal.add(panelGenetics, "Algoritmo Genético");		
@@ -733,5 +733,4 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
             progBar.setValue(progress);
         } 
 	}
-
 }
