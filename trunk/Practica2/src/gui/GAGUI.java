@@ -8,6 +8,7 @@ import gui.ConfigPanel.IntegerOption;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
@@ -35,8 +36,9 @@ import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
+import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
@@ -92,7 +94,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		panelResultados = new JPanel();
 		panelResultados.setLayout(new MigLayout("", "[center]"));
 		panelPruebas = new JPanel();
-		panelPruebas.setLayout(new MigLayout("debug,flowy", "[left]"));
+		panelPruebas.setLayout(new MigLayout("flowy", "[left]"));
 		
 		//WARN: No usar EXIT_ON_CLOSE, threads petan con Plot2DPanel y bugs del JVM
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -111,6 +113,9 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		});
 		
 		JTabbedPane tabPanePrincipal = new JTabbedPane();
+		
+        //********** PANEL GENETICS **************************************//
+		
 		JPanel panelCentral = new JPanel(new MigLayout("", "[left]"));
 
 		panelGenetics.add(new JLabel("General"), "split, gaptop 10");
@@ -210,8 +215,8 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		boton = new JButton("Cargar");
 		boton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				final JFileChooser fc = new JFileChooser();
+				fc.setCurrentDirectory(new File("."));
 				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				int returnVal = fc.showOpenDialog(GAGUI.this);			
 
@@ -308,6 +313,8 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		pGraphic.setPreferredSize(new Dimension(600, 600));
 		panelGenetics.add(pGraphic, "split, grow, gaptop 11, gapleft 20, gapbottom 11, gapright 11, dock east");
 		
+		//********** PANEL RESULTS **************************************//
+		
 		// Grafica results
 		panelResultados.add(new JLabel("Solución encontrada"), "split, gaptop 10");
 		panelResultados.add(new JSeparator(), "growx, wrap, gaptop 10");
@@ -371,44 +378,86 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         chartPanel.setPreferredSize(new Dimension(850, 270));
         panelResultados.add(chartPanel, "gaptop 20");
         
+        //********** PANEL PRUEBAS AUTOMÁTICAS **************************************//
+        JLabel titleLabel = new JLabel("Pruebas Automáticas:");
+        Font font = new Font("Verdana", Font.BOLD, 15);
+        titleLabel.setFont(font);
+        panelPruebas.add(titleLabel, "span, wrap, gapbottom 5, gaptop 5");
+        
+        titleLabel = new JLabel("                                      Valor inicial:                   Valor final:     Incremento:       Selección:");
+        panelPruebas.add(titleLabel, "wrap, span, gapleft 5");
+                
+        
         final ConfigPanel<IGAEngine> cpauto = creaPanelPruebasAuto();
         // asocia el panel con la figura
         cpauto.setTarget(gaEngine);
 		// carga los valores de la figura en el panel
         cpauto.initialize();
-        panelPruebas.add(cpauto, "split, wrap, growy");
+        panelPruebas.add(cpauto, "split, wrap, growy, gapright 10, gapleft 5");
         
-        final JPanel panelIntervalText = new JPanel();
-        panelIntervalText.setLayout(new GridLayout(10,1,0,11));
+        final JPanel panelInterval = new JPanel();
+        panelInterval.setLayout(new GridLayout(10,1,0,-1));
         
-        JTextArea tamGruposText = new JTextArea("LOL");
-        panelIntervalText.add(tamGruposText);
-        JTextArea tamPobText = new JTextArea("LOL");
-        panelIntervalText.add(tamPobText);
-        JTextArea numGenText = new JTextArea("LOL");
-        panelIntervalText.add(numGenText);
-        JTextArea alfaText = new JTextArea("LOL");
-        panelIntervalText.add(alfaText);
-        JTextArea blankText = new JTextArea("LOL");
-        panelIntervalText.add(blankText);
+        JSpinner tamGruposText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        tamGruposText.setMinimumSize(new Dimension(30,5));
+        panelInterval.add(tamGruposText);
+        JSpinner tamPobText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        panelInterval.add(tamPobText);
+        JSpinner numGenText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        panelInterval.add(numGenText);
+        JSpinner alfaText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        panelInterval.add(alfaText);
+        JSpinner blankText = new JSpinner();
+        panelInterval.add(blankText);
         blankText.setVisible(false);
-        JTextArea selecText = new JTextArea("LOL");
-        panelIntervalText.add(selecText);
-        JTextArea blankText2 = new JTextArea("LOL");
-        panelIntervalText.add(blankText2);
+        JSpinner selecText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        panelInterval.add(selecText);
+        JSpinner blankText2 = new JSpinner();
+        panelInterval.add(blankText2);
         blankText2.setVisible(false);
-        JTextArea crossText = new JTextArea("LOL");
-        panelIntervalText.add(crossText);
-        JTextArea blankText3 = new JTextArea("LOL");
-        panelIntervalText.add(blankText3);  
+        JSpinner crossText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        panelInterval.add(crossText);
+        JSpinner blankText3 = new JSpinner();
+        panelInterval.add(blankText3);  
         blankText3.setVisible(false);
-        JTextArea mutText = new JTextArea("LOL");
-        panelIntervalText.add(mutText);
+        JSpinner mutText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        panelInterval.add(mutText);
         
-        panelPruebas.add(panelIntervalText, "gaptop 3, wrap");
+        panelPruebas.add(panelInterval, "gapbottom 2, wrap, gapright 10");
+        
+        final JPanel panelIncrements = new JPanel();
+        panelIncrements.setLayout(new GridLayout(10,1,0,-1));
+        
+        JSpinner tamGruposIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        tamGruposText.setMinimumSize(new Dimension(30,5));
+        panelInterval.add(tamGruposIncr);
+        JSpinner tamPobIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        panelInterval.add(tamPobIncr);
+        JSpinner numGenIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        panelInterval.add(numGenIncr);
+        JSpinner alfaIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        panelInterval.add(alfaIncr);
+        JSpinner blankIncr = new JSpinner();
+        panelInterval.add(blankIncr);
+        blankText.setVisible(false);
+        JSpinner selecIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        panelInterval.add(selecIncr);
+        JSpinner blankIncr2 = new JSpinner();
+        panelInterval.add(blankIncr2);
+        blankText2.setVisible(false);
+        JSpinner crossIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        panelInterval.add(crossIncr);
+        JSpinner blankIncr3 = new JSpinner();
+        panelInterval.add(blankIncr3);  
+        blankText3.setVisible(false);
+        JSpinner mutIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        panelInterval.add(mutIncr);
+       
+        
+        panelPruebas.add(panelIncrements, "gapbottom 2, wrap");
         
         final JPanel panleRadioBut = new JPanel();
-        panleRadioBut.setLayout(new GridLayout(10,1,0,-4));
+        panleRadioBut.setLayout(new GridLayout(10,1,0,-8));
         
         JRadioButton tamGruposBut = new JRadioButton();
         panleRadioBut.add(tamGruposBut);
@@ -435,19 +484,16 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         panleRadioBut.add(mutBut);        
         
         //Group the radio buttons.
-        ButtonGroup group = new ButtonGroup();
-        group.add(tamGruposBut);
-        group.add(tamPobBut);
-        group.add(numGenBut);
-        group.add(alfaBut);
-        group.add(selecBut);
-        group.add(crossBut);
-        group.add(mutBut);
-        
-        panelPruebas.add(panleRadioBut, "gaptop 3");
-        
-        
-        
+        ButtonGroup radioButGroup = new ButtonGroup();
+        radioButGroup.add(tamGruposBut);
+        radioButGroup.add(tamPobBut);
+        radioButGroup.add(numGenBut);
+        radioButGroup.add(alfaBut);
+        radioButGroup.add(selecBut);
+        radioButGroup.add(crossBut);
+        radioButGroup.add(mutBut);
+                
+        panelPruebas.add(panleRadioBut, "gaptop 0");
 		
 		// Tabs
 		tabPanePrincipal.add(panelGenetics, "Algoritmo Genético");		
@@ -503,7 +549,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 			public void actionPerformed(ActionEvent e) {
 				JComboBox combo = (JComboBox)e.getSource();
 		        String funcName = (String)combo.getSelectedItem();
-		        paramsSelecDouble.getTextFieldRef().enable();
+		        paramsSelecDouble.getTextFieldRef().setEnabled(true);
 				if(funcName == "Ruleta")
 					paramsSelecDouble.getLabelRef().setText("Params Ruleta");
 				else if(funcName == "Torneo Prob")
@@ -535,7 +581,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 			public void actionPerformed(ActionEvent e) {
 				JComboBox combo = (JComboBox)e.getSource();
 		        String funcName = (String)combo.getSelectedItem();
-		        paramsCrossDouble.getTextFieldRef().enable();
+		        paramsCrossDouble.getTextFieldRef().setEnabled(true);
 				if(funcName == "PMX")
 					paramsCrossDouble.getLabelRef().setText("Params PMX");
 				else if(funcName == "OX")
@@ -567,7 +613,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 			public void actionPerformed(ActionEvent e) {
 				JComboBox combo = (JComboBox)e.getSource();
 		        String funcName = (String)combo.getSelectedItem();
-		        paramsMutDouble.getTextFieldRef().enable();
+		        paramsMutDouble.getTextFieldRef().setEnabled(true);
 				if(funcName == "Inserción")
 					paramsMutDouble.getLabelRef().setText("Params Inserción");
 				else if(funcName == "Intercambio")
@@ -577,7 +623,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 				else if(funcName == "Heurística")
 				{
 					paramsMutDouble.getLabelRef().setText("Params Heurística");
-					paramsMutDouble.getTextFieldRef().disable();
+					paramsMutDouble.getTextFieldRef().setEnabled(false);
 				}
 			}
 		});
