@@ -33,7 +33,7 @@ public class MainAplication {
 		gui.runGUI();
 		
 		Logger log = Logger.getLogger("");
-		for (Handler h : log.getHandlers()) log.removeHandler( h );
+		for (Handler h : log.getHandlers()) log.removeHandler(h);
 		log = Logger.getLogger("Engine");
 		log.addHandler(new ConsoleHandler());
 		log.getHandlers()[0].setFormatter(myFormater);
