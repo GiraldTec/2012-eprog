@@ -54,6 +54,7 @@ import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.plot.CategoryMarker;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.math.plot.Plot2DPanel;
@@ -80,16 +81,19 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	private double[] dataGenerationAverage;
 	private double[] dataGenerationCount;
 	private Plot2DPanel pGraphic;
+	private Plot2DPanel pGraphicPruebsAuto;
 	private JProgressBar progBar;
 	private ChoiceOption<IGAEngine> functChoiceOpt;
 	private DoubleOption<IGAEngine> paramsSelecDouble;
 	private DoubleOption<IGAEngine> paramsCrossDouble;
 	private DoubleOption<IGAEngine> paramsMutDouble;
+	private double maxVal;
 	public String configData;
 	
 	public GAGUI(final IGAEngine gaEngine) {
 		super("Programación Evolutiva - Práctica 2");
 		pGraphic = new Plot2DPanel();
+		pGraphicPruebsAuto = new Plot2DPanel();
 		panelGenetics = new JPanel();
 		panelGenetics.setLayout(new MigLayout("", "[center]"));
 		panelResultados = new JPanel();
@@ -344,7 +348,8 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	            true,                     // tooltips?
 	            false                     // URLs?
 	        );
-		
+        chart.setBackgroundPaint(new Color(58,58,58));
+                		
 		final CategoryPlot plot = chart.getCategoryPlot();
         plot.setBackgroundPaint(Color.white);
         plot.setRangeGridlinePaint(Color.lightGray);
@@ -369,6 +374,17 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         plot.addDomainMarker(new CategoryMarker("G3", Color.red, stroke, Color.black, stroke, 0.4f)); 
         plot.addDomainMarker(new CategoryMarker("G14", Color.red, stroke, Color.black, stroke, 0.4f));
         
+        plot.getRangeAxis().setAxisLinePaint(Color.white);
+        plot.getRangeAxis().setLabelPaint(Color.white);
+        plot.getRangeAxis().setTickLabelPaint(Color.white);
+        plot.getRangeAxis().setTickMarkPaint(Color.white);
+        plot.getDomainAxis().setAxisLinePaint(Color.white);
+        plot.getDomainAxis().setLabelPaint(Color.white);
+        plot.getDomainAxis().setTickLabelPaint(Color.white);
+        plot.getDomainAxis().setTickMarkPaint(Color.white);
+        
+        chart.getTitle().setPaint(Color.white);
+        
         renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
         
         NumberFormat format = NumberFormat.getNumberInstance();
@@ -376,14 +392,15 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         renderer.setBaseItemLabelsVisible(true);
 
 		ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(850, 270));
+        chartPanel.setPreferredSize(new Dimension(825, 270));
         panelResultados.add(chartPanel, "gaptop 20");
         
         //********** PANEL PRUEBAS AUTOMÁTICAS **************************************//
+        
         JLabel titleLabel = new JLabel("Pruebas Automáticas:");
         Font font = new Font("Verdana", Font.BOLD, 15);
         titleLabel.setFont(font);
-        panelPruebas.add(titleLabel, "span, wrap, gapbottom 5, gaptop 5");       
+        panelPruebas.add(titleLabel, "span, wrap, gaptop 5, gapleft 15");
         
         final ConfigPanel<IGAEngine> cpauto = creaPanelPruebasAuto();
         cpauto.setBorder(BorderFactory.createTitledBorder("Valor inicial:"));
@@ -391,10 +408,14 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         cpauto.setTarget(gaEngine);
 		// carga los valores de la figura en el panel
         cpauto.initialize();
-        panelPruebas.add(cpauto, "split, wrap, growy, gapright 5, gapleft 5");
+        final JPanel panelconfigu = new JPanel();
+        panelconfigu.setLayout(new GridLayout(1,1,0,0));
+        //panelPruebas.add(cpauto, "split, wrap, growy, gapright 5, gapleft 40");
+        panelconfigu.add(cpauto);        
+        panelPruebas.add(panelconfigu, "split, wrap, gapleft 10, top");
         
         final JPanel panelInterval = new JPanel();
-        panelInterval.setLayout(new GridLayout(10,1,0,-1));
+        panelInterval.setLayout(new GridLayout(10,1,0,0));
         panelInterval.setBorder(BorderFactory.createTitledBorder("Valor final:"));
         
         JSpinner tamGruposText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
@@ -422,10 +443,10 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         JSpinner mutText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         panelInterval.add(mutText);
         
-        panelPruebas.add(panelInterval, "gapbottom 2, wrap");
+        panelPruebas.add(panelInterval, "gapbottom 2, wrap, top");
         
         final JPanel panelIncrements = new JPanel();
-        panelIncrements.setLayout(new GridLayout(10,1,0,-1));
+        panelIncrements.setLayout(new GridLayout(10,1,0,0));
         panelIncrements.setBorder(BorderFactory.createTitledBorder("Incremento"));
         
         JSpinner tamGruposIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
@@ -453,7 +474,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         JSpinner mutIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         panelIncrements.add(mutIncr);  
         
-        panelPruebas.add(panelIncrements, "gapbottom 2, wrap");
+        panelPruebas.add(panelIncrements, "gapbottom 2, wrap, top");
         
         final JPanel panleRadioBut = new JPanel();
         panleRadioBut.setLayout(new GridLayout(10,1,0,-8));
@@ -493,7 +514,12 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         radioButGroup.add(crossBut);
         radioButGroup.add(mutBut);
                 
-        panelPruebas.add(panleRadioBut);
+        panelPruebas.add(panleRadioBut, "wrap, top");
+        
+        //pGraphicPruebsAuto.addLinePlot("Mejor Absoluto", Color.blue, dataGenerationCount,	dataAbsoluteBest);
+        pGraphicPruebsAuto.addLegend("SOUTH");
+        pGraphicPruebsAuto.setPreferredSize(new Dimension(350, 350));
+        panelPruebas.add(pGraphicPruebsAuto, "gapleft 5, gaptop 5, top");
 		
 		// Tabs
 		tabPanePrincipal.add(panelGenetics, "Algoritmo Genético");		
