@@ -67,76 +67,84 @@ public final class GAStudentsEngine extends IGAEngine {
 	
 	public void loadConfig(String config) {
 			
-		
 	}
 	
 	private void loadStudents(String path)
 	{
 		try{
-		  // Open the file
-		  FileInputStream fstream = new FileInputStream("data/" + path);
-		  DataInputStream in = new DataInputStream(fstream);
-		  BufferedReader br = new BufferedReader(new InputStreamReader(in));
-		  String strLine, data[];
-		  GAStudent student;
-		  int numRestrictions;
-		  
-		  // Read first line: | Num Students | Num restrictions | 
-		  strLine = br.readLine();
-		  data = strLine.split(" ");
-		  
-		  //log.info("Num estudiantes: "+ data[0] + "\nNum restricciones: " + data[1]);
-		  System.out.println("Num estudiantes: "+ data[0] + "\nNum restricciones: " + data[1]);
-		  
-		  population_Size = Integer.parseInt(data[0]);
-		  numRestrictions = Integer.parseInt(data[1]);
-		  
-		  // Read Student data: | ID | Result |
-		  for (int i=0; i<population_Size; i++) {
-			  strLine = br.readLine();
-			  data = strLine.split(" ");
-			  
-			  System.out.println("Id : "+ data[0] + " Result: " + data[1]);
-			  
-			  // Create student and load id + result
-			  student = new GAStudent(Integer.parseInt(data[0]), Double.parseDouble(data[1]));
-			  studentMap.put(student.getId(), students.size());
-			  students.add(student);
-		  }
-		  
-		  // Read restrictions:
-		  for (int i=0; i<numRestrictions; i++)
-		  {
-			  strLine = br.readLine();
-			  data = strLine.split(" ");
-			  
-			  System.out.println("Student : "+ data[0] + " hates " + data[1]);
-			  
-			  student = students.get(studentMap.get(Integer.parseInt(data[0])));
-			  student.getHaters().add(Integer.parseInt(data[1]));
-		  }
-		  
-		  // Add filler students
-		  while (population_Size % groupSize != 0){
-			  student = new GAStudent(fillerId, 0.0);
-			  studentMap.put(student.getId(), students.size());
-			  students.add(student);
-			  System.out.println("Num filler student: " + fillerId);
-			  fillerId--;
-			  population_Size++;
-		  }
-		  
-		  // Close the input stream
-		  in.close();
-		    }catch (Exception e){//Catch exception if any
-		  System.err.println("Error: " + e.getMessage());
-		  }
+
+			if (path.isEmpty())
+				path  = "1.txt";
+
+			// Open the file
+			FileInputStream fstream = new FileInputStream("data/" + path);
+			DataInputStream in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String strLine, data[];
+			GAStudent student;
+			int numRestrictions;
+
+			// Read first line: | Num Students | Num restrictions | 
+			strLine = br.readLine();
+			data = strLine.split(" ");
+
+			//log.info("Num estudiantes: "+ data[0] + "\nNum restricciones: " + data[1]);
+			System.out.println("Num estudiantes: "+ data[0] + "\nNum restricciones: " + data[1]);
+
+			population_Size = Integer.parseInt(data[0]);
+			numRestrictions = Integer.parseInt(data[1]);
+
+			// Read Student data: | ID | Result |
+			for (int i=0; i<population_Size; i++) {
+				strLine = br.readLine();
+				data = strLine.split(" ");
+
+				System.out.println("Id : "+ data[0] + " Result: " + data[1]);
+
+				// Create student and load id + result
+				student = new GAStudent(Integer.parseInt(data[0]), Double.parseDouble(data[1]));
+				studentMap.put(student.getId(), students.size());
+				students.add(student);
+			}
+
+			// Read restrictions:
+			for (int i=0; i<numRestrictions; i++)
+			{
+				strLine = br.readLine();
+				data = strLine.split(" ");
+
+				System.out.println("Student : "+ data[0] + " hates " + data[1]);
+
+				student = students.get(studentMap.get(Integer.parseInt(data[0])));
+				student.getHaters().add(Integer.parseInt(data[1]));
+			}	
+
+			// Add filler students
+			while (population_Size % groupSize != 0){
+				student = new GAStudent(fillerId, 0.0);
+				studentMap.put(student.getId(), students.size());
+				students.add(student);
+				System.out.println("Num filler student: " + fillerId);
+				fillerId--;
+				population_Size++;
+			}
+
+			// Close the input stream
+			in.close();
+		}catch (Exception e){//Catch exception if any
+			System.err.println("Error: " + e.getMessage());
+		}
+	}
+	
+	public void preloadStudents() {
+		
+		loadStudents(studentPath);
 	}
 	
 	/*public static void main(String[] args) {
 		GAStudentsEngine ga = new GAStudentsEngine();
 		ga.init();
-		ga.loadStudents("data/1.txt");
+		ga.loadStudents("3.txt");
 	}*/
 
 	
@@ -248,6 +256,9 @@ public final class GAStudentsEngine extends IGAEngine {
 	}
 	public void setGroupSize(int groupSize) {
 		this.groupSize = groupSize;
+	}
+	public String getStudentPath() {
+		return studentPath;
 	}
 	public void setStudentPath(String studentPath) {
 		this.studentPath = studentPath;
