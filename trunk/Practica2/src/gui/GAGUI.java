@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.text.NumberFormat;
+import java.util.Enumeration;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -39,6 +41,7 @@ import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
+import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -87,7 +90,8 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	private DoubleOption<IGAEngine> paramsSelecDouble;
 	private DoubleOption<IGAEngine> paramsCrossDouble;
 	private DoubleOption<IGAEngine> paramsMutDouble;
-	private double maxVal;
+	private int selectedMaxVal=0;
+	private int selectedIncrement=0;
 	public String configData;
 	
 	public GAGUI(final IGAEngine gaEngine) {
@@ -99,7 +103,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		panelResultados = new JPanel();
 		panelResultados.setLayout(new MigLayout("", "[center]"));
 		panelPruebas = new JPanel();
-		panelPruebas.setLayout(new MigLayout("flowy", "[left]"));
+		panelPruebas.setLayout(new MigLayout("debug, flowy", "[left]"));
 		
 		//WARN: No usar EXIT_ON_CLOSE, threads petan con Plot2DPanel y bugs del JVM
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -227,9 +231,9 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 
 		        if (returnVal == JFileChooser.APPROVE_OPTION) {
 		            File file = fc.getSelectedFile();
-		            //This is where a real application would open the file.
+		            System.out.println("Opening: " + file.getName());
+		            
 		            ((GAStudentsEngine) gaEngine).setStudentPath(file.getName());
-		            System.out.println("Opening: " + file.getName() + ".");
 		        } else {
 		        	System.out.println("Open command cancelled by user.");
 		        }
@@ -396,11 +400,11 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         panelResultados.add(chartPanel, "gaptop 20");
         
         //********** PANEL PRUEBAS AUTOMÁTICAS **************************************//
-        
+                
         JLabel titleLabel = new JLabel("Pruebas Automáticas:");
         Font font = new Font("Verdana", Font.BOLD, 15);
         titleLabel.setFont(font);
-        panelPruebas.add(titleLabel, "span, wrap, gaptop 5, gapleft 15");
+        panelPruebas.add(titleLabel, "span, wrap, gaptop 15, gapleft 5");
         
         final ConfigPanel<IGAEngine> cpauto = creaPanelPruebasAuto();
         cpauto.setBorder(BorderFactory.createTitledBorder("Valor inicial:"));
@@ -412,69 +416,69 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         panelconfigu.setLayout(new GridLayout(1,1,0,0));
         //panelPruebas.add(cpauto, "split, wrap, growy, gapright 5, gapleft 40");
         panelconfigu.add(cpauto);        
-        panelPruebas.add(panelconfigu, "split, wrap, gapleft 10, top");
+        panelPruebas.add(panelconfigu, "split, wrap, gapleft 10, top, gaptop 40");
         
         final JPanel panelInterval = new JPanel();
         panelInterval.setLayout(new GridLayout(10,1,0,0));
         panelInterval.setBorder(BorderFactory.createTitledBorder("Valor final:"));
         
-        JSpinner tamGruposText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        final JSpinner tamGruposText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         tamGruposText.setMinimumSize(new Dimension(30,5));
         panelInterval.add(tamGruposText);
-        JSpinner tamPobText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        final JSpinner tamPobText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         panelInterval.add(tamPobText);
-        JSpinner numGenText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        final JSpinner numGenText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         panelInterval.add(numGenText);
-        JSpinner alfaText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        final JSpinner alfaText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         panelInterval.add(alfaText);
         JSpinner blankText = new JSpinner();
         panelInterval.add(blankText);
         blankText.setVisible(false);
-        JSpinner selecText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        final JSpinner selecText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         panelInterval.add(selecText);
         JSpinner blankText2 = new JSpinner();
         panelInterval.add(blankText2);
         blankText2.setVisible(false);
-        JSpinner crossText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        final JSpinner crossText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         panelInterval.add(crossText);
         JSpinner blankText3 = new JSpinner();
         panelInterval.add(blankText3);  
         blankText3.setVisible(false);
-        JSpinner mutText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        final JSpinner mutText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         panelInterval.add(mutText);
         
-        panelPruebas.add(panelInterval, "gapbottom 2, wrap, top");
+        panelPruebas.add(panelInterval, "gapbottom 2, wrap, top, gaptop 40");
         
         final JPanel panelIncrements = new JPanel();
         panelIncrements.setLayout(new GridLayout(10,1,0,0));
         panelIncrements.setBorder(BorderFactory.createTitledBorder("Incremento"));
         
-        JSpinner tamGruposIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        final JSpinner tamGruposIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         tamGruposIncr.setMinimumSize(new Dimension(30,5));
         panelIncrements.add(tamGruposIncr);
-        JSpinner tamPobIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        final JSpinner tamPobIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         panelIncrements.add(tamPobIncr);
-        JSpinner numGenIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        final JSpinner numGenIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         panelIncrements.add(numGenIncr);
-        JSpinner alfaIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        final JSpinner alfaIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         panelIncrements.add(alfaIncr);
         JSpinner blankIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         panelIncrements.add(blankIncr);
         blankIncr.setVisible(false);
-        JSpinner selecIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        final JSpinner selecIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         panelIncrements.add(selecIncr);
         JSpinner blankIncr2 = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         panelIncrements.add(blankIncr2);
         blankIncr2.setVisible(false);
-        JSpinner crossIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        final JSpinner crossIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         panelIncrements.add(crossIncr);
         JSpinner blankIncr3 = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         panelIncrements.add(blankIncr3);  
         blankIncr3.setVisible(false);
-        JSpinner mutIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
+        final JSpinner mutIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
         panelIncrements.add(mutIncr);  
         
-        panelPruebas.add(panelIncrements, "gapbottom 2, wrap, top");
+        panelPruebas.add(panelIncrements, "gapbottom 2, wrap, top, gaptop 40");
         
         final JPanel panleRadioBut = new JPanel();
         panleRadioBut.setLayout(new GridLayout(10,1,0,-8));
@@ -505,7 +509,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         panleRadioBut.add(mutBut);        
         
         //Group the radio buttons.
-        ButtonGroup radioButGroup = new ButtonGroup();
+        final ButtonGroup radioButGroup = new ButtonGroup();
         radioButGroup.add(tamGruposBut);
         radioButGroup.add(tamPobBut);
         radioButGroup.add(numGenBut);
@@ -513,15 +517,128 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         radioButGroup.add(selecBut);
         radioButGroup.add(crossBut);
         radioButGroup.add(mutBut);
-                
-        panelPruebas.add(panleRadioBut, "wrap, top");
+                        
+        panelPruebas.add(panleRadioBut, "wrap, top, gaptop 40");
         
         //pGraphicPruebsAuto.addLinePlot("Mejor Absoluto", Color.blue, dataGenerationCount,	dataAbsoluteBest);
+        
+        double[] x1 = {2.0 ,3.9, 100};
+        double[] y1 = {5.6, -62.0, 50};
+        
+        pGraphicPruebsAuto.addLinePlot("my plot", Color.blue, x1, y1);
+        pGraphicPruebsAuto.addLinePlot("my plota", Color.red, y1, x1);
+        
         pGraphicPruebsAuto.addLegend("SOUTH");
         pGraphicPruebsAuto.setPreferredSize(new Dimension(350, 350));
         panelPruebas.add(pGraphicPruebsAuto, "gapleft 5, gaptop 5, top");
+                
+        boton = new JButton("Stop");
+		boton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(stepThread != null)
+				{
+					JRadioButton selected = (JRadioButton) radioButGroup.getSelection();
+					System.out.println(selected.getName());
+					// Detener la evolución
+					stepThread.cancel(true);					
+				}
+			}
+		});
+		panelPruebas.add(boton, "dock south, gapleft 80, gapright 600");
+        
+        // botón para ejecutar la evolucion
+		boton = new JButton("Run");
+		boton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int selectedRadio = 0;
+											
+				// consigue los valores seleccionados por el radioBut
+				@SuppressWarnings("rawtypes")
+				Enumeration elements = radioButGroup.getElements();
+			    while (elements.hasMoreElements()) {
+			      AbstractButton button = (AbstractButton)elements.nextElement();
+			      selectedRadio++;
+			      if (button.isSelected()) {
+			        System.out.println("Selected radio: " + selectedRadio);
+			        break;
+			      }
+			    }
+			    			    
+			    switch (selectedRadio)
+			    {
+			    	case 0 : break;
+			    	case 1 : 	
+			    		selectedIncrement = (Integer) ((SpinnerNumberModel)tamGruposIncr.getModel()).getNumber(); 
+			    		selectedMaxVal=(Integer)(tamGruposText.getValue());
+			    		break;
+			    	case 2 : 	
+			    		selectedIncrement=(Integer)((SpinnerNumberModel)tamPobIncr.getModel()).getNumber(); 
+    					selectedMaxVal=(Integer)(tamPobText.getValue());
+    					break;
+			    	case 3 : 
+			    		selectedIncrement=(Integer)(numGenIncr.getValue()); 
+    					selectedMaxVal=(Integer)(numGenText.getValue());
+    					break;
+			    	case 4 : 
+			    		selectedIncrement=(Integer)(alfaIncr.getValue()); 
+    					selectedMaxVal=(Integer)(alfaText.getValue());
+    					break;
+			    	case 5 : 	
+			    		selectedIncrement=(Integer)(selecIncr.getValue()); 
+    					selectedMaxVal=(Integer)(selecText.getValue());
+    					break;
+			    	case 6 : 	
+			    		selectedIncrement=(Integer)(crossIncr.getValue()); 
+    					selectedMaxVal=(Integer)(crossText.getValue());
+    					break;
+			    	case 7 : 	
+			    		selectedIncrement=(Integer)(mutIncr.getValue()); 
+						selectedMaxVal=(Integer)(mutText.getValue());
+						break;
+			    }
+			    
+			    System.out.println("MaxVal: " + selectedMaxVal + " | Increment: " + selectedIncrement);
+				
+			    // creamos nuevos arrays donde guardar resultados de la evolución
+				dataAbsoluteBest = new double[gaEngine.getNum_Max_Gen()];
+				dataGenerationBest = new double[gaEngine.getNum_Max_Gen()];
+				dataGenerationAverage = new double[gaEngine.getNum_Max_Gen()];
+				dataGenerationCount = new double[gaEngine.getNum_Max_Gen()];
+				
+				//pGraphic.removeAllPlots();
+			    
+				// cargamos configuración adicional
+				//gaEngine.loadConfig(configData);
+				
+				// inicializamos el motor genético
+				//gaEngine.init();
+				
+				// tenemos luz verde para ejecutar?
+				if (stepThread == null || (stepThread != null && stepThread.isDone()))
+				{
+				
+				// bucle de evolución, ejecutamos cada step en un thread distinto (para no bloquar la interfaz)
+				/*stepThread = new GAStepThread(gaEngine,(Object) dataAbsoluteBest,(Object) dataGenerationAverage,(Object) dataGenerationBest,(Object) dataGenerationCount) {
+					protected void done() {
+						try {
+							panelEnEdicion.setText("Evolución completada");
+							pGraphic.addLinePlot("Mejor Absoluto", Color.blue, dataGenerationCount,	dataAbsoluteBest);
+							pGraphic.addLinePlot("Mejor de la Generación", Color.red, dataGenerationCount, dataGenerationBest);
+							pGraphic.addLinePlot("Media de la Generación", Color.green, dataGenerationCount, dataGenerationAverage);
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(GAGUI.this, "Error", "Hubo un error durante la evolución.", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				};
+
+				stepThread.execute();*/
+				}
+			}
+		});
+		panelPruebas.add(boton, "dock south, gapleft 80, gapright 600");
+						
+		//***** Tabs ********//
 		
-		// Tabs
 		tabPanePrincipal.add(panelGenetics, "Algoritmo Genético");		
 		tabPanePrincipal.add(panelResultados, "Grupos Resultado");
 		tabPanePrincipal.add(panelPruebas, "Pruebas Automáticas");
