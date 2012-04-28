@@ -15,8 +15,8 @@ public abstract class IGACromosome{
 	public abstract IGACromosome clone();
 	public abstract boolean equals(IGACromosome c);
 	
-	public void evaluate(int incompatibilities){
-		evaluatedValue = gen.evaluate(incompatibilities);
+	public void evaluate(){
+		evaluatedValue = gen.evaluate();
 	};
 	
 	public Boolean mutate(IGAMutator mutator,double prob){

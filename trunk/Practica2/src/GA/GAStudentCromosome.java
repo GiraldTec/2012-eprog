@@ -19,7 +19,7 @@ public class GAStudentCromosome extends IGACromosome implements Cloneable{
 	}
 
 	public void initCromosome(ArrayList<GAStudent> students, int incompatibilities, int groupSize, double resultAverage, double alpha) {
-		gen = new GAStudentGene(students.size(), groupSize, resultAverage, alpha);
+		gen = new GAStudentGene(students.size(), groupSize, resultAverage, alpha, incompatibilities);
 		loadCromosome(students, incompatibilities);
 	}
 	
@@ -27,7 +27,7 @@ public class GAStudentCromosome extends IGACromosome implements Cloneable{
 		// calcular balance
 		calcBalance(students);
 		// calcular la funcion de evaluacion
-		evaluate(incompatibilities);
+		evaluate();
 	}
 	
 	@Override
