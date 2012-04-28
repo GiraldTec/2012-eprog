@@ -9,7 +9,8 @@ import GACore.IGARandom;
 
 public class GAMutator3Heuristic extends IGAMutator{
 
-	@Override
+	GAStudentsEngine engine;
+	
 	public Boolean mutate(IGAGene gen, double prob) {
 		Boolean res = new Boolean(false);
 		if(IGARandom.getRDouble()<prob){
@@ -77,16 +78,20 @@ public class GAMutator3Heuristic extends IGAMutator{
 			GAStudentGene desGen6 = new GAStudentGene(pDes6);
 			genSet.add(desGen6);
 			
-			//double mejorV = genEvaluatedValue  <-- ES una putada, ya que para evaluar hay que pasarleun huevo de cosas
+			double mejorV = gen.evaluate();
 			GAStudentGene mejorGen = (GAStudentGene) gen;
 			while( genSet.iterator().hasNext() ){
-				//ir cogiendo el que tenga mejor evaluacion, para devolver el mejor
-				genSet.iterator().next();
+				GAStudentGene auxgen = genSet.iterator().next();
+				if (auxgen.evaluate()>mejorV) mejorGen = auxgen;				
 			}
 			gen=mejorGen;
 			res= !res;
 		}
 		return res;
 	}
+
+
+	
+	
 
 }

@@ -9,7 +9,7 @@ public abstract class IGAGene {
 	
 	public abstract Boolean mutate(IGAMutator mutator, double prob);
 	public abstract double calcBalance(ArrayList<GAStudent> students);
-	public abstract double evaluate(int incompatibilities);
+	public abstract double evaluate();
 	
 	public int[] getGen() {
 		return gen;

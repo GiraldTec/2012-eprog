@@ -12,11 +12,13 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 	private double resultAverage;
 	private double alphaValue;
 	private double geneUnbalance;
+	private int incompatibilities;
 	
-	public GAStudentGene(int numberStudents, int groupSize, double resultAverage, double alpha){
+	public GAStudentGene(int numberStudents, int groupSize, double resultAverage, double alpha, int incompatibilities){
 		this.groupSize = groupSize;
 		this.numberStudents = numberStudents;
 		this.resultAverage = resultAverage;
+		this.incompatibilities = incompatibilities;
 		alphaValue = alpha;
 		gen = new int[numberStudents];
 		for (int i=0;i<numberStudents;i++){
@@ -53,7 +55,7 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 	}
 
 	@Override
-	public double evaluate(int incompatibilities) {
+	public double evaluate() {
 		return alphaValue * geneUnbalance + ((1 - alphaValue) * incompatibilities);
 	}
 	

@@ -166,7 +166,7 @@ public final class GAStudentsEngine extends IGAEngine {
 				//METER EL TIPO DE LA MUTACIÓN Y LOS ESTUDIANTES
 				if (population[i].mutate(mutador, prob_Mut)) {
 					population[i].calcBalance(students);
-					population[i].evaluate(incompatibilities);
+					population[i].evaluate();
 				}
 			}
 		}
