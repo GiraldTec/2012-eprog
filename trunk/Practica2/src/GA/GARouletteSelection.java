@@ -13,10 +13,7 @@ import GACore.IGASelector;
 
 
 public class GARouletteSelection extends IGASelector{
-	@SuppressWarnings("unused")
-	private Class classofT;
-	
-	@SuppressWarnings("unchecked")
+
 	public IGACromosome[] select(IGACromosome[] pop, int pop_size) 
 								throws InstantiationException, IllegalAccessException {
 		
@@ -27,7 +24,7 @@ public class GARouletteSelection extends IGASelector{
 		
 		sel_super = new int[pop_size];
 		
-		new_pop = (IGACromosome[])Array.newInstance(IGACromosome.class, pop_size);
+		new_pop = new IGACromosome[pop_size];
 		for(int i=0; i < pop_size; i++) {
 			prob = IGARandom.getRDouble();
 			pos_super = 0;

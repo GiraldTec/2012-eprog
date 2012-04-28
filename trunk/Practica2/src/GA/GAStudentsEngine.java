@@ -30,8 +30,8 @@ public final class GAStudentsEngine extends IGAEngine {
 		fillerId = -1;
 		
 	/*	// crear función de selección
-		if (selectorName.equals("Ruleta"))
-			selector = new GARouletteSelection<Boolean>();
+		if (selectorName.equals("Ruleta"))*/
+			selector = new GARouletteSelection();/*
 		else if (selectorName.equals("Torneo Det"))
 			selector = new GATournametSelectionDet<Boolean>();
 		else if (selectorName.equals("Torneo Prob"))
@@ -39,10 +39,10 @@ public final class GAStudentsEngine extends IGAEngine {
 		else 
 			System.err.println("Error al elegir función de selección");
 						
-		// inicializar generación
+		// inicializar generación*/
 		current_Generation = 0;
-		
-		// inicializar array de población
+		/*
+		// inicializar array de población*/
 		population = new GAStudentCromosome[population_Size]; 
 		
 		// crear población inicial
@@ -55,14 +55,15 @@ public final class GAStudentsEngine extends IGAEngine {
 		elite = (GAStudentCromosome)population[0].clone();
 		
 		//crear el cruzador
-		if (crossName.equals("Monopunto"))
-			cruzador = new GABinaryMonoPointCross();
+	//	if (crossName.equals("Monopunto"))
+			cruzador = new GAStudentOrderCross();/*
 		else if (crossName.equals("Bipunto"))
 			cruzador = new GABinaryBiPointCross();
 		else
 			System.err.println("Error al crear función de cruce");*/
 		
 		//crear el mutador
+			
 	}
 	
 	public void loadConfig(String config) {
@@ -155,7 +156,7 @@ public final class GAStudentsEngine extends IGAEngine {
 			
 			for (int i=0; i < population_Size; i++) {
 				//METER EL TIPO DE LA MUTACIÓN Y LOS ESTUDIANTES
-				if (population[i].mutate(mutador)) {
+				if (population[i].mutate(mutador, prob_Mut)) {
 					population[i].calcBalance(students);
 					population[i].evaluate(incompatibilities);
 				}

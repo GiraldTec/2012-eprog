@@ -33,11 +33,6 @@ public class GAStudentCromosome extends IGACromosome implements Cloneable{
 		evaluate(incompatibilities);
 	}
 	
-	public void evaluate(int incompatibilities) {
-		// calcula fitness o adaptacion del cromosoma
-		//evaluatedValue = (Double) evalFunct.evaluate(numberGenes,fenotype);	// valor de la función a optimizar
-	}
-
 	@Override
 	public boolean equals(IGACromosome c) {
 		// TODO Auto-generated method stub
