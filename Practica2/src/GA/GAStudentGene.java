@@ -21,15 +21,11 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 		this.gen=students;
 	}
 
-	public Boolean mutate(IGAMutator mutator){
-		return mutator.mutate(this);
+	public Boolean mutate(IGAMutator mutator, double prob){
+		return mutator.mutate(this,prob);
 	}
 
-	public double calcBalance(ArrayList<GAStudent> students) {
-	
-		// TODO Auto-generated method stub
-		return 0;
-	}
+
 	
 	public GAStudentGene clone(){
 		return new GAStudentGene(this.gen.clone());
@@ -48,5 +44,17 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 			a[j] = a[i];
 			a[i] = aux;
 		}
+	}
+
+	@Override
+	public double evaluate(int incompatibilities, double evValue, int[] gen) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	public double calcBalance(ArrayList<GAStudent> students) {
+		
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

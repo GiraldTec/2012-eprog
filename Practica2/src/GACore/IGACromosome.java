@@ -14,10 +14,12 @@ public abstract class IGACromosome{
 	public abstract void initCromosome(ArrayList<GAStudent> students, int incompatibilities);	
 	public abstract IGACromosome clone();
 	public abstract boolean equals(IGACromosome c);
-	public abstract void evaluate(int incompatibilities);
+	public void evaluate(int incompatibilities){
+		evaluatedValue = gen.evaluate(incompatibilities, evaluatedValue, gen.getGen());
+	};
 	
-	public Boolean mutate(IGAMutator mutator){
-		return gen.mutate(mutator);
+	public Boolean mutate(IGAMutator mutator,double prob){
+		return gen.mutate(mutator,  prob);
 	}
 	
 	public void calcBalance(ArrayList<GAStudent> students){
