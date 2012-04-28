@@ -188,7 +188,7 @@ public final class GAStudentsEngine extends IGAEngine {
 					num_Sel_Cross++;
 				}
 			}
-			log.info("Engine: reproducePopulation1");
+			
 			// el numero de seleccionados se hace par
 			if ((num_Sel_Cross % 2) == 1)
 				num_Sel_Cross--;
@@ -199,13 +199,11 @@ public final class GAStudentsEngine extends IGAEngine {
 				GAStudentCromosome[] parents = new GAStudentCromosome[2];
 				parents[0] = (GAStudentCromosome) auxiliar_population[sel_Cross[i]];
 				parents[1] = (GAStudentCromosome) auxiliar_population[sel_Cross[i+1]];
-				log.info("Engine: evaluatePopulationA");
 				GAStudentCromosome[] descendientes = (GAStudentCromosome[]) cruzador.cross(parents);
 				// los nuevos individuos sustituyen a sus progenitores
 				auxiliar_population[sel_Cross[i]] = descendientes[0];
 				auxiliar_population[sel_Cross[i+1]] = descendientes[1];
 			}
-			log.info("Engine: reproducePopulation2");
 			
 			// si usamos elitismo sustituir a los peores individuos de la población por los hijos
 			if (useElitism) {
@@ -250,7 +248,6 @@ public final class GAStudentsEngine extends IGAEngine {
 					population[sel_Cross[i]]=auxiliar_population[sel_Cross[i]];
 				}
 			}
-			log.info("Engine: reproducePopulation3");
 		}	
 	
 	// Getters Setters ....
