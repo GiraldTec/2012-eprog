@@ -27,8 +27,6 @@ public abstract class IGAEngine {
 	protected String mutName; 			// funcion de mutación seleccionada en GUI
 	protected boolean useElitism=true;  // si usamos elitismo o no (via GUI)
 	
-	protected ArrayList<GAStudent> students;
-	protected int incompatibilities;
 	protected double alfaValue=0.5;
 	protected double selecParams=1.0;
 	protected double crossParams=1.0;

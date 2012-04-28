@@ -59,13 +59,20 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 	
 	public double calcBalance(ArrayList<GAStudent> students) {
 		double partialUnbal;
+		int count = 0;
+		
 		geneUnbalance = 0;
 		for (int i=0; i < students.size(); i++){
 			partialUnbal = 0.0f;
-			for (int j=0; j < groupSize; j++){
-				partialUnbal += students.get(i+j).getResult() - resultAverage;
+			if (count < groupSize) {
+				partialUnbal += students.get(i).getResult() - resultAverage;
+				count++;
 			}
-			geneUnbalance += Math.pow(partialUnbal, 2);
+			else { // fin de ese grupo
+				geneUnbalance += Math.pow(partialUnbal, 2);
+				partialUnbal = 0;
+				count = 0;
+			}			
 		}
 		return geneUnbalance;
 	}
