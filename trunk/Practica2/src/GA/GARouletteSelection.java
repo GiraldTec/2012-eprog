@@ -1,7 +1,5 @@
 package GA;
 
-import java.lang.reflect.Array;
-
 import GACore.IGACromosome;
 import GACore.IGARandom;
 import GACore.IGASelector;

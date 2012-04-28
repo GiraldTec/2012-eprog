@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PriorityQueue;
@@ -19,36 +18,42 @@ public final class GAStudentsEngine extends IGAEngine {
 	private int groupSize = 6;
 	private int fillerId = -1;
 	private String studentPath;
-	protected int incompatibilities;	
+	protected int incompatibilities;
+	protected double resultAverage;
 	
 	public void init()
-	{
-		int id;
-		
+	{		
 		students = new ArrayList<GAStudent>();
 		studentMap = new HashMap<Integer, Integer>();
 		fillerId = -1;
 		
-	/*	// crear función de selección
-		if (selectorName.equals("Ruleta"))*/
-			selector = new GARouletteSelection();/*
+		// crear función de selección
+		selector = new GARouletteSelection();
+		/*if (selectorName.equals("Ruleta"))
+			selector = new GARouletteSelection();
 		else if (selectorName.equals("Torneo Det"))
 			selector = new GATournametSelectionDet<Boolean>();
 		else if (selectorName.equals("Torneo Prob"))
 			selector = new GATournamentSelectionProb<Boolean>();
 		else 
-			System.err.println("Error al elegir función de selección");
+			System.err.println("Error al elegir función de selección");*/
+			
+		// cargar alumnos
+		loadStudents(studentPath);
+		
+		// calculamos la media de sus notas
+		calcAverageScore();
 						
-		// inicializar generación*/
+		// inicializar generación
 		current_Generation = 0;
-		/*
-		// inicializar array de población*/
+
+		// inicializar array de población
 		population = new GAStudentCromosome[population_Size]; 
 		
 		// crear población inicial
 		for (int i = 0; i < population_Size; i++) {
 			population[i] = new GAStudentCromosome();
-			((GAStudentCromosome)population[i]).initCromosome(students,incompatibilities);
+			((GAStudentCromosome)population[i]).initCromosome(students, incompatibilities, groupSize, resultAverage, alfaValue);
 		}
 		
 		// asignar un individuo elite inicial
@@ -137,21 +142,24 @@ public final class GAStudentsEngine extends IGAEngine {
 		}
 	}
 	
-	public void preloadStudents() {
-		
-		loadStudents(studentPath);
-	}
-	
 	/*public static void main(String[] args) {
 		GAStudentsEngine ga = new GAStudentsEngine();
 		ga.init();
 		ga.loadStudents("3.txt");
 	}*/
+	
+	private void calcAverageScore(){
+		double resultAvrg = 0;
+		for (int i=0; i<students.size(); i++){
+			resultAvrg += students.get(i).getResult();
+		}
+		resultAvrg /= students.size();
+		
+		resultAverage = resultAvrg;
+	}
 
 	
 	 protected void mutate(){
-			boolean hasMutated;
-
 			log.info("Engine: mutate");
 			
 			for (int i=0; i < population_Size; i++) {

@@ -1,7 +1,5 @@
 package GA;
 
-import java.util.Random;
-
 import GACore.IGACromosome;
 import GACore.IGACross;
 import GACore.IGARandom;

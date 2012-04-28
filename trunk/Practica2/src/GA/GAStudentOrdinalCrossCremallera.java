@@ -2,7 +2,6 @@ package GA;
 
 import GACore.IGACromosome;
 import GACore.IGACross;
-import GACore.IGARandom;
 
 public class GAStudentOrdinalCrossCremallera extends IGACross{
 
