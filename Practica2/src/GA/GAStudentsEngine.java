@@ -15,9 +15,9 @@ import GACore.IGARandom;
 public final class GAStudentsEngine extends IGAEngine {
 	private ArrayList<GAStudent> students;
 	private HashMap<Integer, Integer> studentMap;
-	private int groupSize = 6;
+	private int groupSize = 2;
 	private int fillerId = -1;
-	private String studentPath;
+	private String studentPath="1.txt";
 	protected int incompatibilities;
 	protected double resultAverage;
 	
