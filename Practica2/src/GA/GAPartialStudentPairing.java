@@ -1,11 +1,7 @@
 package GA;
 
-import java.util.Arrays;
-import java.util.HashSet;
-
 import GACore.IGACromosome;
 import GACore.IGACross;
-import GACore.IGAGene;
 import GACore.IGARandom;
 
 public class GAPartialStudentPairing extends IGACross{

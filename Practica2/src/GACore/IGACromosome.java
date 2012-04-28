@@ -11,11 +11,12 @@ public abstract class IGACromosome{
 	protected double score;
 	protected double acum_score;
 	
-	public abstract void initCromosome(ArrayList<GAStudent> students, int incompatibilities);	
+	public abstract void initCromosome(ArrayList<GAStudent> students, int incompatibilities, int groupSize, double resultAverage, double alpha);	
 	public abstract IGACromosome clone();
 	public abstract boolean equals(IGACromosome c);
+	
 	public void evaluate(int incompatibilities){
-		evaluatedValue = gen.evaluate(incompatibilities, evaluatedValue, gen.getGen());
+		evaluatedValue = gen.evaluate(incompatibilities);
 	};
 	
 	public Boolean mutate(IGAMutator mutator,double prob){

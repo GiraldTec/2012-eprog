@@ -39,6 +39,6 @@ public class MainAplication {
 		log.getHandlers()[0].setFormatter(myFormater);
 
 		// opciones: FINEST, FINER, FINE, INFO, CONFIG, WARNING, SEVERE
-		log.getHandlers()[0].setLevel(Level.OFF);
+		log.getHandlers()[0].setLevel(Level.INFO);
 	}
 }

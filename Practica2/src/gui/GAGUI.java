@@ -41,7 +41,6 @@ import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
-import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -57,7 +56,6 @@ import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.plot.CategoryMarker;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.math.plot.Plot2DPanel;
@@ -103,7 +101,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		panelResultados = new JPanel();
 		panelResultados.setLayout(new MigLayout("", "[center]"));
 		panelPruebas = new JPanel();
-		panelPruebas.setLayout(new MigLayout("debug, flowy", "[left]"));
+		panelPruebas.setLayout(new MigLayout("flowy", "[left]"));
 		
 		//WARN: No usar EXIT_ON_CLOSE, threads petan con Plot2DPanel y bugs del JVM
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

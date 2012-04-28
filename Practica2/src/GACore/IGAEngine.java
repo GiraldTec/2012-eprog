@@ -1,11 +1,8 @@
 package GACore;
-import GA.GAStudent;
-import GA.GAStudentCromosome;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.PriorityQueue;
 import java.util.logging.Logger;
+
+import GA.GAStudent;
 
 public abstract class IGAEngine {
 	protected IGACromosome[] population; 		// población
@@ -49,8 +46,7 @@ public abstract class IGAEngine {
 		double best_EvaluatedValue = 0; 	// mejor aptitud
 		double sum_EvaluatedValue = 0;	// suma de la aptitud
 		
-		log.info("Engine: evaluatePopulation");
-		
+		log.info("Engine: evaluatePopulation");		
 		
 		for (int i=0; i<population_Size; i++) {
 			sum_EvaluatedValue = sum_EvaluatedValue + population[i].getEvaluatedValue();	

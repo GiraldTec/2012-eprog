@@ -12,7 +12,6 @@ import GACore.IGAEngine;
  */
 
 class GAStepThread extends SwingWorker<Void, Void> {
-	@SuppressWarnings("rawtypes")
 	IGAEngine gaEngine;
 	double dataAbsoluteBest[];
 	double dataGenerationBest[];
@@ -20,7 +19,6 @@ class GAStepThread extends SwingWorker<Void, Void> {
 	double dataGenerationCount[];
 	int progress;
 	
-	@SuppressWarnings("rawtypes")
 	public GAStepThread (IGAEngine gaEngine, Object dataAbsoluteBest2, Object dataGenerationAverage2, Object dataGenerationBest2, Object dataGenerationCount2) {
 		this.gaEngine = gaEngine;
 		this.dataAbsoluteBest = (double[])dataAbsoluteBest2;

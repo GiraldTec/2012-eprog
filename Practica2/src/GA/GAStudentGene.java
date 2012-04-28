@@ -1,15 +1,23 @@
 package GA;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import GACore.IGAGene;
 import GACore.IGAMutator;
 import GACore.IGARandom;
 
 public class GAStudentGene extends IGAGene implements Cloneable{
-
-	public GAStudentGene(int numberStudents){
+	private int groupSize;
+	private int numberStudents;
+	private double resultAverage;
+	private double alphaValue;
+	private double geneUnbalance;
+	
+	public GAStudentGene(int numberStudents, int groupSize, double resultAverage, double alpha){
+		this.groupSize = groupSize;
+		this.numberStudents = numberStudents;
+		this.resultAverage = resultAverage;
+		alphaValue = alpha;
 		gen = new int[numberStudents];
 		for (int i=0;i<numberStudents;i++){
 			gen[i]=i;
@@ -24,8 +32,6 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 	public Boolean mutate(IGAMutator mutator, double prob){
 		return mutator.mutate(this,prob);
 	}
-
-
 	
 	public GAStudentGene clone(){
 		return new GAStudentGene(this.gen.clone());
@@ -47,14 +53,20 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 	}
 
 	@Override
-	public double evaluate(int incompatibilities, double evValue, int[] gen) {
-		// TODO Auto-generated method stub
-		return 0;
+	public double evaluate(int incompatibilities) {
+		return alphaValue * geneUnbalance + ((1 - alphaValue) * incompatibilities);
 	}
 	
 	public double calcBalance(ArrayList<GAStudent> students) {
-		
-		// TODO Auto-generated method stub
-		return 0;
+		double partialUnbal;
+		geneUnbalance = 0;
+		for (int i=0; i < students.size(); i++){
+			partialUnbal = 0.0f;
+			for (int j=0; j < groupSize; j++){
+				partialUnbal += students.get(i+j).getResult() - resultAverage;
+			}
+			geneUnbalance += Math.pow(partialUnbal, 2);
+		}
+		return geneUnbalance;
 	}
 }
