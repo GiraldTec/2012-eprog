@@ -6,6 +6,7 @@ public class GAMutatorInversion extends IGAMutator{
 
 	@Override
 	public Boolean mutate(IGAGene gen, double prob) {
+		System.out.print("entraamos a mutar");
 		Boolean res = new Boolean(false);
 		if(IGARandom.getRDouble()<prob){
 			int[] auxGen = gen.getGen().clone();
