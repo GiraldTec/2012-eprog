@@ -55,7 +55,8 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 	}
 
 	@Override
-	public double evaluate() {
+	public double evaluate(ArrayList<GAStudent> students) {
+		incompatibilities = countIncompatibilities (students);
 		return alphaValue * geneUnbalance + ((1 - alphaValue) * incompatibilities);
 	}
 	
@@ -79,5 +80,23 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 		return geneUnbalance;
 		
 	
+	}
+	
+	
+	public int countIncompatibilities (ArrayList<GAStudent> students){
+		
+		int[][] genOrdenado = new int[gen.length/groupSize][groupSize]; // genOrdenado[i][j] == el estudiante de nombre [i][j] en el grupo i
+		int numGrupos = gen.length/groupSize;
+		
+		for (int recorredor =0;recorredor<gen.length;recorredor++){
+			genOrdenado[recorredor/groupSize][recorredor%groupSize]= gen[recorredor];
+		}
+		
+		for(int i=0;i<numGrupos;i++){
+			
+		}
+		
+		
+		return 0;
 	}
 }

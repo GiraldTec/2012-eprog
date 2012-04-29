@@ -27,7 +27,7 @@ public class GAStudentCromosome extends IGACromosome implements Cloneable{
 		// calcular balance
 		calcBalance(students);
 		// calcular la funcion de evaluacion
-		evaluate();
+		evaluate(students);
 	}
 	
 	@Override
