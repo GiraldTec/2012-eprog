@@ -53,7 +53,7 @@ public final class GAStudentsEngine extends IGAEngine {
 		// crear población inicial
 		for (int i = 0; i < population_Size; i++) {
 			population[i] = new GAStudentCromosome();
-			((GAStudentCromosome)population[i]).initCromosome(students, incompatibilities, groupSize, resultAverage, alfaValue);
+			((GAStudentCromosome)population[i]).initCromosome(students, groupSize, resultAverage, alfaValue);
 		}
 		
 		// asignar un individuo elite inicial
