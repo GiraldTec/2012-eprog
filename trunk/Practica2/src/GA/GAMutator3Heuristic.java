@@ -82,7 +82,7 @@ public class GAMutator3Heuristic extends IGAMutator{
 			GAStudentGene mejorGen = (GAStudentGene) gen;
 			while( genSet.iterator().hasNext() ){
 				GAStudentGene auxgen = genSet.iterator().next();
-				if (auxgen.evaluate()>mejorV) mejorGen = auxgen;				
+				if (auxgen.evaluate()<mejorV) mejorGen = auxgen;				
 			}
 			gen=mejorGen;
 			res= !res;
