@@ -68,8 +68,7 @@ public final class GAStudentsEngine extends IGAEngine {
 			System.err.println("Error al crear función de cruce");*/
 		
 		//crear el mutador
-			
-			mutador = new GAMutatorInversion();
+		mutador = new GAMutatorInsertion();
 			
 	}
 	
@@ -90,7 +89,7 @@ public final class GAStudentsEngine extends IGAEngine {
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			String strLine, data[];
 			GAStudent student;
-			int numRestrictions;
+			int numRestrictions, number_of_students;
 
 			// Read first line: | Num Students | Num restrictions | 
 			strLine = br.readLine();
@@ -98,13 +97,8 @@ public final class GAStudentsEngine extends IGAEngine {
 
 			//log.info("Num estudiantes: "+ data[0] + "\nNum restricciones: " + data[1]);
 			System.out.println("Num estudiantes: "+ data[0] + "\nNum restricciones: " + data[1]);
-/*******AQUI RICKY!!*********/
-			population_Size =10;
 			
-			
-			int number_of_students = Integer.parseInt(data[0]);
-		
-			
+			number_of_students = Integer.parseInt(data[0]);		
 			numRestrictions = Integer.parseInt(data[1]);
 
 			// Read Student data: | ID | Result |
@@ -213,7 +207,7 @@ public final class GAStudentsEngine extends IGAEngine {
 			}
 			
 			// si usamos elitismo sustituir a los peores individuos de la población por los hijos
-			if (useElitism) {
+			/*if (useElitism) {
 				@SuppressWarnings("rawtypes")
 				class Struct implements Comparable {
 					private double aptitud;
@@ -248,12 +242,13 @@ public final class GAStudentsEngine extends IGAEngine {
 				for(int i=0;i<num_Sel_Cross;i++){
 					population[rank.poll().possition]=auxiliar_population[sel_Cross[i]];
 				}
-			}
+			}*/
+			
 			// si no usamos elitismo sustituir padres por hijos directamente
-			else {
+			//else {
 				for(int i=0;i<num_Sel_Cross;i++){
 					population[sel_Cross[i]]=auxiliar_population[sel_Cross[i]];
-				}
+			//	}
 			}
 		}	
 	
