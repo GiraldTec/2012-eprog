@@ -63,7 +63,7 @@ public abstract class IGAEngine {
 			population[i].setScore(population[i].getEvaluatedValue() / sum_EvaluatedValue);
 			population[i].setAcum_Score(population[i].getScore() + acum_Score);
 			acum_Score = acum_Score + population[i].getScore();
-			log.info("Cromosome "+i+": "+"Aptitud="+population[i].getEvaluatedValue()+
+			log.info("Cromosome "+i+population[i].getGene().getGen()+"Unbalance="+population[i].getUnbalance()+"EvaluatedValue="+population[i].getEvaluatedValue()+
 					" | Score="+population[i].getScore()) ;
 		}
 	}
