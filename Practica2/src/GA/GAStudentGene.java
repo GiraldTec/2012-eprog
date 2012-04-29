@@ -66,7 +66,8 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 		geneUnbalance = 0;
 		for (int i=0; i < students.size(); i++){
 			if (count < groupSize) {
-				partialUnbal += students.get(i).getResult() - resultAverage;
+				int j = gen[i];
+				partialUnbal += students.get(j).getResult() - resultAverage;
 				count++;
 			}
 			else { // fin de ese grupo
@@ -76,5 +77,7 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 			}			
 		}
 		return geneUnbalance;
+		
+	
 	}
 }

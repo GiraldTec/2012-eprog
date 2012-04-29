@@ -69,6 +69,8 @@ public final class GAStudentsEngine extends IGAEngine {
 		
 		//crear el mutador
 			
+			mutador = new GAMutatorInversion();
+			
 	}
 	
 	public void loadConfig(String config) {
@@ -80,7 +82,7 @@ public final class GAStudentsEngine extends IGAEngine {
 		try{
 
 			if (path.isEmpty())
-				path  = "1.txt";
+				path  = "p.txt";
 
 			// Open the file
 			FileInputStream fstream = new FileInputStream("data/" + path);
@@ -96,12 +98,17 @@ public final class GAStudentsEngine extends IGAEngine {
 
 			//log.info("Num estudiantes: "+ data[0] + "\nNum restricciones: " + data[1]);
 			System.out.println("Num estudiantes: "+ data[0] + "\nNum restricciones: " + data[1]);
-
-			population_Size = Integer.parseInt(data[0]);
+/*******AQUI RICKY!!*********/
+			population_Size =10;
+			
+			
+			int number_of_students = Integer.parseInt(data[0]);
+		
+			
 			numRestrictions = Integer.parseInt(data[1]);
 
 			// Read Student data: | ID | Result |
-			for (int i=0; i<population_Size; i++) {
+			for (int i=0; i<number_of_students; i++) {
 				strLine = br.readLine();
 				data = strLine.split(" ");
 
@@ -126,13 +133,13 @@ public final class GAStudentsEngine extends IGAEngine {
 			}	
 
 			// Add filler students
-			while (population_Size % groupSize != 0){
+			while (number_of_students % groupSize != 0){
 				student = new GAStudent(fillerId, 0.0);
 				studentMap.put(student.getId(), students.size());
 				students.add(student);
 				System.out.println("Num filler student: " + fillerId);
 				fillerId--;
-				population_Size++;
+				number_of_students++;
 			}
 
 			// Close the input stream
