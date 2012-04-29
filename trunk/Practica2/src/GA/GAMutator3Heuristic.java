@@ -1,5 +1,6 @@
 package GA;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import GACore.IGAGene;
@@ -10,6 +11,11 @@ import GACore.IGARandom;
 public class GAMutator3Heuristic extends IGAMutator{
 
 	GAStudentsEngine engine;
+	ArrayList<GAStudent> students;
+	
+	public void getExtraParams(ArrayList<GAStudent> students){
+		this.students=students;
+	}
 	
 	public Boolean mutate(IGAGene gen, double prob) {
 		Boolean res = new Boolean(false);
@@ -41,6 +47,7 @@ public class GAMutator3Heuristic extends IGAMutator{
 			pDes1[indices[1]]=valores[1];
 			pDes1[indices[2]]=valores[2];
 			GAStudentGene desGen1 = new GAStudentGene(pDes1);
+			desGen1.calcBalance(students);
 			genSet.add(desGen1);
 			
 			int[] pDes2 = gen.getGen().clone();
@@ -48,6 +55,7 @@ public class GAMutator3Heuristic extends IGAMutator{
 			pDes2[indices[1]]=valores[2];
 			pDes2[indices[2]]=valores[1];
 			GAStudentGene desGen2 = new GAStudentGene(pDes2);
+			desGen2.calcBalance(students);
 			genSet.add(desGen2);
 			
 			int[] pDes3 = gen.getGen().clone();
@@ -55,6 +63,7 @@ public class GAMutator3Heuristic extends IGAMutator{
 			pDes3[indices[1]]=valores[0];
 			pDes3[indices[2]]=valores[2];
 			GAStudentGene desGen3 = new GAStudentGene(pDes3);
+			desGen3.calcBalance(students);
 			genSet.add(desGen3);
 			
 			int[] pDes4 = gen.getGen().clone();
@@ -62,6 +71,7 @@ public class GAMutator3Heuristic extends IGAMutator{
 			pDes4[indices[1]]=valores[2];
 			pDes4[indices[2]]=valores[0];
 			GAStudentGene desGen4 = new GAStudentGene(pDes4);
+			desGen4.calcBalance(students);
 			genSet.add(desGen4);
 			
 			int[] pDes5 = gen.getGen().clone();
@@ -69,6 +79,7 @@ public class GAMutator3Heuristic extends IGAMutator{
 			pDes5[indices[1]]=valores[0];
 			pDes5[indices[2]]=valores[1];
 			GAStudentGene desGen5 = new GAStudentGene(pDes5);
+			desGen5.calcBalance(students);
 			genSet.add(desGen5);
 			
 			int[] pDes6 = gen.getGen().clone();
@@ -76,13 +87,14 @@ public class GAMutator3Heuristic extends IGAMutator{
 			pDes6[indices[1]]=valores[1];
 			pDes6[indices[2]]=valores[0];
 			GAStudentGene desGen6 = new GAStudentGene(pDes6);
+			desGen6.calcBalance(students);
 			genSet.add(desGen6);
 			
-			double mejorV = gen.evaluate();
+			double mejorV = gen.evaluate(this.students);
 			GAStudentGene mejorGen = (GAStudentGene) gen;
 			while( genSet.iterator().hasNext() ){
 				GAStudentGene auxgen = genSet.iterator().next();
-				if (auxgen.evaluate()<mejorV) mejorGen = auxgen;				
+				if (auxgen.evaluate(this.students)<mejorV) mejorGen = auxgen;				
 			}
 			gen=mejorGen;
 			res= !res;

@@ -9,7 +9,8 @@ public abstract class IGAGene {
 	
 	public abstract Boolean mutate(IGAMutator mutator, double prob);
 	public abstract double calcBalance(ArrayList<GAStudent> students);
-	public abstract double evaluate();
+	public abstract double evaluate(ArrayList<GAStudent> students);
+	
 	
 	public int[] getGen() {
 		return gen;
