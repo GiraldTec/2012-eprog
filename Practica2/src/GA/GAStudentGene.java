@@ -14,11 +14,11 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 	private double geneUnbalance;
 	private int incompatibilities;
 	
-	public GAStudentGene(int numberStudents, int groupSize, double resultAverage, double alpha, int incompatibilities){
+	public GAStudentGene(int numberStudents, int groupSize, double resultAverage, double alpha){
 		this.groupSize = groupSize;
 		this.numberStudents = numberStudents;
 		this.resultAverage = resultAverage;
-		this.incompatibilities = incompatibilities;
+		this.incompatibilities = 0;
 		alphaValue = alpha;
 		gen = new int[numberStudents];
 		for (int i=0;i<numberStudents;i++){
@@ -93,7 +93,18 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 		}
 		
 		for(int i=0;i<numGrupos;i++){
-			
+			ArrayList<Integer> grupoEnSi = new ArrayList<Integer>();
+			for(int j=0;j<groupSize;j++){//recorriendo el grupo para meterlo en un ArrayList		
+				grupoEnSi.add(genOrdenado[i][j]);
+			}
+			for(int j=0;j<groupSize;j++){// recorremos ahora para examinar la lista de haters de cada miembro
+				GAStudent auxEstudiante = students.get(genOrdenado[i][j]);
+				while (auxEstudiante.getHaters().iterator().hasNext()){ // recorremos la lista de haters
+					if(grupoEnSi.contains(auxEstudiante.getHaters().iterator().next())){
+						incompatibilities++;
+					}
+				}
+			}
 		}
 		
 		
