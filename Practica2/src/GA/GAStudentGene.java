@@ -1,6 +1,7 @@
 package GA;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import GACore.IGAGene;
 import GACore.IGAMutator;
@@ -56,7 +57,7 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 
 	@Override
 	public double evaluate(ArrayList<GAStudent> students) {
-		incompatibilities = countIncompatibilities (students);
+		countIncompatibilities (students);
 		return alphaValue * geneUnbalance + ((1 - alphaValue) * incompatibilities);
 	}
 	
@@ -83,31 +84,35 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 	}
 	
 	
-	public int countIncompatibilities (ArrayList<GAStudent> students){
-		
+	public void countIncompatibilities (ArrayList<GAStudent> students){
+		int idHater;
 		int[][] genOrdenado = new int[gen.length/groupSize][groupSize]; // genOrdenado[i][j] == el estudiante de nombre [i][j] en el grupo i
+		int[][] genOrdenadoIds = new int[gen.length/groupSize][groupSize]; 
 		int numGrupos = gen.length/groupSize;
 		
-		for (int recorredor =0;recorredor<gen.length;recorredor++){
+		for (int recorredor = 0; recorredor < gen.length; recorredor++){
 			genOrdenado[recorredor/groupSize][recorredor%groupSize]= gen[recorredor];
+			genOrdenadoIds[recorredor/groupSize][recorredor%groupSize]= students.get(gen[recorredor]).getId();
 		}
 		
-		for(int i=0;i<numGrupos;i++){
+		for(int i=0; i<numGrupos; i++){
 			ArrayList<Integer> grupoEnSi = new ArrayList<Integer>();
-			for(int j=0;j<groupSize;j++){//recorriendo el grupo para meterlo en un ArrayList		
-				grupoEnSi.add(genOrdenado[i][j]);
+			//recorriendo el grupo para meterlo en un ArrayList	
+			for(int j=0; j<groupSize; j++){	
+				grupoEnSi.add(genOrdenadoIds[i][j]);
 			}
-			for(int j=0;j<groupSize;j++){// recorremos ahora para examinar la lista de haters de cada miembro
-				GAStudent auxEstudiante = students.get(genOrdenado[i][j]);
-				while (auxEstudiante.getHaters().iterator().hasNext()){ // recorremos la lista de haters
-					if(grupoEnSi.contains(auxEstudiante.getHaters().iterator().next())){
+			// recorremos ahora para examinar la lista de haters de cada miembro
+			for(int k=0; k<groupSize; k++){
+				GAStudent auxEstudiante = students.get(genOrdenado[i][k]);
+				// recorremos la lista de haters
+				Iterator<Integer> iterHaters = auxEstudiante.getHaters().iterator();
+				while (iterHaters.hasNext()){
+					idHater = iterHaters.next();
+					if(grupoEnSi.contains(idHater)) {
 						incompatibilities++;
 					}
 				}
 			}
 		}
-		
-		
-		return 0;
 	}
 }
