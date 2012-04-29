@@ -24,20 +24,36 @@ public class GAStudentOrderCross extends IGACross {
 			genD1[i]=genD2[i]=-1;
 		}
 		
-		for(int i=indexA;i<=indexB;i++){
+		for(int i=indexA;i<indexB;i++){
 			genD1[i]=parent2.getGene().getGen()[i];
 			genD2[i]=parent1.getGene().getGen()[i];
 		}
-		int recorredor=indexB;
-		while(recorredor!=indexB-1){
-			if(!pertenece(parent1.getGene().getGen()[recorredor],genD1))
-				genD1[recorredor]=parent1.getGene().getGen()[recorredor];
-			if(!pertenece(parent2.getGene().getGen()[recorredor],genD2))
-				genD2[recorredor]=parent2.getGene().getGen()[recorredor];
+		int recorredorHijo=indexB;
+		int recorredorPadre = indexB;
+		while(recorredorHijo!=indexB-1){
 			
-			recorredor++;
-			recorredor=(recorredor % genLength);
+			if(!pertenece(parent1.getGene().getGen()[recorredorPadre],genD1)){
+				genD1[recorredorHijo]=parent1.getGene().getGen()[recorredorPadre];
+				recorredorHijo++;
+				recorredorHijo = (recorredorHijo % genLength);
+			}
+			recorredorPadre++;
+			recorredorPadre = (recorredorPadre % genLength);
 		}
+		recorredorHijo=indexB;
+		recorredorPadre = indexB;
+		while(recorredorHijo!=indexB-1){
+			
+			if(!pertenece(parent2.getGene().getGen()[recorredorPadre],genD2)){
+				genD2[recorredorHijo]=parent2.getGene().getGen()[recorredorPadre];
+				recorredorHijo++;
+				recorredorHijo = (recorredorHijo % genLength);
+			}
+			recorredorPadre++;
+			recorredorPadre = (recorredorPadre % genLength);
+		}
+		
+		
 		
 		GAStudentCromosome[] descendientes= new GAStudentCromosome[2];
 		descendientes[0]= new GAStudentCromosome();
