@@ -14,6 +14,7 @@ public abstract class IGACromosome{
 	public abstract void initCromosome(ArrayList<GAStudent> students, int groupSize, double resultAverage, double alpha);	
 	public abstract IGACromosome clone();
 	public abstract boolean equals(IGACromosome c);
+	public abstract void loadCromosome(ArrayList<GAStudent> students);
 	
 	public void evaluate(ArrayList<GAStudent> students){
 		evaluatedValue = gen.evaluate(students);

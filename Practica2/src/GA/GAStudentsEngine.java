@@ -203,7 +203,9 @@ public final class GAStudentsEngine extends IGAEngine {
 				GAStudentCromosome[] descendientes = (GAStudentCromosome[]) cruzador.cross(parents);
 				// los nuevos individuos sustituyen a sus progenitores
 				auxiliar_population[sel_Cross[i]] = descendientes[0];
+				auxiliar_population[sel_Cross[i]].loadCromosome(students);
 				auxiliar_population[sel_Cross[i+1]] = descendientes[1];
+				auxiliar_population[sel_Cross[i+1]].loadCromosome(students);
 			}
 			
 			// si usamos elitismo sustituir a los peores individuos de la población por los hijos
