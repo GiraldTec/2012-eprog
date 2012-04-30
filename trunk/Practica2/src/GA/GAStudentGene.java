@@ -133,7 +133,8 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 	public int getGroupSize() {
 		return groupSize;
 	}
-
-
+	public int getIncompatibilities() {
+		return incompatibilities;
+	}
 	
 }

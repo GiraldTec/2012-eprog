@@ -22,7 +22,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -60,6 +63,7 @@ import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.math.plot.Plot2DPanel;
 
+import GA.GAStudentGene;
 import GA.GAStudentsEngine;
 import GACore.IGAEngine;
 import GACore.IGARandom;
@@ -277,17 +281,26 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 								pGraphic.addLinePlot("Mejor de la Generación", Color.red, dataGenerationCount, dataGenerationBest);
 								pGraphic.addLinePlot("Media de la Generación", Color.green, dataGenerationCount, dataGenerationAverage);
 								
-								int count = 1;
+								int count = 1, pos;
 						    	String category;
 						    	dataset.clear();
 						    	GAStudentsEngine studEng = (GAStudentsEngine) gaEngine;
 						    	CategoryPlot plot = resultsChart.getCategoryPlot();
+						    	Stroke stroke = new BasicStroke();
+						        plot.addDomainMarker(new CategoryMarker("G3", Color.red, stroke, Color.black, stroke, 0.4f)); 
 						    	plot.clearDomainMarkers();
+						    	
 								for (int i=0; i < studEng.getStudents().size(); i++){
+									pos = gaEngine.getAbsoluteBest().getGene().getGen()[i];
 									category = "G" + ((int) Math.floor(i/studEng.getGroupSize()));
-									System.out.println(i +" | "+ count +" | "+ category + " | " +studEng.getStudents().get(i).getResult());
-									dataset.addValue(studEng.getStudents().get(i).getResult(), category + "." + count, category);
+									
+									System.out.println(i +" | "+ count+" | "+ pos +" | "+ category + " | " +studEng.getStudents().get(i).getResult());
+									
+									dataset.addValue(studEng.getStudents().get(pos).getResult(), category + "." + count, category);
 							        plot.getRenderer().setSeriesPaint(i, linearGradient(new Color(65, 105, 225), new Color(135, 206, 250), studEng.getGroupSize(), count));
+							        
+							        if (((GAStudentGene) gaEngine.getAbsoluteBest().getGene()).getIncompatibilities() > 0)
+							        	((CategoryPlot) resultsChart.getPlot()).addDomainMarker(new CategoryMarker(category, Color.red, stroke, Color.black, stroke, 0.4f));
 							        
 									if (count < studEng.getGroupSize()) {
 										count++;
