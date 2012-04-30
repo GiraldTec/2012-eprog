@@ -83,6 +83,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	private double[] dataGenerationCount;
 	private Plot2DPanel pGraphic;
 	private Plot2DPanel pGraphicPruebsAuto;
+	private JFreeChart resultsChart;
 	private JProgressBar progBar;
 	private ChoiceOption<IGAEngine> functChoiceOpt;
 	private DoubleOption<IGAEngine> paramsSelecDouble;
@@ -90,7 +91,9 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	private DoubleOption<IGAEngine> paramsMutDouble;
 	private int selectedMaxVal=0;
 	private int selectedIncrement=0;
+	private DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 	public String configData;
+	
 	
 	public GAGUI(final IGAEngine gaEngine) {
 		super("Programación Evolutiva - Práctica 2");
@@ -273,6 +276,25 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 								pGraphic.addLinePlot("Mejor Absoluto", Color.blue, dataGenerationCount,	dataAbsoluteBest);
 								pGraphic.addLinePlot("Mejor de la Generación", Color.red, dataGenerationCount, dataGenerationBest);
 								pGraphic.addLinePlot("Media de la Generación", Color.green, dataGenerationCount, dataGenerationAverage);
+								
+								int count = 0;
+						    	String category = "G0";
+						    	dataset.clear();
+						    	GAStudentsEngine studEng = (GAStudentsEngine) gaEngine;
+						    	CategoryPlot plot = resultsChart.getCategoryPlot();
+						    	plot.clearDomainMarkers();
+								for (int i=0; i < studEng.getStudents().size(); i++){
+									dataset.addValue(studEng.getStudents().get(i).getResult(), category + "." + count, category);
+							        plot.getRenderer().setSeriesPaint(i, linearGradient(new Color(65, 105, 225), new Color(135, 206, 250), studEng.getGroupSize(), count));
+							        
+									if (count < studEng.getGroupSize()) {
+										count++;
+									}
+									else { // fin de ese grupo
+										category = "G" + ((int) Math.floor(i/studEng.getGroupSize()));
+										count = 0;
+									}									
+								}
 							} catch (Exception e) {
 								JOptionPane.showMessageDialog(GAGUI.this, "Error", "Hubo un error durante la evolución.", JOptionPane.ERROR_MESSAGE);
 							}
@@ -326,8 +348,8 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		panelResultados.add(new JLabel("Solución encontrada"), "split, gaptop 10");
 		panelResultados.add(new JSeparator(), "growx, wrap, gaptop 10");
 		
-		// create the dataset...
-        final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+		// clear the dataset...
+		dataset.clear();
         
         // Set random data for now
         int numGroups = 20;
@@ -337,9 +359,9 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         	dataset.addValue(IGARandom.getRInt(10)+5, "Listo", category);
         	dataset.addValue(IGARandom.getRInt(10)+5, "Normal", category);
         	dataset.addValue(IGARandom.getRInt(10)+5, "Subnormal", category);
-        }
+        }            
         		
-        JFreeChart chart = ChartFactory.createStackedBarChart(
+        resultsChart = ChartFactory.createStackedBarChart(
 		//JFreeChart chart = ChartFactory.createStackedBarChart3D (
 	            "Grupos Solución",        // chart title
 	            "Número de grupo",        // domain axis label
@@ -350,9 +372,9 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	            true,                     // tooltips?
 	            false                     // URLs?
 	        );
-        chart.setBackgroundPaint(new Color(58,58,58));
+        resultsChart.setBackgroundPaint(new Color(58,58,58));
                 		
-		final CategoryPlot plot = chart.getCategoryPlot();
+		final CategoryPlot plot = resultsChart.getCategoryPlot();
         plot.setBackgroundPaint(Color.white);
         plot.setRangeGridlinePaint(Color.lightGray);
         
@@ -385,7 +407,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         plot.getDomainAxis().setTickLabelPaint(Color.white);
         plot.getDomainAxis().setTickMarkPaint(Color.white);
         
-        chart.getTitle().setPaint(Color.white);
+        resultsChart.getTitle().setPaint(Color.white);
         
         renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
         
@@ -393,10 +415,10 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         format.setMaximumFractionDigits(2);
         renderer.setBaseItemLabelsVisible(true);
 
-		ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(825, 270));
+		ChartPanel chartPanel = new ChartPanel(resultsChart);
+        chartPanel.setPreferredSize(new Dimension(825, 500));
         panelResultados.add(chartPanel, "gaptop 20");
-        
+                        
         //********** PANEL PRUEBAS AUTOMÁTICAS **************************************//
                 
         JLabel titleLabel = new JLabel("Pruebas Automáticas:");
