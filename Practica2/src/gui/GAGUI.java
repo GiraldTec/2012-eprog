@@ -277,13 +277,15 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 								pGraphic.addLinePlot("Mejor de la Generación", Color.red, dataGenerationCount, dataGenerationBest);
 								pGraphic.addLinePlot("Media de la Generación", Color.green, dataGenerationCount, dataGenerationAverage);
 								
-								int count = 0;
-						    	String category = "G0";
+								int count = 1;
+						    	String category;
 						    	dataset.clear();
 						    	GAStudentsEngine studEng = (GAStudentsEngine) gaEngine;
 						    	CategoryPlot plot = resultsChart.getCategoryPlot();
 						    	plot.clearDomainMarkers();
 								for (int i=0; i < studEng.getStudents().size(); i++){
+									category = "G" + ((int) Math.floor(i/studEng.getGroupSize()));
+									System.out.println(i +" | "+ count +" | "+ category + " | " +studEng.getStudents().get(i).getResult());
 									dataset.addValue(studEng.getStudents().get(i).getResult(), category + "." + count, category);
 							        plot.getRenderer().setSeriesPaint(i, linearGradient(new Color(65, 105, 225), new Color(135, 206, 250), studEng.getGroupSize(), count));
 							        
@@ -291,8 +293,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 										count++;
 									}
 									else { // fin de ese grupo
-										category = "G" + ((int) Math.floor(i/studEng.getGroupSize()));
-										count = 0;
+										count = 1;
 									}									
 								}
 							} catch (Exception e) {
@@ -349,7 +350,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		panelResultados.add(new JSeparator(), "growx, wrap, gaptop 10");
 		
 		// clear the dataset...
-		dataset.clear();
+		/*dataset.clear();
         
         // Set random data for now
         int numGroups = 20;
@@ -359,7 +360,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         	dataset.addValue(IGARandom.getRInt(10)+5, "Listo", category);
         	dataset.addValue(IGARandom.getRInt(10)+5, "Normal", category);
         	dataset.addValue(IGARandom.getRInt(10)+5, "Subnormal", category);
-        }            
+        }           */ 
         		
         resultsChart = ChartFactory.createStackedBarChart(
 		//JFreeChart chart = ChartFactory.createStackedBarChart3D (
@@ -374,7 +375,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	        );
         resultsChart.setBackgroundPaint(new Color(58,58,58));
                 		
-		final CategoryPlot plot = resultsChart.getCategoryPlot();
+		/*final CategoryPlot plot = resultsChart.getCategoryPlot();
         plot.setBackgroundPaint(Color.white);
         plot.setRangeGridlinePaint(Color.lightGray);
         
@@ -392,28 +393,30 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         
         Marker marker = new ValueMarker(5.0);
         marker.setPaint(Color.red);
-        plot.addRangeMarker(marker);*/
+        plot.addRangeMarker(marker);
         
         Stroke stroke = new BasicStroke();
         plot.addDomainMarker(new CategoryMarker("G3", Color.red, stroke, Color.black, stroke, 0.4f)); 
-        plot.addDomainMarker(new CategoryMarker("G14", Color.red, stroke, Color.black, stroke, 0.4f));
+        plot.addDomainMarker(new CategoryMarker("G14", Color.red, stroke, Color.black, stroke, 0.4f));*/
         
-        plot.getRangeAxis().setAxisLinePaint(Color.white);
-        plot.getRangeAxis().setLabelPaint(Color.white);
-        plot.getRangeAxis().setTickLabelPaint(Color.white);
-        plot.getRangeAxis().setTickMarkPaint(Color.white);
-        plot.getDomainAxis().setAxisLinePaint(Color.white);
-        plot.getDomainAxis().setLabelPaint(Color.white);
-        plot.getDomainAxis().setTickLabelPaint(Color.white);
-        plot.getDomainAxis().setTickMarkPaint(Color.white);
+        resultsChart.getCategoryPlot().setBackgroundPaint(Color.white);
+        resultsChart.getCategoryPlot().setRangeGridlinePaint(Color.lightGray);        
+        resultsChart.getCategoryPlot().getRangeAxis().setAxisLinePaint(Color.white);
+        resultsChart.getCategoryPlot().getRangeAxis().setLabelPaint(Color.white);
+        resultsChart.getCategoryPlot().getRangeAxis().setTickLabelPaint(Color.white);
+        resultsChart.getCategoryPlot().getRangeAxis().setTickMarkPaint(Color.white);
+        resultsChart.getCategoryPlot().getDomainAxis().setAxisLinePaint(Color.white);
+        resultsChart.getCategoryPlot().getDomainAxis().setLabelPaint(Color.white);
+        resultsChart.getCategoryPlot().getDomainAxis().setTickLabelPaint(Color.white);
+        resultsChart.getCategoryPlot().getDomainAxis().setTickMarkPaint(Color.white);
         
         resultsChart.getTitle().setPaint(Color.white);
         
-        renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+        resultsChart.getCategoryPlot().getRenderer().setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
         
         NumberFormat format = NumberFormat.getNumberInstance();
         format.setMaximumFractionDigits(2);
-        renderer.setBaseItemLabelsVisible(true);
+        resultsChart.getCategoryPlot().getRenderer().setBaseItemLabelsVisible(true);
 
 		ChartPanel chartPanel = new ChartPanel(resultsChart);
         chartPanel.setPreferredSize(new Dimension(825, 500));
