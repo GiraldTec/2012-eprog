@@ -2,6 +2,7 @@ package GA;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import GACore.IGAGene;
 import GACore.IGAMutator;
@@ -33,9 +34,11 @@ public class GAMutator3Heuristic extends IGAMutator{
 				}
 			}
 			i=0;
-			while (miniSet.iterator().hasNext()){
-				indices[i]=miniSet.iterator().next().intValue();
+			Iterator<Integer> iterador = miniSet.iterator();
+			while (iterador.hasNext()){
+				indices[i]=iterador.next().intValue();
 				valores[i]=gen.getGen()[indices[i]];
+				i++;
 			}
 			
 			// Las 6 posibles combinaciones de los tres indices en forma de genes:
@@ -98,8 +101,9 @@ public class GAMutator3Heuristic extends IGAMutator{
 			
 			double mejorV = gen.evaluate(this.students);
 			GAStudentGene mejorGen = (GAStudentGene) gen;
-			while( genSet.iterator().hasNext() ){
-				GAStudentGene auxgen = genSet.iterator().next();
+			Iterator<GAStudentGene> gSetIterador = genSet.iterator();
+			while( gSetIterador.hasNext() ){
+				GAStudentGene auxgen = gSetIterador.next();
 				if (auxgen.evaluate(this.students)<mejorV) mejorGen = auxgen;				
 			}
 			gen=mejorGen;
