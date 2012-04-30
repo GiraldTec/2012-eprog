@@ -273,4 +273,7 @@ public final class GAStudentsEngine extends IGAEngine {
 	public void setStudentPath(String studentPath) {
 		this.studentPath = studentPath;
 	}
+	public ArrayList<GAStudent> getStudents() {
+		return students;
+	}
 }
