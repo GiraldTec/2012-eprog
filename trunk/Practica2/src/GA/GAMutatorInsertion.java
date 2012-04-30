@@ -14,7 +14,7 @@ public class GAMutatorInsertion extends IGAMutator{
 			int numInserciones = IGARandom.getRInt(gen.getGen().length%5);
 			
 			for(int i=1;i<=numInserciones;i++){
-				int posOrg = IGARandom.getRInt(gen.getGen().length);
+				int posOrg = IGARandom.getRInt(gen.getGen().length-1)+1;
 				int elem = gen.getGen()[posOrg];
 				
 				int posDst = IGARandom.getRInt(posOrg);
