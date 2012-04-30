@@ -67,7 +67,8 @@ public final class GAStudentsEngine extends IGAEngine {
 			System.err.println("Error al crear función de cruce");*/
 		
 		//crear el mutador
-		mutador = new GAMutatorExchange();
+		mutador = new GAMutator3Heuristic();
+		((GAMutator3Heuristic)mutador).getExtraParams(students);
 			
 	}
 	
