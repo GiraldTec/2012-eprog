@@ -30,9 +30,8 @@ class GAStepThread extends SwingWorker<Void, Void> {
 	// Main task. Executed in background thread.
     public Void doInBackground() {
     	int currGeneration = gaEngine.getCurrent_Generation();
-    	progress = (currGeneration * 100) / gaEngine.getNum_Max_Gen();
         //Initialize progress property.
-        setProgress(progress);
+        setProgress(0);
             while (!gaEngine.isEvol_Complete() && currGeneration < gaEngine.getNum_Max_Gen()){
             	try {
             		// ejecutamos un step de la evolución

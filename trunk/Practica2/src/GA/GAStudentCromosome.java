@@ -16,7 +16,6 @@ public class GAStudentCromosome extends IGACromosome implements Cloneable{
 		clone.setUnbalance(unbalance);
 		clone.setEvaluatedValue(evaluatedValue);
 
-		
 		return clone;
 	}
 

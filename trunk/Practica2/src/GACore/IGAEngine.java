@@ -1,8 +1,5 @@
 package GACore;
-import java.util.ArrayList;
 import java.util.logging.Logger;
-
-import GA.GAStudent;
 
 public abstract class IGAEngine {
 	protected IGACromosome[] population; 		// población
@@ -41,10 +38,10 @@ public abstract class IGAEngine {
 	
 	protected void evaluatePopulation()	{
 		double acum_Score = 0; 		// puntuación acumulada
-		double best_EvaluatedValue = 0; 	// mejor aptitud
+		double best_EvaluatedValue = Double.MAX_VALUE; 	// mejor aptitud
 		double sum_EvaluatedValue = 0;	// suma de la aptitud
 		
-		log.info("Engine: evaluatePopulation");		
+		log.info("Engine: evaluatePopulation");	
 		
 		for (int i=0; i<population_Size; i++) {
 			sum_EvaluatedValue = sum_EvaluatedValue + population[i].getEvaluatedValue();	
@@ -55,7 +52,7 @@ public abstract class IGAEngine {
 					elite = (IGACromosome)population[i].clone();
 			}
 		}
-		//sum_Aptitude += population_Size*best_Aptitude;
+		
 		population_Average = sum_EvaluatedValue/population_Size;
 		
 		for (int i=0; i<population_Size; i++) {
@@ -63,8 +60,8 @@ public abstract class IGAEngine {
 			population[i].setScore(population[i].getEvaluatedValue() / sum_EvaluatedValue);
 			population[i].setAcum_Score(population[i].getScore() + acum_Score);
 			acum_Score = acum_Score + population[i].getScore();
-			log.info("Cromosome "+i+population[i].getGene().getGen()+"Unbalance="+population[i].getUnbalance()+"EvaluatedValue="+population[i].getEvaluatedValue()+
-					" | Score="+population[i].getScore()) ;
+			log.info("Cromosome "+i+population[i].getGene().getGen()+" Unbalance: "+population[i].getUnbalance()+" EvaluatedValue: "+population[i].getEvaluatedValue()+
+					" | Score: "+population[i].getScore()) ;
 		}
 	}
 
