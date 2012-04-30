@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.PriorityQueue;
 
 import GACore.IGACromosome;
 import GACore.IGAEngine;
@@ -60,7 +59,7 @@ public final class GAStudentsEngine extends IGAEngine {
 		elite = (GAStudentCromosome)population[0].clone();
 		
 		//crear el cruzador
-	//	if (crossName.equals("Monopunto"))
+		//	if (crossName.equals("Monopunto"))
 			cruzador = new GAStudentOrderCross();/*
 		else if (crossName.equals("Bipunto"))
 			cruzador = new GABinaryBiPointCross();

@@ -32,13 +32,14 @@ public class GAStudentOrdinalCrossCremallera extends IGACross{
 		int[] genD1 = deCode(aux1);
 		int[] genD2 = deCode(aux2);
 		
+		GAStudentGene genP1 = (GAStudentGene) parent1.getGene();
+		GAStudentGene genP2 = (GAStudentGene) parent2.getGene();
 		GAStudentCromosome[] descendientes= new GAStudentCromosome[2];
 		descendientes[0]= new GAStudentCromosome();
-		descendientes[0].setGene(new GAStudentGene(genD1));
+		descendientes[0].setGene(new GAStudentGene(genD1, genP1.getNumberStudents(), genP1.getGroupSize(), genP1.getResultAverage(), genP1.getAlphaValue()));
 		descendientes[1]= new GAStudentCromosome();
-		descendientes[1].setGene(new GAStudentGene(genD2));
+		descendientes[1].setGene(new GAStudentGene(genD2, genP2.getNumberStudents(), genP2.getGroupSize(), genP2.getResultAverage(), genP2.getAlphaValue()));
 		
-		// TODO Auto-generated method stub
 		return descendientes;
 	}
 

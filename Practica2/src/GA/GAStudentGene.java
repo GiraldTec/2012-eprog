@@ -28,8 +28,13 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 		shuffle(gen);
 	}
 
-	public GAStudentGene(int[] students){
+	public GAStudentGene(int[] students, int numberStudents, int groupSize, double resultAverage, double alpha){
 		this.gen=students;
+		this.groupSize = groupSize;
+		this.numberStudents = numberStudents;
+		this.resultAverage = resultAverage;
+		this.incompatibilities = 0;
+		alphaValue = alpha;
 	}
 
 	public Boolean mutate(IGAMutator mutator, double prob){
@@ -37,7 +42,7 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 	}
 	
 	public GAStudentGene clone(){
-		return new GAStudentGene(this.gen.clone());
+		return new GAStudentGene(this.gen.clone(), groupSize, groupSize, alphaValue, alphaValue);
 	}
 	
 	/**
@@ -79,8 +84,6 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 			}			
 		}
 		return geneUnbalance;
-		
-	
 	}
 	
 	
@@ -115,4 +118,22 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 			}
 		}
 	}
+	
+	public int getNumberStudents() {
+		return numberStudents;
+	}
+
+	public double getResultAverage() {
+		return resultAverage;
+	}
+
+	public double getAlphaValue() {
+		return alphaValue;
+	}
+	public int getGroupSize() {
+		return groupSize;
+	}
+
+
+	
 }
