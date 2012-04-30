@@ -45,6 +45,13 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 		return new GAStudentGene(this.gen.clone(), groupSize, groupSize, alphaValue, alphaValue);
 	}
 	
+	public void loadGene(ArrayList<GAStudent> students){
+		// calcular balance
+		geneUnbalance = calcBalance(students);
+		// calcular la funcion de evaluacion
+		//evaluate(students);
+	}
+	
 	/**
 	* Desordena el array 'a'. Funcionaría con cualquier tipo de array.
 	* Para generar una permutación aleatoria de enteros, bastaría con que
