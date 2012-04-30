@@ -8,25 +8,25 @@ public class GAMutatorInversion extends IGAMutator{
 	public Boolean mutate(IGAGene gen, double prob) {
 		System.out.print("entraamos a mutar");
 		Boolean res = new Boolean(false);
-		if(IGARandom.getRDouble()<prob){
+		//if(IGARandom.getRDouble()<prob){
 			int[] auxGen = gen.getGen().clone();
 			int longitud = auxGen.length;
 			
-			int pointA = IGARandom.getRInt(longitud-1);
-			int pointB = IGARandom.getRInt(longitud - pointA)+pointA;
+			int pointB  = IGARandom.getRInt(longitud-1)+1;
+			int pointA = IGARandom.getRInt(pointB);
 			
 			int recorredorA = pointA;
-			int recorredorB = pointB;
 			
-			for(int i=0;i<(pointB-pointA);i++){
-				auxGen[i+recorredorA]=gen.getGen()[recorredorB-i-1];
+			
+			for(int i=pointB-1;i>=pointA;i--){
+				auxGen[i]=gen.getGen()[recorredorA];
 				recorredorA++;
-				recorredorB--;
+				
 			}
 			
 			gen.setGen(auxGen);
 			res= !res;
-		}
+//		}
 		return res;
 	}
 
