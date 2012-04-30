@@ -29,7 +29,4 @@ public class GAMutatorInsertion extends IGAMutator{
 		}
 		return res;
 	}
-
-
-
 }
