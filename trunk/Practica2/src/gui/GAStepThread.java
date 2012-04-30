@@ -51,6 +51,7 @@ class GAStepThread extends SwingWorker<Void, Void> {
 				{
 					System.out.print(i + " ");
 				}
+				System.out.print("\n");
 				
 				dataGenerationCount[currGeneration] = currGeneration;
 				currGeneration = gaEngine.getCurrent_Generation();
