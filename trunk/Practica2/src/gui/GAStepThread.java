@@ -46,7 +46,7 @@ class GAStepThread extends SwingWorker<Void, Void> {
 				dataGenerationBest[currGeneration] = gaEngine.getGenerationBest().getEvaluatedValue();
 				dataGenerationAverage[currGeneration] = gaEngine.getPopulation_Average();
 				
-				System.out.print("Grupos: ");
+				System.out.print("Grupos de la elite: ");
 				for (Integer i : gaEngine.getAbsoluteBest().getGene().getGen())
 				{
 					System.out.print(i + " ");

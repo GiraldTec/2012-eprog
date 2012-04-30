@@ -2,6 +2,7 @@ package GA;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import GACore.IGACromosome;
 import GA.GAStudentGene;
@@ -33,7 +34,24 @@ public class GAStudentCromosome extends IGACromosome implements Cloneable{
 	
 	@Override
 	public boolean equals(IGACromosome c) {
-		// TODO Auto-generated method stub
-		return false;
+		int[] myGenes, theirGenes;
+		int groupSize = ((GAStudentGene) gen).getGroupSize();
+		
+		myGenes = ((GAStudentGene) gen).getGen();
+		theirGenes = ((GAStudentGene)((GAStudentCromosome) c).getGene()).getGen();
+		
+		for(int i=0; i < myGenes.length;i=+groupSize){
+				if (! checkGroup(Arrays.copyOfRange(myGenes, i, i+groupSize), Arrays.copyOfRange(theirGenes, i, i+groupSize)))
+					return false;
+		}		
+		return true;
+	}
+	
+	private boolean checkGroup(int[] elemsA, int[] elemsB){
+		for (int i=0; i<elemsA.length; i++){
+			if (!(Arrays.binarySearch(elemsB, elemsA[i]) > 0))
+				return false;
+		}
+		return true;
 	}
 }
