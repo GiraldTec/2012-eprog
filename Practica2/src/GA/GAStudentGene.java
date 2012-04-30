@@ -70,17 +70,18 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 	@Override
 	public double evaluate(ArrayList<GAStudent> students) {
 		countIncompatibilities (students);
+		System.out.println("INCOPATIBLES: " + incompatibilities);
 		return alphaValue * geneUnbalance + ((1 - alphaValue) * incompatibilities);
 	}
 	
 	public double calcBalance(ArrayList<GAStudent> students) {
 		double partialUnbal = 0.0;
-		int count = 0;
+		int count = 0, j;
 		
 		geneUnbalance = 0;
 		for (int i=0; i < students.size(); i++){
 			if (count < groupSize) {
-				int j = gen[i];
+				j = gen[i];
 				partialUnbal += students.get(j).getResult() - resultAverage;
 				count++;
 			}

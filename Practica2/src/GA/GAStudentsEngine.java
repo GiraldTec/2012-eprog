@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.PriorityQueue;
 
 import GACore.IGACromosome;
 import GACore.IGAEngine;
@@ -28,14 +29,18 @@ public final class GAStudentsEngine extends IGAEngine {
 		
 		// crear función de selección
 		selector = new GARouletteSelection();
-		/*if (selectorName.equals("Ruleta"))
+		if (selectorName.equals("Ruleta"))
 			selector = new GARouletteSelection();
 		else if (selectorName.equals("Torneo Det"))
-			selector = new GATournametSelectionDet<Boolean>();
+			selector = new GATournametSelectionDet();
 		else if (selectorName.equals("Torneo Prob"))
-			selector = new GATournamentSelectionProb<Boolean>();
-		else 
-			System.err.println("Error al elegir función de selección");*/
+			selector = new GATournamentSelectionProb();
+		else if (selectorName.equals("Ranking"))
+			selector = new GATournametSelectionDet();
+		else if (selectorName.equals("Método Propio"))
+			selector = new GATournametSelectionDet();
+		else
+			System.err.println("Error al elegir la función de selección");
 			
 		// cargar alumnos
 		loadStudents(studentPath);
@@ -57,18 +62,34 @@ public final class GAStudentsEngine extends IGAEngine {
 		
 		// asignar un individuo elite inicial
 		elite = (GAStudentCromosome)population[0].clone();
-		
+
 		//crear el cruzador
-		//	if (crossName.equals("Monopunto"))
-			cruzador = new GAStudentOrderCross();/*
-		else if (crossName.equals("Bipunto"))
-			cruzador = new GABinaryBiPointCross();
+		if (crossName.equals("PMX"))
+			cruzador = new GAPartialStudentPairing();
+		else if (crossName.equals("OX"))
+			cruzador = new GAStudentOrderCross();
+		else if (crossName.equals("Variante OX"))
+			cruzador = new GAStudentOrdinalCrossCremallera();
+		else if (crossName.equals("Ordinal"))
+			cruzador = new GAStudentOrdinalCross();
+		else if (crossName.equals("Método Propio"))
+			cruzador = new GAStudentOrdinalCross();
 		else
-			System.err.println("Error al crear función de cruce");*/
+			System.err.println("Error al elegir la función de cruce");
 		
 		//crear el mutador
-		mutador = new GAMutator3Heuristic();
-		((GAMutator3Heuristic)mutador).getExtraParams(students);
+		if (mutName.equals("Inserción"))
+			mutador = new GAMutatorInsertion();
+		else if (crossName.equals("Intercambio"))
+			mutador = new GAMutatorExchange();
+		else if (crossName.equals("Inversión"))
+			mutador = new GAMutatorInversion();
+		else if (crossName.equals("Heurística")){
+			mutador = new GAMutator3Heuristic();
+			((GAMutator3Heuristic)mutador).getExtraParams(students);
+		}
+		else
+			System.err.println("Error al elegir la función de mutación");
 			
 	}
 	
@@ -169,6 +190,13 @@ public final class GAStudentsEngine extends IGAEngine {
 					population[i].calcBalance(students);
 					population[i].evaluate(students);
 				}
+				
+				System.out.print("Grupos tras mutación: ");
+				for (Integer j : population[i].getGene().getGen())
+				{
+					System.out.print(j + " ");
+				}
+				System.out.print("\n");
 			}
 		}
 	 
@@ -209,7 +237,7 @@ public final class GAStudentsEngine extends IGAEngine {
 			}
 			
 			// si usamos elitismo sustituir a los peores individuos de la población por los hijos
-			/*if (useElitism) {
+			if (useElitism) {
 				@SuppressWarnings("rawtypes")
 				class Struct implements Comparable {
 					private double aptitud;
@@ -244,13 +272,13 @@ public final class GAStudentsEngine extends IGAEngine {
 				for(int i=0;i<num_Sel_Cross;i++){
 					population[rank.poll().possition]=auxiliar_population[sel_Cross[i]];
 				}
-			}*/
+			}
 			
 			// si no usamos elitismo sustituir padres por hijos directamente
-			//else {
+			else {
 				for(int i=0;i<num_Sel_Cross;i++){
 					population[sel_Cross[i]]=auxiliar_population[sel_Cross[i]];
-			//	}
+				}
 			}
 		}	
 	
