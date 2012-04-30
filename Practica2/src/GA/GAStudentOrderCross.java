@@ -30,7 +30,8 @@ public class GAStudentOrderCross extends IGACross {
 		}
 		int recorredorHijo=indexB;
 		int recorredorPadre = indexB;
-		while(recorredorHijo!=indexB-1){
+		boolean dadavuelta = false;
+		while(!dadavuelta){
 			
 			if(!pertenece(parent1.getGene().getGen()[recorredorPadre],genD1)){
 				genD1[recorredorHijo]=parent1.getGene().getGen()[recorredorPadre];
@@ -39,10 +40,12 @@ public class GAStudentOrderCross extends IGACross {
 			}
 			recorredorPadre++;
 			recorredorPadre = (recorredorPadre % genLength);
+			if(recorredorPadre==indexB) dadavuelta=true;
 		}
 		recorredorHijo=indexB;
 		recorredorPadre = indexB;
-		while(recorredorHijo!=indexB-1){
+		dadavuelta = false;
+		while(!dadavuelta){
 			
 			if(!pertenece(parent2.getGene().getGen()[recorredorPadre],genD2)){
 				genD2[recorredorHijo]=parent2.getGene().getGen()[recorredorPadre];
@@ -51,6 +54,7 @@ public class GAStudentOrderCross extends IGACross {
 			}
 			recorredorPadre++;
 			recorredorPadre = (recorredorPadre % genLength);
+			if(recorredorPadre==indexB) dadavuelta=true;
 		}
 		
 		
