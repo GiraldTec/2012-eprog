@@ -3,7 +3,7 @@ package GACore;
 public abstract class IGACross {
 	public abstract IGACromosome[] cross(IGACromosome[] parents);
 		
-	protected boolean pertenece (int x,int[] l){
+	public static boolean pertenece (int x,int[] l){
 		int i=0;
 		boolean res=false;
 		while(!res && i<l.length) 
@@ -12,7 +12,7 @@ public abstract class IGACross {
 		return res;
 	}
 	
-	protected int getIndex(int x, int[] l){
+	protected static int getIndex(int x, int[] l){
 		int i=0;
 		boolean res = false;
 		while(!res && i<l.length){
