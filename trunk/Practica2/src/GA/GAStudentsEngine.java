@@ -69,7 +69,7 @@ public final class GAStudentsEngine extends IGAEngine {
 		else if (crossName.equals("OX"))
 			cruzador = new GAStudentOrderCross();
 		else if (crossName.equals("Variante OX"))
-			cruzador = new GAStudentOrdinalCrossCremallera();
+			cruzador = new GAStudentOrderCrossVariant();
 		else if (crossName.equals("Ordinal"))
 			cruzador = new GAStudentOrdinalCross();
 		else if (crossName.equals("Método Propio"))
