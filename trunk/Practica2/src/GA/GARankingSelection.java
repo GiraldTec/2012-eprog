@@ -23,12 +23,12 @@ public class GARankingSelection extends IGASelector{
 		
 		Iterator<nodoRank> pilaiterator = nuevoRank.iterator();
 		int posicionRank = 1;
-		int probAcumulada=0;
+		double probAcumulada=0;
 		while(pilaiterator.hasNext()){
 			double nuevaprobabilidad=nuevaProb(pop_size,posicionRank);
 			nodoRank nodoDelRank = pilaiterator.next();
 			nodoDelRank.setPunt(nuevaprobabilidad);
-			probAcumulada+=nuevaprobabilidad;
+			probAcumulada= probAcumulada + nuevaprobabilidad;
 			nodoDelRank.setAcu_punt(probAcumulada);
 			posicionRank++;
 		}
@@ -55,7 +55,10 @@ public class GARankingSelection extends IGASelector{
 	
 	public static double nuevaProb(int numCroms, int pos){
 		double betta=1.5;
-		return (betta-(2*(betta - 1)*((pos - 1)/(numCroms - 1))))/numCroms;
+		double res= (pos - 1)/(numCroms - 1);
+		res = 2*(betta - 1)* res;
+		res= (betta-(res))*1/numCroms;
+		return res;
 	}
 	
 	public class nodoRank implements Comparable<nodoRank>{

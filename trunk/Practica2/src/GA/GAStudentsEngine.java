@@ -36,9 +36,9 @@ public final class GAStudentsEngine extends IGAEngine {
 		else if (selectorName.equals("Torneo Prob"))
 			selector = new GATournamentSelectionProb();
 		else if (selectorName.equals("Ranking"))
-			selector = new GATournametSelectionDet();
+			selector = new GARankingSelection();
 		else if (selectorName.equals("Método Propio"))
-			selector = new GATournametSelectionDet();
+			selector = new GAShuffleSelection();
 		else
 			System.err.println("Error al elegir la función de selección");
 			

@@ -14,7 +14,7 @@ public class GAShuffleSelection extends IGASelector{
 		IGACromosome[] new_pop = new IGACromosome[pop_size];	
 		
 		for(int i=0;i<pop_size;i++){
-			new_pop[pop_size-i]= pop[i];
+			new_pop[pop_size-i-1]= pop[i];
 		}
 		
 		int nBarajados = IGARandom.getRInt(10);
