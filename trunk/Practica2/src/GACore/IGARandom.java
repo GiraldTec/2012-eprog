@@ -11,7 +11,7 @@ public class IGARandom {
 	
 	public static boolean getRBoolean() { return rand.nextBoolean();}
 	public static int getRInt() { return rand.nextInt();}
-	public static int getRInt(int max) { return rand.nextInt(max);}
+	public static int getRInt(int max) { if (max <= 0) return 0; else return rand.nextInt(max);}
 	public static double getRDouble() { return rand.nextDouble();}
 	
 }
