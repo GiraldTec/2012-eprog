@@ -18,6 +18,7 @@ public class GAStudentOrderCrossVariant extends IGACross {
 		
 		int[] vectorPos = new int[numPos];
 		
+		
 		for(int i=0;i<numPos;i++){
 			int newPos= IGARandom.getRInt(genLength);
 			while(pertenece(newPos, vectorPos)) newPos= IGARandom.getRInt(genLength);
