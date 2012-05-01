@@ -23,9 +23,9 @@ public class GARankingSelection extends IGASelector{
 		
 		Iterator<nodoRank> pilaiterator = nuevoRank.iterator();
 		int posicionRank = 1;
-		double probAcumulada=0;
+		float probAcumulada=0;
 		while(pilaiterator.hasNext()){
-			double nuevaprobabilidad=nuevaProb(pop_size,posicionRank);
+			float nuevaprobabilidad=nuevaProb(pop_size,posicionRank);
 			nodoRank nodoDelRank = pilaiterator.next();
 			nodoDelRank.setPunt(nuevaprobabilidad);
 			probAcumulada= probAcumulada + nuevaprobabilidad;
@@ -38,6 +38,7 @@ public class GARankingSelection extends IGASelector{
 		for(int i=0;i<pop_size;i++){
 			double probAleatoria = IGARandom.getRDouble();
 			boolean found = false;
+			pilaiterator = nuevoRank.iterator();
 			while(!found && pilaiterator.hasNext()){
 				nodoRank nodoDelRank=pilaiterator.next();
 				if(probAleatoria<nodoDelRank.getAcu_punt() &&
@@ -53,9 +54,10 @@ public class GARankingSelection extends IGASelector{
 	}
 	
 	
-	public static double nuevaProb(int numCroms, int pos){
-		double betta=1.5;
-		double res= (pos - 1)/(numCroms - 1);
+	public static float nuevaProb(int numCroms, int pos){
+		float betta=(float) 1.5;
+		float res= (pos - 1);
+		res = res /(numCroms - 1);
 		res = 2*(betta - 1)* res;
 		res= (betta-(res))*1/numCroms;
 		return res;
@@ -63,8 +65,8 @@ public class GARankingSelection extends IGASelector{
 	
 	public class nodoRank implements Comparable<nodoRank>{
 		
-		private double acu_punt;
-		private double punt;
+		private float acu_punt;
+		private float punt;
 		private int pos;
 		
 		private IGACromosome cromosoma;
@@ -81,19 +83,19 @@ public class GARankingSelection extends IGASelector{
 				return 1;
 		}
 
-		public void setAcu_punt(double acu_punt) {
+		public void setAcu_punt(float acu_punt) {
 			this.acu_punt = acu_punt;
 		}
 
-		public double getAcu_punt() {
+		public float getAcu_punt() {
 			return acu_punt;
 		}
 
-		public void setPunt(double punt) {
+		public void setPunt(float punt) {
 			this.punt = punt;
 		}
 
-		public double getPunt() {
+		public float getPunt() {
 			return punt;
 		}
 
