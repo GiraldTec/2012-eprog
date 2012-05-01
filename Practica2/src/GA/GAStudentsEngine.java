@@ -191,12 +191,12 @@ public final class GAStudentsEngine extends IGAEngine {
 					population[i].evaluate(students);
 				}
 				
-				System.out.print("Grupos tras mutación: ");
+				log.info("Grupos tras mutación: ");
 				for (Integer j : population[i].getGene().getGen())
 				{
-					System.out.print(j + " ");
+					log.info(j + " ");
 				}
-				System.out.print("\n");
+				log.info("\n");
 			}
 		}
 	 

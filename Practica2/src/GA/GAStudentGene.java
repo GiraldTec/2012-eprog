@@ -3,6 +3,8 @@ package GA;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.jfree.util.Log;
+
 import GACore.IGAGene;
 import GACore.IGAMutator;
 import GACore.IGARandom;
@@ -58,6 +60,7 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 	* 'a' contuviese todos los enteros del 0 al N-1.
 	*/
 	public static void shuffle(int[] a) {
+		log.info("Haciendo shuffle: ");
 		for (int i=a.length-1; i>=1; i--) {
 			int j = IGARandom.getRInt(i+1); // un numero entre 0 e i, inclusive
 			// intercambia a[i], a[j]
@@ -65,32 +68,38 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 			a[j] = a[i];
 			a[i] = aux;
 		}
+		
+		for (int i=0; i<a.length; i++) {
+			log.info((a[i]+1)+ " ");
+		}
+		log.info("\n");
 	}
 
 	@Override
 	public double evaluate(ArrayList<GAStudent> students) {
 		countIncompatibilities (students);
-		System.out.println("INCOPATIBLES: " + incompatibilities);
+		//System.out.println("INCOPATIBLES: " + incompatibilities);
 		return alphaValue * geneUnbalance + ((1 - alphaValue) * incompatibilities);
 	}
 	
 	public double calcBalance(ArrayList<GAStudent> students) {
 		double partialUnbal = 0.0;
-		int count = 0, j;
+		int count = 0, j = 0;
 		
 		geneUnbalance = 0;
 		for (int i=0; i < students.size(); i++){
+			j = gen[i];
 			if (count < groupSize) {
-				j = gen[i];
-				partialUnbal += students.get(j).getResult() - resultAverage;
+				partialUnbal = partialUnbal + (students.get(j).getResult() - resultAverage);
 				count++;
 			}
 			else { // fin de ese grupo
-				geneUnbalance += Math.pow(partialUnbal, 2);
-				partialUnbal = 0;
-				count = 0;
+				geneUnbalance = geneUnbalance + Math.pow(partialUnbal, 2);
+				partialUnbal = students.get(j).getResult() - resultAverage;
+				count = 1;
 			}			
 		}
+		geneUnbalance = geneUnbalance + Math.pow(partialUnbal, 2);
 		return geneUnbalance;
 	}
 	
@@ -100,6 +109,8 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 		int[][] genOrdenado = new int[gen.length/groupSize][groupSize]; // genOrdenado[i][j] == el estudiante de nombre [i][j] en el grupo i
 		int[][] genOrdenadoIds = new int[gen.length/groupSize][groupSize]; 
 		int numGrupos = gen.length/groupSize;
+		
+		incompatibilities=0;
 		
 		for (int recorredor = 0; recorredor < gen.length; recorredor++){
 			genOrdenado[recorredor/groupSize][recorredor%groupSize]= gen[recorredor];
