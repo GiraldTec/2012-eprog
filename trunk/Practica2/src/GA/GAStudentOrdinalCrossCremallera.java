@@ -1,5 +1,7 @@
 package GA;
 
+import java.util.ArrayList;
+
 import GACore.IGACromosome;
 import GACore.IGACross;
 
@@ -47,55 +49,26 @@ public class GAStudentOrdinalCrossCremallera extends IGACross{
 	public int[] codify(int[] g){
 		int[] cdRes = new int[longitud];
 		
-		boolean[] dyList = new boolean[longitud];
-		for(int i=0;i<longitud;i++) dyList[i] = true;
+		ArrayList<Integer> listaD = new ArrayList<Integer>();
+		for(int i=0;i<g.length;i++) listaD.add(new Integer(i));
 		
-		// Hay que buscar el "índice" relativo del elemento g[i] en la lista de booleanos
-		// y asi obtener el valor codificado de su posición
-		for (int i = 0; i<longitud;i++){
-			cdRes[i]= getIndexOfElem(g[i],dyList);
+		for(int i=0;i<g.length;i++){
+			cdRes[i]=listaD.indexOf(new Integer(g[i]));
+			listaD.remove(new Integer(g[i]));
 		}
 		
 		return cdRes;
 	}
-	
-	public int getIndexOfElem(int elemento, boolean[] lista){
-		boolean encontrado=false;
-		int index =0;
-		int recorredor=0;
-		while (!encontrado && recorredor <longitud){	if(index==elemento){
-									encontrado=true;
-									lista[index]=false;
-								}else{	if(lista[recorredor]) 
-											index++;
-											recorredor++;
-											}}
-		return index;
-	}
-	
-	public int getElemOfIndex(int indice, boolean[] lista){
-		boolean encontrado=false;
-		int index =0;
-		int elemento=0;
-		while (!encontrado && elemento <longitud){	if(index==indice){
-									encontrado=true;
-									lista[index]=false;
-								}else{	if(lista[elemento]) 
-											index++;
-											elemento++;
-											}}
-		return elemento;
-	}
-	
+
 	public int[] deCode(int[] g){
 		
 		int[] cdRes = new int[longitud];
 		
-		boolean[] dyList = new boolean[longitud];
-		for(int i=0;i<longitud;i++) dyList[i] = true;
+		ArrayList<Integer> listaD = new ArrayList<Integer>();
+		for(int i=0;i<g.length;i++) listaD.add(new Integer(i));
 		
-		for (int i = 0; i<longitud;i++){
-			cdRes[i]= getElemOfIndex(g[i],dyList);
+		for(int i=0;i<g.length;i++){
+			cdRes[i]= listaD.remove(g[i]).intValue();
 		}
 		
 		return cdRes;

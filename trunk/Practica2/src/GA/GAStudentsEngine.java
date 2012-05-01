@@ -64,18 +64,18 @@ public final class GAStudentsEngine extends IGAEngine {
 		elite = (GAStudentCromosome)population[0].clone();
 
 		//crear el cruzador
-		//if (crossName.equals("PMX"))
+		if (crossName.equals("PMX"))
 			cruzador = new GAPartialStudentPairing();
-		/*else if (crossName.equals("OX"))
+		else if (crossName.equals("OX"))
 			cruzador = new GAStudentOrderCross();
 		else if (crossName.equals("Variante OX"))
 			cruzador = new GAStudentOrdinalCrossCremallera();
 		else if (crossName.equals("Ordinal"))
 			cruzador = new GAStudentOrdinalCross();
 		else if (crossName.equals("Método Propio"))
-			cruzador = new GAStudentOrdinalCross();
+			cruzador = new GAStudentOrdinalCrossCremallera();
 		else
-			System.err.println("Error al elegir la función de cruce");*/
+			System.err.println("Error al elegir la función de cruce");
 		
 		//crear el mutador
 		if (mutName.equals("Inserción"))
