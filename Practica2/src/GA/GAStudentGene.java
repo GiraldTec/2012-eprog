@@ -3,8 +3,6 @@ package GA;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.jfree.util.Log;
-
 import GACore.IGAGene;
 import GACore.IGAMutator;
 import GACore.IGARandom;
@@ -16,13 +14,15 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 	private double alphaValue;
 	private double geneUnbalance;
 	private int incompatibilities;
-	
+	private ArrayList<Integer> gruposConfict;	//sólo para la interfaz
+
 	public GAStudentGene(int numberStudents, int groupSize, double resultAverage, double alpha){
 		this.groupSize = groupSize;
 		this.numberStudents = numberStudents;
 		this.resultAverage = resultAverage;
 		this.incompatibilities = 0;
 		alphaValue = alpha;
+		gruposConfict = new ArrayList<Integer>();
 		gen = new int[numberStudents];
 		for (int i=0;i<numberStudents;i++){
 			gen[i]=i;
@@ -37,6 +37,7 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 		this.resultAverage = resultAverage;
 		this.incompatibilities = 0;
 		alphaValue = alpha;
+		gruposConfict = new ArrayList<Integer>();
 	}
 
 	public Boolean mutate(IGAMutator mutator, double prob){
@@ -44,7 +45,10 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 	}
 	
 	public GAStudentGene clone(){
-		return new GAStudentGene(this.gen.clone(), groupSize, groupSize, alphaValue, alphaValue);
+		GAStudentGene clone = new GAStudentGene(this.gen.clone(), groupSize, groupSize, alphaValue, alphaValue);
+		clone.incompatibilities = this.incompatibilities;
+		clone.gruposConfict = this.gruposConfict;
+		return clone;
 	}
 	
 	public void loadGene(ArrayList<GAStudent> students){
@@ -132,6 +136,8 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 					idHater = iterHaters.next();
 					if(grupoEnSi.contains(idHater)) {
 						incompatibilities++;
+						if (!gruposConfict.contains(i))
+							gruposConfict.add(i);
 					}
 				}
 			}
@@ -154,6 +160,9 @@ public class GAStudentGene extends IGAGene implements Cloneable{
 	}
 	public int getIncompatibilities() {
 		return incompatibilities;
+	}
+	public ArrayList<Integer> getGruposConfict() {
+		return gruposConfict;
 	}
 	
 }

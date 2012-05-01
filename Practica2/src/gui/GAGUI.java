@@ -290,13 +290,10 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 									pos = gaEngine.getAbsoluteBest().getGene().getGen()[i];
 									category = "G" + ((int) Math.floor(i/studEng.getGroupSize()));
 									
-									//System.out.println(i +" | "+ count+" | "+ pos +" | "+ category + " | " +studEng.getStudents().get(i).getResult());
+									System.out.println(i +" | "+ count+" | "+ pos +" | "+ category + " | " +studEng.getStudents().get(i).getResult());
 									
 									dataset.addValue(studEng.getStudents().get(pos).getResult(), category + "." + count, category);
 							        plot.getRenderer().setSeriesPaint(i, linearGradient(new Color(65, 105, 225), new Color(135, 206, 250), studEng.getGroupSize(), count));
-							        
-							        if (((GAStudentGene) gaEngine.getAbsoluteBest().getGene()).getIncompatibilities() > 0)
-							        	((CategoryPlot) resultsChart.getPlot()).addDomainMarker(new CategoryMarker(category, Color.red, stroke, Color.black, stroke, 0.4f));
 							        
 							        groupScore += studEng.getStudents().get(pos).getResult();
 							        
@@ -310,6 +307,9 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 										avergVariance += groupScore;
 										groupScore = 0;
 									}
+								}
+								for (Integer i : ((GAStudentGene) gaEngine.getAbsoluteBest().getGene()).getGruposConfict()){
+						        	((CategoryPlot) resultsChart.getPlot()).addDomainMarker(new CategoryMarker("G"+i, Color.red, stroke, Color.black, stroke, 0.4f));
 								}
 								System.out.println("MaxGroupScore :"+maxVariance+ "\nMinGroupScore :"+minVariance+"\nAvrgVariance :"+avergVariance/((GAStudentsEngine) gaEngine).getStudents().size());
 							} catch (Exception e) {
@@ -536,14 +536,6 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
                         
         panelPruebas.add(panleRadioBut, "wrap, top, gaptop 40");
         
-        //pGraphicPruebsAuto.addLinePlot("Mejor Absoluto", Color.blue, dataGenerationCount,	dataAbsoluteBest);
-        
-        double[] x1 = {2.0 ,3.9, 100};
-        double[] y1 = {5.6, -62.0, 50};
-        
-        pGraphicPruebsAuto.addLinePlot("my plot", Color.blue, x1, y1);
-        pGraphicPruebsAuto.addLinePlot("my plota", Color.red, y1, x1);
-        
         pGraphicPruebsAuto.addLegend("SOUTH");
         pGraphicPruebsAuto.setPreferredSize(new Dimension(350, 510));
         panelPruebas.add(pGraphicPruebsAuto, "gapleft 5, gaptop 5, top");
@@ -556,7 +548,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 					JRadioButton selected = (JRadioButton) radioButGroup.getSelection();
 					System.out.println(selected.getName());
 					// Detener la evolución
-					stepThread.cancel(true);					
+					stepThread.cancel(true);
 				}
 			}
 		});
@@ -730,8 +722,8 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	}
 	
 	public ConfigPanel<IGAEngine> creaPanelConfiguracion() {
-		String[] selectorNames = new String[] { "Ruleta", "Torneo Det", "Torneo Prob", "Ranking", "Método Propio" };
-		String[] crossNames = new String[] { "PMX", "OX", "Variante OX", "Ordinal", "Método Propio" };
+		String[] selectorNames = new String[] { "Ruleta", "Torneo Det", "Torneo Prob", "Ranking", "Shuffle" };
+		String[] crossNames = new String[] { "PMX", "OX", "Variante OX", "Ordinal", "Cremallera" };
 		String[] mutNames = new String[] { "Inserción", "Intercambio", "Inversión", "Heurística" };
 	
 		ConfigPanel<IGAEngine> config = new ConfigPanel<IGAEngine>();
@@ -777,15 +769,29 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		        String funcName = (String)combo.getSelectedItem();
 		        paramsSelecDouble.getTextFieldRef().setEnabled(true);
 				if(funcName == "Ruleta")
+				{
 					paramsSelecDouble.getLabelRef().setText("Params Ruleta");
+					paramsSelecDouble.getTextFieldRef().setEnabled(false);
+				}
 				else if(funcName == "Torneo Prob")
+				{
 					paramsSelecDouble.getLabelRef().setText("Params Torneo Prob");
+				}
 				else if(funcName == "Torneo Det")
+				{
 					paramsSelecDouble.getLabelRef().setText("Params Torneo Det");
+					paramsSelecDouble.getTextFieldRef().setEnabled(false);
+				}
 				else if(funcName == "Ranking")
+				{
 					paramsSelecDouble.getLabelRef().setText("Params Ranking");
-				else if(funcName == "Método Propio")
-					paramsSelecDouble.getLabelRef().setText("Params Método Propio");
+					paramsSelecDouble.getTextFieldRef().setEnabled(false);
+				}
+				else if(funcName == "Shuffle")
+				{
+					paramsSelecDouble.getLabelRef().setText("Params Shuffle");
+					paramsSelecDouble.getTextFieldRef().setEnabled(false);
+				}
 			}
 		});
 		
@@ -807,7 +813,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 			public void actionPerformed(ActionEvent e) {
 				JComboBox combo = (JComboBox)e.getSource();
 		        String funcName = (String)combo.getSelectedItem();
-		        paramsCrossDouble.getTextFieldRef().setEnabled(true);
+		        paramsCrossDouble.getTextFieldRef().setEnabled(false);
 				if(funcName == "PMX")
 					paramsCrossDouble.getLabelRef().setText("Params PMX");
 				else if(funcName == "OX")
@@ -816,8 +822,8 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 					paramsCrossDouble.getLabelRef().setText("Params Variante OX");
 				else if(funcName == "Ordinal")
 					paramsCrossDouble.getLabelRef().setText("Params Ordinal");
-				else if(funcName == "Método Propio")
-					paramsCrossDouble.getLabelRef().setText("Params Método Propio");
+				else if(funcName == "Cremallera")
+					paramsCrossDouble.getLabelRef().setText("Params Cremallera");
 			}
 		});
 		
@@ -839,17 +845,19 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 			public void actionPerformed(ActionEvent e) {
 				JComboBox combo = (JComboBox)e.getSource();
 		        String funcName = (String)combo.getSelectedItem();
-		        paramsMutDouble.getTextFieldRef().setEnabled(true);
-				if(funcName == "Inserción")
+		        paramsMutDouble.getTextFieldRef().setEnabled(false);
+				if(funcName == "Inserción"){
 					paramsMutDouble.getLabelRef().setText("Params Inserción");
-				else if(funcName == "Intercambio")
+				}
+				else if(funcName == "Intercambio"){
 					paramsMutDouble.getLabelRef().setText("Params Intercambio");
-				else if(funcName == "Inversión")
+				}
+				else if(funcName == "Inversión"){
 					paramsMutDouble.getLabelRef().setText("Params Inversión");
+				}
 				else if(funcName == "Heurística")
 				{
 					paramsMutDouble.getLabelRef().setText("Params Heurística");
-					paramsMutDouble.getTextFieldRef().setEnabled(false);
 				}
 			}
 		});
