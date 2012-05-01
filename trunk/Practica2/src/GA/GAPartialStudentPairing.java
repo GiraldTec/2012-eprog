@@ -46,24 +46,33 @@ public class GAPartialStudentPairing extends IGACross{
 			parejaH2[genD2[i]]=genD1[i];
 		}
 		
-		
+		//cogemos las que no dan conflicto
 		for(int i=0;i<genLength;i++){
 			if(i<indexA | i>=indexB){
 				//Mirando el hijo1
-				if(!pertenece(padreGen1[i],genD1)){
+				if(!pertenece(padreGen1[i],genD1)){ // si no está ya en el gen, lo metemos
 					genD1[i]=padreGen1[i];
-				}else{
-					genD1[i]=parejaH1[padreGen1[i]];
 				}
 				//Mirando al hijo2
 				if(!pertenece(padreGen2[i],genD2)){
 					genD2[i]=padreGen2[i];
-				}else{
-					genD2[i]=parejaH2[padreGen2[i]];
 				}
 			}
 		}
 		
+		// las que dan conflicto las cambiamos por su pareja
+		for(int i=0;i<genLength;i++){
+			if(genD1[i]==-1){//Da conflicto
+				int simboloQueQueremosMeter = padreGen1[i];
+				int parejaDelSimbolo = parejaH1[simboloQueQueremosMeter];
+				genD1[i]=parejaDelSimbolo;
+			}
+			if(genD2[i]==-1){
+				int simboloQueQueremosMeter = padreGen2[i];
+				int parejaDelSimbolo = parejaH2[simboloQueQueremosMeter];
+				genD2[i]=parejaDelSimbolo;
+			}
+		}
 		
 		GAStudentGene genP1 = (GAStudentGene) parent1.getGene();
 		checkear(genD1);
@@ -85,7 +94,7 @@ public class GAPartialStudentPairing extends IGACross{
 			argu=pertenece(i, gn);
 			i++;
 		}
-		System.out.print(argu);
+		System.out.print(argu+""+(i-1));
 	}
 	
 }
