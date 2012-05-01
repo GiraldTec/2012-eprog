@@ -43,7 +43,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -270,6 +269,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 					// bucle de evolución, ejecutamos cada step en un thread distinto (para no bloquar la interfaz)
 					stepThread = new GAStepThread(gaEngine,(Object) dataAbsoluteBest,(Object) dataGenerationAverage,(Object) dataGenerationBest,(Object) dataGenerationCount) {
 						protected void done() {
+							double maxVariance=0, minVariance=Double.MAX_VALUE, avergVariance=0, groupScore=0;
 							try {
 								progBar.setValue(0);
 								panelEnEdicion.setText("Evolución completada");
@@ -290,7 +290,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 									pos = gaEngine.getAbsoluteBest().getGene().getGen()[i];
 									category = "G" + ((int) Math.floor(i/studEng.getGroupSize()));
 									
-									System.out.println(i +" | "+ count+" | "+ pos +" | "+ category + " | " +studEng.getStudents().get(i).getResult());
+									//System.out.println(i +" | "+ count+" | "+ pos +" | "+ category + " | " +studEng.getStudents().get(i).getResult());
 									
 									dataset.addValue(studEng.getStudents().get(pos).getResult(), category + "." + count, category);
 							        plot.getRenderer().setSeriesPaint(i, linearGradient(new Color(65, 105, 225), new Color(135, 206, 250), studEng.getGroupSize(), count));
@@ -298,13 +298,20 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 							        if (((GAStudentGene) gaEngine.getAbsoluteBest().getGene()).getIncompatibilities() > 0)
 							        	((CategoryPlot) resultsChart.getPlot()).addDomainMarker(new CategoryMarker(category, Color.red, stroke, Color.black, stroke, 0.4f));
 							        
+							        groupScore += studEng.getStudents().get(pos).getResult();
+							        
 									if (count < studEng.getGroupSize()) {
 										count++;
 									}
 									else { // fin de ese grupo
 										count = 1;
-									}									
+										maxVariance = groupScore > maxVariance ? groupScore : maxVariance;
+										minVariance = groupScore < minVariance ? groupScore : minVariance;
+										avergVariance += groupScore;
+										groupScore = 0;
+									}
 								}
+								System.out.println("MaxGroupScore :"+maxVariance+ "\nMinGroupScore :"+minVariance+"\nAvrgVariance :"+avergVariance/((GAStudentsEngine) gaEngine).getStudents().size());
 							} catch (Exception e) {
 								JOptionPane.showMessageDialog(GAGUI.this, "Error", "Hubo un error durante la evolución.", JOptionPane.ERROR_MESSAGE);
 							}
@@ -357,20 +364,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		// Grafica results
 		panelResultados.add(new JLabel("Solución encontrada"), "split, gaptop 10");
 		panelResultados.add(new JSeparator(), "growx, wrap, gaptop 10");
-		
-		// clear the dataset...
-		/*dataset.clear();
-        
-        // Set random data for now
-        int numGroups = 20;
-        String category;
-        for (int i=1; i<=numGroups; i++){
-        	category = "G" + i;
-        	dataset.addValue(IGARandom.getRInt(10)+5, "Listo", category);
-        	dataset.addValue(IGARandom.getRInt(10)+5, "Normal", category);
-        	dataset.addValue(IGARandom.getRInt(10)+5, "Subnormal", category);
-        }           */ 
-        		
+		      		
         resultsChart = ChartFactory.createStackedBarChart(
 		//JFreeChart chart = ChartFactory.createStackedBarChart3D (
 	            "Grupos Solución",        // chart title
@@ -384,17 +378,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	        );
         resultsChart.setBackgroundPaint(new Color(58,58,58));
                 		
-		/*final CategoryPlot plot = resultsChart.getCategoryPlot();
-        plot.setBackgroundPaint(Color.white);
-        plot.setRangeGridlinePaint(Color.lightGray);
-        
-        CategoryItemRenderer renderer = plot.getRenderer();
-        //renderer.setSeriesItemLabelsVisible(0, false);
-        
-        plot.getRenderer().setSeriesPaint(0, linearGradient(new Color(65, 105, 225), new Color(135, 206, 250), 3, 0));
-        plot.getRenderer().setSeriesPaint(1, linearGradient(new Color(65, 105, 225), new Color(135, 206, 250), 3, 1));
-        plot.getRenderer().setSeriesPaint(2, linearGradient(new Color(65, 105, 225), new Color(135, 206, 250), 3, 2));
-        
+		        
         /* Esto por si interesa más tarde
         final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setRange(0.0, 100.0);
@@ -446,7 +430,6 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         cpauto.initialize();
         final JPanel panelconfigu = new JPanel();
         panelconfigu.setLayout(new GridLayout(1,1,0,0));
-        //panelPruebas.add(cpauto, "split, wrap, growy, gapright 5, gapleft 40");
         panelconfigu.add(cpauto);        
         panelPruebas.add(panelconfigu, "split, wrap, gapleft 10, top, gaptop 40");
         

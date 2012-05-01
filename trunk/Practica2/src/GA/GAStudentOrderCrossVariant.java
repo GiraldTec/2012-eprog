@@ -1,7 +1,5 @@
 package GA;
 
-import java.lang.reflect.Array;
-
 import GACore.IGACromosome;
 import GACore.IGACross;
 import GACore.IGARandom;
@@ -16,10 +14,9 @@ public class GAStudentOrderCrossVariant extends IGACross {
 		
 		int numPos, indexB;
 		int genLength = parent1.getGene().getGen().length;
-		numPos = IGARandom.getRInt(genLength/2);
+		numPos = IGARandom.getRInt(genLength/2)+1;
 		
 		int[] vectorPos = new int[numPos];
-		for(int i=0;i<numPos;i++) vectorPos[i]=-1;
 		
 		for(int i=0;i<numPos;i++){
 			int newPos= IGARandom.getRInt(genLength);
