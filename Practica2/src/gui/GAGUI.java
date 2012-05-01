@@ -43,6 +43,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -74,7 +75,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	private JPanel panelGenetics;
 	private JPanel panelPruebas;
 	private JPanel panelResultados;
-	private boolean inputFieldsOK;	// datos de entrada correctos
+	private boolean inputFieldsOK;
 	private GAStepThread stepThread;
 	private double[] dataAbsoluteBest;
 	private double[] dataGenerationBest;
@@ -88,8 +89,8 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	private DoubleOption<IGAEngine> paramsSelecDouble;
 	private DoubleOption<IGAEngine> paramsCrossDouble;
 	private DoubleOption<IGAEngine> paramsMutDouble;
-	private int selectedMaxVal=0;
-	private int selectedIncrement=0;
+	private int selectedRadio=0;
+	private double currEvaluatedValue=0, oldEvaluatedValue=0,selectedMaxVal=0, selectedIncrement=0;
 	private DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 	public String configData;
 	
@@ -517,6 +518,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         
         JRadioButton tamGruposBut = new JRadioButton();
         panleRadioBut.add(tamGruposBut);
+        tamGruposBut.setSelected(true);
         JRadioButton tamPobBut = new JRadioButton();
         panleRadioBut.add(tamPobBut);
         JRadioButton numGenBut = new JRadioButton();
@@ -560,7 +562,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
         pGraphicPruebsAuto.addLinePlot("my plota", Color.red, y1, x1);
         
         pGraphicPruebsAuto.addLegend("SOUTH");
-        pGraphicPruebsAuto.setPreferredSize(new Dimension(350, 350));
+        pGraphicPruebsAuto.setPreferredSize(new Dimension(350, 510));
         panelPruebas.add(pGraphicPruebsAuto, "gapleft 5, gaptop 5, top");
                 
         boton = new JButton("Stop");
@@ -581,11 +583,11 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		boton = new JButton("Run");
 		boton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int selectedRadio = 0;
 											
 				// consigue los valores seleccionados por el radioBut
-				@SuppressWarnings("rawtypes")
+				@SuppressWarnings("rawtypes")				
 				Enumeration elements = radioButGroup.getElements();
+				selectedRadio = 0;
 			    while (elements.hasMoreElements()) {
 			      AbstractButton button = (AbstractButton)elements.nextElement();
 			      selectedRadio++;
@@ -598,72 +600,139 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 			    switch (selectedRadio)
 			    {
 			    	case 0 : break;
-			    	case 1 : 	
+			    	case 1 : 
+			    		currEvaluatedValue = (Integer)((GAStudentsEngine)gaEngine).getGroupSize();
 			    		selectedIncrement = (Integer) ((SpinnerNumberModel)tamGruposIncr.getModel()).getNumber(); 
 			    		selectedMaxVal=(Integer)(tamGruposText.getValue());
 			    		break;
 			    	case 2 : 	
+			    		currEvaluatedValue = (Integer)((GAStudentsEngine)gaEngine).getPopulation_Size();
 			    		selectedIncrement=(Integer)((SpinnerNumberModel)tamPobIncr.getModel()).getNumber(); 
     					selectedMaxVal=(Integer)(tamPobText.getValue());
     					break;
 			    	case 3 : 
+			    		currEvaluatedValue = (Integer)((GAStudentsEngine)gaEngine).getNum_Max_Gen();
 			    		selectedIncrement=(Integer)(numGenIncr.getValue()); 
     					selectedMaxVal=(Integer)(numGenText.getValue());
     					break;
 			    	case 4 : 
+			    		currEvaluatedValue = ((GAStudentsEngine)gaEngine).getAlfaValue();
 			    		selectedIncrement=(Integer)(alfaIncr.getValue()); 
     					selectedMaxVal=(Integer)(alfaText.getValue());
     					break;
-			    	case 5 : 	
+			    	case 5 :
+			    		currEvaluatedValue = ((GAStudentsEngine)gaEngine).getSelecParams();
 			    		selectedIncrement=(Integer)(selecIncr.getValue()); 
     					selectedMaxVal=(Integer)(selecText.getValue());
     					break;
-			    	case 6 : 	
+			    	case 6 :
+			    		currEvaluatedValue = ((GAStudentsEngine)gaEngine).getCrossParams();
 			    		selectedIncrement=(Integer)(crossIncr.getValue()); 
     					selectedMaxVal=(Integer)(crossText.getValue());
     					break;
-			    	case 7 : 	
+			    	case 7 :
+			    		currEvaluatedValue = ((GAStudentsEngine)gaEngine).getMutParams();
 			    		selectedIncrement=(Integer)(mutIncr.getValue()); 
 						selectedMaxVal=(Integer)(mutText.getValue());
 						break;
 			    }
 			    
-			    System.out.println("MaxVal: " + selectedMaxVal + " | Increment: " + selectedIncrement);
-				
-			    // creamos nuevos arrays donde guardar resultados de la evolución
-				dataAbsoluteBest = new double[gaEngine.getNum_Max_Gen()];
-				dataGenerationBest = new double[gaEngine.getNum_Max_Gen()];
-				dataGenerationAverage = new double[gaEngine.getNum_Max_Gen()];
-				dataGenerationCount = new double[gaEngine.getNum_Max_Gen()];
-				
-				//pGraphic.removeAllPlots();
+			    oldEvaluatedValue = currEvaluatedValue;
 			    
-				// cargamos configuración adicional
-				//gaEngine.loadConfig(configData);
+			    System.out.println("MaxVal: " + selectedMaxVal + " | Increment: " + selectedIncrement);
+		
+				pGraphicPruebsAuto.removeAllPlots();
 				
-				// inicializamos el motor genético
-				//gaEngine.init();
-				
-				// tenemos luz verde para ejecutar?
-				if (stepThread == null || (stepThread != null && stepThread.isDone()))
-				{
-				
-				// bucle de evolución, ejecutamos cada step en un thread distinto (para no bloquar la interfaz)
-				/*stepThread = new GAStepThread(gaEngine,(Object) dataAbsoluteBest,(Object) dataGenerationAverage,(Object) dataGenerationBest,(Object) dataGenerationCount) {
-					protected void done() {
-						try {
-							panelEnEdicion.setText("Evolución completada");
-							pGraphic.addLinePlot("Mejor Absoluto", Color.blue, dataGenerationCount,	dataAbsoluteBest);
-							pGraphic.addLinePlot("Mejor de la Generación", Color.red, dataGenerationCount, dataGenerationBest);
-							pGraphic.addLinePlot("Media de la Generación", Color.green, dataGenerationCount, dataGenerationAverage);
-						} catch (Exception e) {
-							JOptionPane.showMessageDialog(GAGUI.this, "Error", "Hubo un error durante la evolución.", JOptionPane.ERROR_MESSAGE);
+				// vamos actualizando el valor hasta llegar al máximo
+				while (currEvaluatedValue <= selectedMaxVal){
+						int currGeneration = gaEngine.getCurrent_Generation();
+					
+						// creamos nuevos arrays donde guardar resultados de la evolución
+						dataAbsoluteBest = new double[gaEngine.getNum_Max_Gen()];
+						dataGenerationBest = new double[gaEngine.getNum_Max_Gen()];
+						dataGenerationAverage = new double[gaEngine.getNum_Max_Gen()];
+						dataGenerationCount = new double[gaEngine.getNum_Max_Gen()];
+						
+						// cargamos configuración adicional
+						gaEngine.loadConfig(configData);
+						
+						// inicializamos el motor genético
+						gaEngine.init();
+						
+						while (!gaEngine.isEvol_Complete() && currGeneration < gaEngine.getNum_Max_Gen()){
+								try {
+									gaEngine.runEvolutionStep();
+								} catch (InstantiationException e1) {
+									e1.printStackTrace();
+								} catch (IllegalAccessException e1) {
+									e1.printStackTrace();
+								}
+								dataAbsoluteBest[currGeneration] = gaEngine.getAbsoluteBest().getEvaluatedValue();
+								dataGenerationBest[currGeneration] = gaEngine.getGenerationBest().getEvaluatedValue();
+								dataGenerationAverage[currGeneration] = gaEngine.getPopulation_Average();
+								dataGenerationCount[currGeneration] = currGeneration;
+								currGeneration = gaEngine.getCurrent_Generation();
 						}
-					}
-				};
-
-				stepThread.execute();*/
+						
+						pGraphicPruebsAuto.addLinePlot("Mejor Absoluto", Color.blue, dataGenerationCount,	dataAbsoluteBest);
+						pGraphicPruebsAuto.addLinePlot("Mejor de la Generación", Color.red, dataGenerationCount, dataGenerationBest);
+						pGraphicPruebsAuto.addLinePlot("Media de la Generación", Color.green, dataGenerationCount, dataGenerationAverage);
+						
+						// Actualizar el engine con el siguiente incremento
+						currEvaluatedValue += selectedIncrement;												
+						switch (selectedRadio)
+					    {
+					    	case 0 : break;
+					    	case 1 :
+					    		((GAStudentsEngine)gaEngine).setGroupSize((int)currEvaluatedValue);
+					    		break;
+					    	case 2 :
+		    					((GAStudentsEngine)gaEngine).setPopulation_Size((int)currEvaluatedValue);
+		    					break;
+					    	case 3 :
+		    					((GAStudentsEngine)gaEngine).setNum_Max_Gen((int)currEvaluatedValue);
+		    					break;
+					    	case 4 :
+		    					((GAStudentsEngine)gaEngine).setAlfaValue(currEvaluatedValue);
+		    					break;
+					    	case 5 : 	
+					    		((GAStudentsEngine)gaEngine).setSelecParams(currEvaluatedValue);
+		    					break;
+					    	case 6 : 	
+					    		((GAStudentsEngine)gaEngine).setCrossParams(currEvaluatedValue);
+		    					break;
+					    	case 7 : 	
+					    		((GAStudentsEngine)gaEngine).setMutParams(currEvaluatedValue);
+								break;
+					    }
 				}
+				// volvemos a colocar su valor inicial
+				switch (selectedRadio)
+			    {
+			    	case 0 : break;
+			    	case 1 :
+			    		((GAStudentsEngine)gaEngine).setGroupSize((int)oldEvaluatedValue);
+			    		break;
+			    	case 2 :
+    					((GAStudentsEngine)gaEngine).setPopulation_Size((int)oldEvaluatedValue);
+    					break;
+			    	case 3 :
+    					((GAStudentsEngine)gaEngine).setNum_Max_Gen((int)oldEvaluatedValue);
+    					break;
+			    	case 4 :
+    					((GAStudentsEngine)gaEngine).setAlfaValue(oldEvaluatedValue);
+    					break;
+			    	case 5 : 	
+			    		((GAStudentsEngine)gaEngine).setSelecParams(oldEvaluatedValue);
+    					break;
+			    	case 6 : 	
+			    		((GAStudentsEngine)gaEngine).setCrossParams(oldEvaluatedValue);
+    					break;
+			    	case 7 : 	
+			    		((GAStudentsEngine)gaEngine).setMutParams(oldEvaluatedValue);
+						break;
+			    }
+				
 			}
 		});
 		panelPruebas.add(boton, "dock south, gapleft 80, gapright 600");

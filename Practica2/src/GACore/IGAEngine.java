@@ -106,12 +106,6 @@ public abstract class IGAEngine {
 	}
 	public void setFunctionName(String functionName) {
 		this.functionName = functionName;
-	}	
-	public double getAlfa() {
-		return alfaValue;
-	}
-	public void setAlfa(double alfaValue) {
-		this.alfaValue = alfaValue;
 	}
 	public int getNum_Max_Gen() {
 		return num_Max_Gen;
