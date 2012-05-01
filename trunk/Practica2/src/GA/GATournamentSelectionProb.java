@@ -37,5 +37,9 @@ public class GATournamentSelectionProb extends IGASelector{
 		}
 		return new_pop;
 	}
+	
+	public void loadSelectorConf(double selecParams){
+		probLoser = selecParams;		
+	}
 
 }

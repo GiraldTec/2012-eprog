@@ -20,24 +20,27 @@ public final class GAStudentsEngine extends IGAEngine {
 	private String studentPath="1.txt";
 	protected int incompatibilities;
 	protected double resultAverage;
+	 
 	
 	public void init()
 	{		
 		students = new ArrayList<GAStudent>();
 		studentMap = new HashMap<Integer, Integer>();
 		fillerId = -1;
-		
+				
 		// crear función de selección
 		selector = new GARouletteSelection();
 		if (selectorName.equals("Ruleta"))
 			selector = new GARouletteSelection();
 		else if (selectorName.equals("Torneo Det"))
 			selector = new GATournametSelectionDet();
-		else if (selectorName.equals("Torneo Prob"))
+		else if (selectorName.equals("Torneo Prob")){
 			selector = new GATournamentSelectionProb();
+			((GATournamentSelectionProb)selector).loadSelectorConf(selecParams);
+		}
 		else if (selectorName.equals("Ranking"))
 			selector = new GARankingSelection();
-		else if (selectorName.equals("Método Propio"))
+		else if (selectorName.equals("Shuffle"))
 			selector = new GAShuffleSelection();
 		else
 			System.err.println("Error al elegir la función de selección");
@@ -72,7 +75,7 @@ public final class GAStudentsEngine extends IGAEngine {
 			cruzador = new GAStudentOrderCrossVariant();
 		else if (crossName.equals("Ordinal"))
 			cruzador = new GAStudentOrdinalCross();
-		else if (crossName.equals("Método Propio"))
+		else if (crossName.equals("Cremallera"))
 			cruzador = new GAStudentOrdinalCrossCremallera();
 		else
 			System.err.println("Error al elegir la función de cruce");
@@ -80,11 +83,11 @@ public final class GAStudentsEngine extends IGAEngine {
 		//crear el mutador
 		if (mutName.equals("Inserción"))
 			mutador = new GAMutatorInsertion();
-		else if (crossName.equals("Intercambio"))
+		else if (mutName.equals("Intercambio"))
 			mutador = new GAMutatorExchange();
-		else if (crossName.equals("Inversión"))
+		else if (mutName.equals("Inversión"))
 			mutador = new GAMutatorInversion();
-		else if (crossName.equals("Heurística")){
+		else if (mutName.equals("Heurística")){
 			mutador = new GAMutator3Heuristic();
 			((GAMutator3Heuristic)mutador).getExtraParams(students);
 		}
@@ -94,7 +97,6 @@ public final class GAStudentsEngine extends IGAEngine {
 	}
 	
 	public void loadConfig(String config) {
-			
 	}
 	
 	private void loadStudents(String path)
@@ -117,7 +119,7 @@ public final class GAStudentsEngine extends IGAEngine {
 			data = strLine.split(" ");
 
 			//log.info("Num estudiantes: "+ data[0] + "\nNum restricciones: " + data[1]);
-			System.out.println("Num estudiantes: "+ data[0] + "\nNum restricciones: " + data[1]);
+			log.info("Num estudiantes: "+ data[0] + "\nNum restricciones: " + data[1]);
 			
 			number_of_students = Integer.parseInt(data[0]);		
 			numRestrictions = Integer.parseInt(data[1]);
@@ -127,7 +129,7 @@ public final class GAStudentsEngine extends IGAEngine {
 				strLine = br.readLine();
 				data = strLine.split(" ");
 
-				System.out.println("Id : "+ data[0] + " Result: " + data[1]);
+				log.info("Id : "+ data[0] + " Result: " + data[1]);
 
 				// Create student and load id + result
 				student = new GAStudent(Integer.parseInt(data[0]), Double.parseDouble(data[1]));
@@ -141,7 +143,7 @@ public final class GAStudentsEngine extends IGAEngine {
 				strLine = br.readLine();
 				data = strLine.split(" ");
 
-				System.out.println("Student : "+ data[0] + " hates " + data[1]);
+				log.info("Student : "+ data[0] + " hates " + data[1]);
 
 				student = students.get(studentMap.get(Integer.parseInt(data[0])));
 				student.getHaters().add(Integer.parseInt(data[1]));
@@ -152,7 +154,7 @@ public final class GAStudentsEngine extends IGAEngine {
 				student = new GAStudent(fillerId, 0.0);
 				studentMap.put(student.getId(), students.size());
 				students.add(student);
-				System.out.println("Num filler student: " + fillerId);
+				log.info("Num filler student: " + fillerId);
 				fillerId--;
 				number_of_students++;
 			}
