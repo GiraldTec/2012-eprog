@@ -15,45 +15,59 @@ public class GAPartialStudentPairing extends IGACross{
 		
 		int indexA, indexB;
 		int genLength = parent1.getGene().getGen().length;
-		indexA = IGARandom.getRInt(genLength/2-1);
-		indexB = IGARandom.getRInt(genLength/2-1)+(genLength/2);
+		indexB = IGARandom.getRInt(genLength-1)+1;
+		indexA = IGARandom.getRInt(indexB);
 		
 		int[] genD1, genD2;
 		genD1 = new int[genLength];
 		genD2 = new int[genLength];
 		
-		int[][] conflictos = new int[2][genLength];
-		for(int i=0;i<2;i++)
-			for(int j=0;j<genLength;j++)
-				conflictos[i][j]=-1;
+		int[] padreGen1= parent1.getGene().getGen();
+		int[] padreGen2= parent2.getGene().getGen();
 		
+		checkear(padreGen1);
+		checkear(padreGen2);
 		
-		for(int i=indexA;i<=indexB;i++){
-			genD1[i]=parent2.getGene().getGen()[i];
-			genD2[i]=parent1.getGene().getGen()[i];
-			conflictos[0][i]= genD1[i];
-			conflictos[1][i]= genD2[i];
-		}
+		//inicializando los genesDescendientes
+		for(int i=0;i<genLength;i++){	genD1[i]=genD2[i]=-1;}
 		
-		for(int i=0;i<genLength;i++){
-			if(i>=indexA && i<=indexB){
-				if(!pertenece(parent1.getGene().getGen()[i],conflictos[0]))
-					genD1[i]=parent1.getGene().getGen()[i];
-				if(!pertenece(parent2.getGene().getGen()[i],conflictos[1]))
-					genD2[i]=parent2.getGene().getGen()[i];				
-			}
-		}
+		//Intercambio de la zona delimitada por los indices
+		// Y crear los pares
 		
-		for(int i=0;i<genLength;i++){
-			if(i>=indexA && i<=indexB){
-				if(pertenece(parent1.getGene().getGen()[i],genD1))
-					genD1[i]=conflictos[1][getIndex(parent1.getGene().getGen()[i], genD1)];
-				if(pertenece(parent2.getGene().getGen()[i],genD2))
-					genD2[i]=conflictos[0][getIndex(parent2.getGene().getGen()[i],genD2)];
-			}
-		}
+		int[] parejaH1 = new int[genLength];
+		int[] parejaH2 = new int[genLength];
+		
+		for(int i=indexA;i<indexB;i++){
+			genD1[i]=padreGen2[i];
 			
+			genD2[i]=padreGen1[i];
+			
+			parejaH1[genD1[i]]=genD2[i];
+			parejaH2[genD2[i]]=genD1[i];
+		}
+		
+		
+		for(int i=0;i<genLength;i++){
+			if(i<indexA | i>=indexB){
+				//Mirando el hijo1
+				if(!pertenece(padreGen1[i],genD1)){
+					genD1[i]=padreGen1[i];
+				}else{
+					genD1[i]=parejaH1[padreGen1[i]];
+				}
+				//Mirando al hijo2
+				if(!pertenece(padreGen2[i],genD2)){
+					genD2[i]=padreGen2[i];
+				}else{
+					genD2[i]=parejaH2[padreGen2[i]];
+				}
+			}
+		}
+		
+		
 		GAStudentGene genP1 = (GAStudentGene) parent1.getGene();
+		checkear(genD1);
+		checkear(genD2);
 		GAStudentGene genP2 = (GAStudentGene) parent2.getGene();
 		GAStudentCromosome[] descendientes= new GAStudentCromosome[2];
 		descendientes[0]= new GAStudentCromosome();
@@ -64,5 +78,14 @@ public class GAPartialStudentPairing extends IGACross{
 		return descendientes;
 	}
 
+	public void checkear(int[] gn){
+		boolean argu=true;
+		int i=0;
+		while(i<gn.length & argu){
+			argu=pertenece(i, gn);
+			i++;
+		}
+		System.out.print(argu);
+	}
 	
 }
