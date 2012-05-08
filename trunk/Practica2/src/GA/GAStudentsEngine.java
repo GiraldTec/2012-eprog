@@ -166,12 +166,6 @@ public final class GAStudentsEngine extends IGAEngine {
 		}
 	}
 	
-	/*public static void main(String[] args) {
-		GAStudentsEngine ga = new GAStudentsEngine();
-		ga.init();
-		ga.loadStudents("3.txt");
-	}*/
-	
 	private void calcAverageScore(){
 		double resultAvrg = 0;
 		for (int i=0; i<students.size(); i++){
@@ -240,25 +234,24 @@ public final class GAStudentsEngine extends IGAEngine {
 			
 			// si usamos elitismo sustituir a los peores individuos de la población por los hijos
 			if (useElitism) {
-				@SuppressWarnings("rawtypes")
-				class Struct implements Comparable {
+				final class CromoData implements Comparable<CromoData> {
 					private double aptitud;
 					private int possition;
 		
-					public Struct(double apt, int pos) {
+					public CromoData(double apt, int pos) {
 						aptitud = apt;
 						possition = pos;
 					}
 		
-					public int compareTo(Object o) {
+					public int compareTo(CromoData o) {
 		
-						if (this.aptitud == ((Struct) o).getAptitude())
+						if (this.aptitud == o.getAptitude())
 							return 0;
 						else {
-							if (this.aptitud < ((Struct) o).getAptitude()) {
-								return -1;
-							} else
+							if (this.aptitud < o.getAptitude()) {
 								return 1;
+							} else
+								return -1;
 						}
 					}
 		
@@ -267,9 +260,9 @@ public final class GAStudentsEngine extends IGAEngine {
 					}
 				}
 		
-				PriorityQueue<Struct> rank = new PriorityQueue<Struct>();
+				PriorityQueue<CromoData> rank = new PriorityQueue<CromoData>();
 				for (int i=0; i<population_Size;i++){
-					rank.add(new Struct(population[i].getEvaluatedValue(),i));
+					rank.add(new CromoData(population[i].getEvaluatedValue(),i));
 				}
 				for(int i=0;i<num_Sel_Cross;i++){
 					population[rank.poll().possition]=auxiliar_population[sel_Cross[i]];
