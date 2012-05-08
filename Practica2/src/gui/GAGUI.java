@@ -57,6 +57,7 @@ import org.jfree.chart.plot.CategoryMarker;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.util.Log;
 import org.math.plot.Plot2DPanel;
 
 import GA.GAStudentGene;
@@ -290,7 +291,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 									pos = gaEngine.getAbsoluteBest().getGene().getGen()[i];
 									category = "G" + ((int) Math.floor(i/studEng.getGroupSize()));
 									
-									System.out.println(i +" | "+ count+" | "+ pos +" | "+ category + " | " +studEng.getStudents().get(i).getResult());
+									Log.info(i +" | "+ count+" | "+ pos +" | "+ category + " | " +studEng.getStudents().get(i).getResult());
 									
 									dataset.addValue(studEng.getStudents().get(pos).getResult(), category + "." + count, category);
 							        plot.getRenderer().setSeriesPaint(i, linearGradient(new Color(65, 105, 225), new Color(135, 206, 250), studEng.getGroupSize(), count));

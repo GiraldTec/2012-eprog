@@ -4,6 +4,7 @@ import GACore.IGACromosome;
 import GACore.IGACross;
 import GACore.IGARandom;
 
+// Variación OX : Posiciones Prioritarias
 public class GAStudentOrderCrossVariant extends IGACross {
 
 	@Override
@@ -17,7 +18,6 @@ public class GAStudentOrderCrossVariant extends IGACross {
 		numPos = IGARandom.getRInt(genLength/2)+1;
 		
 		int[] vectorPos = new int[numPos];
-		
 		
 		for(int i=0;i<numPos;i++){
 			int newPos= IGARandom.getRInt(genLength);
