@@ -144,9 +144,9 @@ public abstract class IGAEngine<T> {
 						return 0;
 					else {
 						if (this.aptitud < ((Struct) o).getAptitude()) {
-							return -1;
-						} else
 							return 1;
+						} else
+							return -1;
 					}
 				}
 	
