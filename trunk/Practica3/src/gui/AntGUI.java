@@ -1,33 +1,45 @@
 package gui;
 
-import java.util.List;
-import java.util.Iterator;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.util.ArrayList;
-import java.awt.*;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import no.geosoft.cc.geometry.Geometry;
-import no.geosoft.cc.graphics.*;
+import no.geosoft.cc.graphics.GInteraction;
+import no.geosoft.cc.graphics.GObject;
+import no.geosoft.cc.graphics.GScene;
+import no.geosoft.cc.graphics.GSegment;
+import no.geosoft.cc.graphics.GStyle;
+import no.geosoft.cc.graphics.GWindow;
 
 public class AntGUI extends JFrame implements GInteraction {
 	private static final long serialVersionUID = 5565888368147220570L;
-	static int boardSize = 32;
 	
-	private Reversi reversi_;
+	static int boardSize = 32;
+	public enum PieceType {
+		NOTHING(0),	PATH(1), FOOD(2), EATENFOOD(3), ANT(4);		
+		public int id;		
+		PieceType(int i){id = i;}
+	};
+	private AntBoardManager antBoardManager;
+	
 
 	public AntGUI(int boardSize) {
 		super("G Graphics Library - Demo 13");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// Create the GUI
-		JPanel topLevel = new JPanel();
-		topLevel.setLayout(new BorderLayout());
-		getContentPane().add(topLevel);
+		JPanel panelAntBoard = new JPanel();
+		panelAntBoard.setLayout(new BorderLayout());
+		getContentPane().add(panelAntBoard);
 
 		// Create the graphic canvas
 		GWindow window = new GWindow(new Color(0, 220, 220));
-		topLevel.add(window.getCanvas(), BorderLayout.CENTER);
+		panelAntBoard.add(window.getCanvas(), BorderLayout.CENTER);
 
 		// Create scene
 		GScene scene = new GScene(window);
@@ -37,9 +49,9 @@ public class AntGUI extends JFrame implements GInteraction {
 		scene.setWorldExtent(w0, w1, w2);
 
 		// Create the Reversi game and graphics representation
-		reversi_ = new Reversi(boardSize);
-		GObject reversiBoard = new ReversiBoard();
-		scene.add(reversiBoard);
+		antBoardManager = new AntBoardManager(boardSize);
+		GObject antBoard = new AntBoard();
+		scene.add(antBoard);
 		
 		pack();
 		setSize(new Dimension(600, 600));
@@ -66,192 +78,176 @@ public class AntGUI extends JFrame implements GInteraction {
 		int i = (int) w[1] - 1;
 		int j = (int) w[0] - 1;
 
-		if (i < 0 || i >= reversi_.getSize() || j < 0
-				|| j >= reversi_.getSize())
+		if (i < 0 || i >= antBoardManager.getSize() || j < 0
+				|| j >= antBoardManager.getSize())
 			return;
 
 		switch (event) {
-		case GWindow.MOTION:
-			if (reversi_.isLegalMove(i, j)) {
-				GSegment highlight = new GSegment();
-				GStyle highlightStyle = new GStyle();
-				highlightStyle.setBackgroundColor(new Color(1.0f, 1.0f, 1.0f,
-						0.7f));
-				highlight.setStyle(highlightStyle);
-				interaction.addSegment(highlight);
-
-				highlight.setGeometryXy(new double[] { j + 1.0, i + 1.0,
-						j + 2.0, i + 1.0, j + 2.0, i + 2.0, j + 1.0, i + 2.0,
-						j + 1.0, i + 1.0 });
-			}
-			break;
-
-		case GWindow.BUTTON1_UP:
-			if (reversi_.isLegalMove(i, j)) {
-				reversi_.move(i, j);
+			case GWindow.MOTION:
+				if (antBoardManager.isLegalPos(i, j)) {
+					GSegment highlight = new GSegment();
+					GStyle highlightStyle = new GStyle();
+					highlightStyle.setBackgroundColor(new Color(1.0f, 1.0f, 1.0f, 0.7f));
+					highlight.setStyle(highlightStyle);
+					interaction.addSegment(highlight);
+	
+					highlight.setGeometryXy(new double[] { j + 1.0, i + 1.0,
+							j + 2.0, i + 1.0, j + 2.0, i + 2.0, j + 1.0, i + 2.0,
+							j + 1.0, i + 1.0 });
+				}
+				break;
+	
+			case GWindow.BUTTON1_UP:
+				//if (antBoardManager.isLegalPos(i, j)) {
+					antBoardManager.setPosValue(i, j, PieceType.FOOD);
+					interaction.removeSegments();
+					scene.redraw();
+				//}
+				break;
+				
+			case GWindow.BUTTON2_UP:
+				antBoardManager.setPosValue(i, j, PieceType.NOTHING);
 				interaction.removeSegments();
 				scene.redraw();
-			}
+				break;
 		}
 
 		scene.refresh();
 	}
 
-	class ReversiBoard extends GObject {
-		private GSegment board_;
-		private GSegment[] grid_;
-		private ArrayList<GSegment> pieces_; // og GSegment
-		private GStyle[] pieceStyle_;
+	class AntBoard extends GObject {
+		private GSegment board;
+		private GSegment[] grid;
+		private ArrayList<GSegment> pieces;
+		private GStyle[] pieceStyle;
 
-		public ReversiBoard() {
-			board_ = new GSegment();
+		public AntBoard() {
+			board = new GSegment();
 			GStyle boardStyle = new GStyle();
 			boardStyle.setBackgroundColor(new Color(0, 200, 0));
-			board_.setStyle(boardStyle);
-			addSegment(board_);
+			board.setStyle(boardStyle);
+			addSegment(board);
 
 			GStyle gridStyle = new GStyle();
 			gridStyle.setForegroundColor(new Color(0, 0, 0));
 			gridStyle.setLineWidth(2);
-			grid_ = new GSegment[(reversi_.getSize() + 1) * 2];
+			grid = new GSegment[(antBoardManager.getSize() + 1) * 2];
 
-			for (int i = 0; i < grid_.length; i++) {
-				grid_[i] = new GSegment();
-				grid_[i].setStyle(gridStyle);
-				addSegment(grid_[i]);
+			for (int i = 0; i < grid.length; i++) {
+				grid[i] = new GSegment();
+				grid[i].setStyle(gridStyle);
+				addSegment(grid[i]);
 			}
 
-			pieceStyle_ = new GStyle[2];
-			pieceStyle_[0] = new GStyle();
-			pieceStyle_[0].setForegroundColor(new Color(255, 255, 255));
-			pieceStyle_[0].setBackgroundColor(new Color(255, 255, 255));
+			pieceStyle = new GStyle[4];
+						
+			// Path
+			pieceStyle[0] = new GStyle();
+			pieceStyle[0].setForegroundColor(new Color(255, 255, 255));
+			pieceStyle[0].setBackgroundColor(new Color(245, 61, 0));
 
-			pieceStyle_[1] = new GStyle();
-			pieceStyle_[1].setForegroundColor(new Color(0, 0, 0));
-			pieceStyle_[1].setBackgroundColor(new Color(0, 0, 0));
-
-			pieces_ = new ArrayList<GSegment>();
+			// Food
+			pieceStyle[1] = new GStyle();
+			pieceStyle[1].setForegroundColor(new Color(155, 155, 155));
+			pieceStyle[1].setBackgroundColor(new Color(0, 0, 0));
+			
+			// Eaten Food
+			pieceStyle[2] = new GStyle();
+			pieceStyle[2].setForegroundColor(new Color(255, 0, 0));
+			pieceStyle[2].setBackgroundColor(new Color(0, 0, 0));
+			
+			// Ant
+			pieceStyle[3] = new GStyle();
+			pieceStyle[3].setForegroundColor(new Color(255, 255, 255));
+			pieceStyle[3].setBackgroundColor(new Color(51, 102, 255));
+			
+			pieces = new ArrayList<GSegment>();
 		}
 
 		public void draw() {
-			int size = reversi_.getSize();
+			int size = antBoardManager.getSize();
 
 			// Board
-			board_.setGeometryXy(new double[] { 1.0, 1.0, size + 1.0, 1.0,
+			board.setGeometryXy(new double[] { 1.0, 1.0, size + 1.0, 1.0,
 					size + 1.0, size + 1.0, 1.0, size + 1.0, 1.0, 1.0 });
 
 			// Grid lines
 			for (int i = 0; i <= size; i++) {
-				grid_[i * 2 + 0].setGeometry(1.0, i + 1.0, size + 1.0, i + 1.0);
-				grid_[i * 2 + 1].setGeometry(i + 1.0, 1.0, i + 1.0, size + 1.0);
+				grid[i * 2 + 0].setGeometry(1.0, i + 1.0, size + 1.0, i + 1.0);
+				grid[i * 2 + 1].setGeometry(i + 1.0, 1.0, i + 1.0, size + 1.0);
 			}
 
 			// Pieces
-			int[] state = reversi_.getState();
+			PieceType[] state = antBoardManager.getState();
 			int j = 0;
 			for (int i = 0; i < state.length; i++) {
-				if (state[i] != 0) {
-					double y = i / size + 1.5;
-					double x = i % size + 1.5;
+				if (state[i] != PieceType.NOTHING) {
+					double x = i % size + 1.084;
+					double y = i / size + 1.9;
 
 					int[] xy = getTransformer().worldToDevice(x, y);
 
 					GSegment piece;
-					if (j < pieces_.size())
-						piece = (GSegment) pieces_.get(j);
+					if (j < pieces.size())
+						piece = (GSegment) pieces.get(j);
 					else {
 						piece = new GSegment();
-						pieces_.add(piece);
+						pieces.add(piece);
 						addSegment(piece);
 					}
 
+					piece.setStyle(pieceStyle[state[i].id - 1]);					
+					piece.setGeometry(Geometry.createRectangle(xy[0], xy[1], 15, 15));
+					
 					j++;
-
-					piece.setStyle(pieceStyle_[state[i] - 1]);
-					piece.setGeometry(Geometry.createCircle(xy[0], xy[1], 15 - boardSize/4));// createRectangle(xy[0], xy[0]+5, xy[1], xy[1]+5));
 				}
 			}
 		}
 	}
 
-	class Reversi {
-		private int size_;
-		private int[] state_;
-		private int player_;
+	class AntBoardManager {
+		private int size;
+		private PieceType[] state;
 
-		public Reversi(int size) {
-			size_ = size;
+		public AntBoardManager(int newSize) {
+			size = newSize;
 
-			state_ = new int[size_ * size_];
-			for (int i = 0; i < state_.length; i++)
-				state_[i] = 0;
-
-			state_[(size_ / 2 - 1) * size_ + size_ / 2 - 1] = 1;
-			state_[(size_ / 2 - 1) * size_ + size_ / 2] = 2;
-			state_[(size_ / 2) * size_ + size_ / 2 - 1] = 2;
-			state_[(size_ / 2) * size_ + size_ / 2] = 1;
-
-			player_ = 1;
+			state = new PieceType[size * size];
+			for (int i = 0; i < state.length; i++)
+				state[i] = Math.random() > 0.9 ? PieceType.FOOD : PieceType.NOTHING;
+			
+			setPosValue(0,0,PieceType.PATH);
+			setPosValue(0,1,PieceType.PATH);
+			setPosValue(0,2,PieceType.PATH);
+			setPosValue(0,3,PieceType.PATH);
+			setPosValue(0,4,PieceType.PATH);
+			setPosValue(1,4,PieceType.EATENFOOD);
+			setPosValue(2,4,PieceType.PATH);
+			setPosValue(3,4,PieceType.PATH);
+			setPosValue(4,4,PieceType.ANT);
 		}
 
 		public int getSize() {
-			return size_;
+			return size;
 		}
 
-		public int[] getState() {
-			return state_;
+		public PieceType[] getState() {
+			return state;
+		}
+		
+		public void setPosValue(int i, int j, PieceType p) {
+			state[i * size + j] = p;
 		}
 
-		public boolean isLegalMove(int i, int j) {
-			return state_[i * size_ + j] == 0
-					&& (win(i, j, player_)).length > 0;
+		public boolean isLegalPos(int i, int j) {
+			return state[i * size + j] == PieceType.NOTHING;
 		}
-
+		
 		public void move(int i, int j) {
-			int[] win = win(i, j, player_);
-			for (int s = 0; s < win.length; s++)
-				state_[win[s]] = player_;
-			state_[i * size_ + j] = player_;
-
-			player_ = player_ == 1 ? 2 : 1;
+			if (isLegalPos(i, j))
+				state[i * size + j] = PieceType.ANT;
 		}
-
-		private int[] win(int i, int j, int color) {
-			ArrayList<Integer> win = new ArrayList<Integer>();
-			win.addAll(win(i, j, color, +1, 0));
-			win.addAll(win(i, j, color, +1, +1));
-			win.addAll(win(i, j, color, 0, +1));
-			win.addAll(win(i, j, color, -1, +1));
-			win.addAll(win(i, j, color, -1, 0));
-			win.addAll(win(i, j, color, -1, -1));
-			win.addAll(win(i, j, color, 0, -1));
-			win.addAll(win(i, j, color, +1, -1));
-
-			int[] a = new int[win.size()];
-			int s = 0;
-			for (Iterator<Integer> t = win.iterator(); t.hasNext(); s++)
-				a[s] = ((Integer) t.next()).intValue();
-
-			return a;
-		}
-
-		private ArrayList<Integer> win(int i, int j, int color, int dx, int dy) {
-			ArrayList<Integer> win = new ArrayList<Integer>();
-
-			while (true) {
-				i += dx;
-				j += dy;
-
-				if (i < 0 || i == size_ || j < 0 || j == size_
-						|| state_[i * size_ + j] == 0)
-					return new ArrayList<Integer>();
-
-				else if (state_[i * size_ + j] == color)
-					return win;
-				else if (state_[i * size_ + j] != color)
-					win.add(new Integer(i * size_ + j));
-			}
-		}
+				
 	}
 
 	public static void main(String[] args) {
