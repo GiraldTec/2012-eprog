@@ -5,6 +5,7 @@ import gui.ConfigPanel.ConfigListener;
 import gui.ConfigPanel.DoubleOption;
 import gui.ConfigPanel.IntegerOption;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -45,9 +46,17 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import net.miginfocom.swing.MigLayout;
+import no.geosoft.cc.graphics.GInteraction;
+import no.geosoft.cc.graphics.GObject;
+import no.geosoft.cc.graphics.GScene;
+import no.geosoft.cc.graphics.GSegment;
+import no.geosoft.cc.graphics.GStyle;
+import no.geosoft.cc.graphics.GWindow;
 
 import org.math.plot.Plot2DPanel;
 
+import practica3.AntBoardManager;
+import practica3.AntBoardManager.PieceType;
 import GA.GAStudentsEngine;
 import GACore.IGAEngine;
 import de.javasoft.plaf.synthetica.SyntheticaBlackEyeLookAndFeel;
@@ -56,7 +65,7 @@ import de.javasoft.plaf.synthetica.SyntheticaBlackEyeLookAndFeel;
  * @author Ricardo Pragnell, Carlos Gabriel
  */
 
-public class GAGUI extends JFrame implements PropertyChangeListener{
+public class GAGUI extends JFrame implements PropertyChangeListener, GInteraction{
 	
 	private static final long serialVersionUID = 5393378737313833016L;
 	private JPanel panelGenetics;
@@ -75,7 +84,8 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 	private DoubleOption<IGAEngine> paramsSelecDouble;
 	private DoubleOption<IGAEngine> paramsCrossDouble;
 	private DoubleOption<IGAEngine> paramsMutDouble;
-	private int selectedRadio=0;
+	private int selectedRadio=0, boardSize=32;
+	private AntBoardManager boardManager;
 	private double currEvaluatedValue=0, oldEvaluatedValue=0,selectedMaxVal=0, selectedIncrement=0;
 	public String configData;
 	
@@ -87,7 +97,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		panelGenetics = new JPanel();
 		panelGenetics.setLayout(new MigLayout("", "[center]"));
 		panelResultados = new JPanel();
-		panelResultados.setLayout(new MigLayout("", "[center]"));
+		panelResultados.setLayout(new BorderLayout());
 		panelPruebas = new JPanel();
 		panelPruebas.setLayout(new MigLayout("flowy", "[left]"));
 		
@@ -108,6 +118,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		});
 		
 		JTabbedPane tabPanePrincipal = new JTabbedPane();
+		boardManager = new AntBoardManager(boardSize);
 		
         //********** PANEL GENETICS **************************************//
 		
@@ -309,6 +320,30 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
 		pGraphic.setSize(600, 600);
 		pGraphic.setPreferredSize(new Dimension(600, 600));
 		panelGenetics.add(pGraphic, "split, grow, gaptop 11, gapleft 20, gapbottom 11, gapright 11, dock east");
+		
+		//********** PANEL PRUEBAS RESULTADOS **************************************//
+		
+		// Create the graphic canvas
+		GWindow window = new GWindow(new Color(0, 220, 220));
+		panelResultados.add(window.getCanvas(), BorderLayout.CENTER);
+		
+		// Create scene
+		GScene scene = new GScene(window);
+		double w0[] = { 0.0, 0.0, 0.0 };
+		double w1[] = { boardSize + 2.0, 0.0, 0.0 };
+		double w2[] = { 0.0, boardSize + 2.0, 0.0 };
+		scene.setWorldExtent(w0, w1, w2);
+
+		GUIAntBoard antBoard = new GUIAntBoard(boardManager);
+		scene.add(antBoard);
+
+		// Make sure plot can be scrolled
+		window.startInteraction(this);
+		
+		JPanel saveLoadPanel = new JPanel(new GridLayout(1, 2));
+		saveLoadPanel.add(new JButton("Cargar"));
+		saveLoadPanel.add(new JButton("Guardar"));
+		panelResultados.add(saveLoadPanel, BorderLayout.SOUTH);
 		                        
         //********** PANEL PRUEBAS AUTOMÁTICAS **************************************//
                 
@@ -850,5 +885,66 @@ public class GAGUI extends JFrame implements PropertyChangeListener{
             int progress = (Integer) evt.getNewValue();
             progBar.setValue(progress);
         } 
+	}
+
+	public void event(GScene scene, int event, int x, int y) {
+		if (scene == null)
+			return;
+
+		GObject interaction = scene.find("interaction");
+		if (interaction == null) {
+			interaction = new GObject("interaction");
+			scene.add(interaction);
+		}
+
+		interaction.removeSegments();
+
+		double[] w = scene.getTransformer().deviceToWorld(x, y);
+
+		int i = (int) w[1] - 1;
+		int j = (int) w[0] - 1;
+
+		if (i < 0 || i >= boardSize || j < 0 || j >= boardSize)
+			return;
+
+		switch (event) {
+			case GWindow.MOTION:
+				if (boardManager.isLegalPos(i, j)) {
+					GSegment highlight = new GSegment();
+					GStyle highlightStyle = new GStyle();
+					highlightStyle.setBackgroundColor(new Color(1.0f, 1.0f, 1.0f, 0.7f));
+					highlight.setStyle(highlightStyle);
+					interaction.addSegment(highlight);
+	
+					highlight.setGeometryXy(new double[] { j + 1.0, i + 1.0,
+							j + 2.0, i + 1.0, j + 2.0, i + 2.0, j + 1.0, i + 2.0,
+							j + 1.0, i + 1.0 });
+				}
+				break;
+	
+			case GWindow.BUTTON1_UP:
+				if (boardManager.getPos(i,j) == PieceType.NOTHING){
+					boardManager.setPosValue(i, j, PieceType.FOOD);
+					interaction.removeSegments();
+					scene.redraw();
+				}
+				break;
+			
+			case GWindow.BUTTON2_UP:
+				boardManager.setAntPos(i, j);
+				interaction.removeSegments();
+				scene.redraw();
+				break;
+			
+			case GWindow.BUTTON3_UP:
+				if (boardManager.getPos(i,j) != PieceType.ANT){
+					boardManager.setPosValue(i, j, PieceType.NOTHING);
+					interaction.removeSegments();
+					scene.redraw();
+				}
+				break;			
+		}
+
+	scene.refresh();
 	}
 }
