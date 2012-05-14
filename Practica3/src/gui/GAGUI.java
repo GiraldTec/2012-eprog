@@ -85,9 +85,10 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 	private DoubleOption<IGAEngine> paramsCrossDouble;
 	private DoubleOption<IGAEngine> paramsMutDouble;
 	private int selectedRadio=0, boardSize=32;
+	private GUIAntBoard antBoard;
 	private AntBoardManager boardManager;
 	private double currEvaluatedValue=0, oldEvaluatedValue=0,selectedMaxVal=0, selectedIncrement=0;
-	public String configData;
+	public String configData, mapName;
 	
 	
 	public GAGUI(final IGAEngine gaEngine) {
@@ -214,30 +215,9 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		progBar.setStringPainted(true);
 		panelCentral.add(progBar, "wrap, span, gaptop 15, gapbottom 10, center");
 		
-		// usado por todos los botones
+		// variable para ir creando los botones
 		JButton boton;
-		
-		// pedir el path del archivo alumnos
-		boton = new JButton("Cargar");
-		boton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				final JFileChooser fc = new JFileChooser();
-				fc.setCurrentDirectory(new File("."));
-				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				int returnVal = fc.showOpenDialog(GAGUI.this);			
-
-		        if (returnVal == JFileChooser.APPROVE_OPTION) {
-		            File file = fc.getSelectedFile();
-		            System.out.println("Opening: " + file.getName());
-		            
-		            ((GAStudentsEngine) gaEngine).setStudentPath(file.getName());
-		        } else {
-		        	System.out.println("Open command cancelled by user.");
-		        }
-			}
-		});
-		panelCentral.add(boton);
-		
+	
 		// botón para ejecutar la evolucion
 		boton = new JButton("Run");
 		boton.addActionListener(new ActionListener() {
@@ -334,15 +314,78 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		double w2[] = { 0.0, boardSize + 2.0, 0.0 };
 		scene.setWorldExtent(w0, w1, w2);
 
-		GUIAntBoard antBoard = new GUIAntBoard(boardManager);
+		antBoard = new GUIAntBoard(boardManager);
 		scene.add(antBoard);
 
 		// Make sure plot can be scrolled
 		window.startInteraction(this);
 		
-		JPanel saveLoadPanel = new JPanel(new GridLayout(1, 2));
-		saveLoadPanel.add(new JButton("Cargar"));
-		saveLoadPanel.add(new JButton("Guardar"));
+		JPanel saveLoadPanel = new JPanel(new GridLayout(1, 2, 20, 1));
+		boton = new JButton("Cargar");
+		boton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				final JFileChooser fc = new JFileChooser();
+				fc.setCurrentDirectory(new File("."));
+				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				int returnVal = fc.showOpenDialog(GAGUI.this);			
+
+		        if (returnVal == JFileChooser.APPROVE_OPTION) {
+		            File file = fc.getSelectedFile();
+		            System.out.println("Abriendo: " + file.getName());
+		            
+		            mapName = file.getName();
+		            boardManager.loadMapFromFile(mapName);
+		            antBoard.redraw();
+		        } else {
+		        	System.out.println("Open command cancelled by user.");
+		        }
+			}
+		});
+		
+		saveLoadPanel.add(boton);
+		boton = new JButton("Guardar");
+		boton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				final JFileChooser fc = new JFileChooser();
+				fc.setCurrentDirectory(new File("."));
+				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				int returnVal = fc.showSaveDialog(GAGUI.this);			
+
+		        if (returnVal == JFileChooser.APPROVE_OPTION) {
+		            File file = fc.getSelectedFile();
+		            System.out.println("Guardando: " + file.getName());
+		            
+		            mapName = file.getName();
+		            boardManager.saveMapToFile(mapName);
+		        } else {
+		        	System.out.println("Save command cancelled by user.");
+		        }
+			}
+		});
+		saveLoadPanel.add(boton);
+		
+		saveLoadPanel.add(boton);
+		boton = new JButton("Randomize");
+		boton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				boardManager.randomizeBoard();
+				antBoard.redraw();
+				antBoard.refresh();
+			}
+		});
+		saveLoadPanel.add(boton);
+		
+		saveLoadPanel.add(boton);
+		boton = new JButton("Reset");
+		boton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				boardManager.resetBoard();
+				antBoard.redraw();
+				antBoard.refresh();
+			}
+		});
+		saveLoadPanel.add(boton);
+		
 		panelResultados.add(saveLoadPanel, BorderLayout.SOUTH);
 		                        
         //********** PANEL PRUEBAS AUTOMÁTICAS **************************************//
