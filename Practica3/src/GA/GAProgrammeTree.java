@@ -1,8 +1,10 @@
 package GA;
 
+import GACore.IGARandom;
+
 public class GAProgrammeTree {
 
-	private byte kindOf; 
+	private byte operator; 
 	/* **************
 	 * 	Tipos:
 	 * **************
@@ -21,19 +23,67 @@ public class GAProgrammeTree {
 	private GAProgrammeTree centerSon;
 	private GAProgrammeTree rigthSon;
 	
+	private int numNodes;
+	
+	// valores por defecto
+	private int minDepth = 5;
+	private int maxDepth = 10;
+	
 	public GAProgrammeTree(){
-		setKindOf((byte) -1);
+		setOperator((byte) -1);
 		leftSon = null;
 		centerSon = null;
 		rigthSon = null;
+		numNodes = 0;
+		
+		// crear el arbol
+		initTree(this, minDepth, maxDepth);
 	}
 	
-	public GAProgrammeTree initTree(){
+	public GAProgrammeTree initTree(GAProgrammeTree tree, int minD, int maxD){
+		byte operator;
+		GAProgrammeTree hIzq, hDer, hCen;
 		
-		/*
-		 * funcion creaArbol(TArbol arbol,entero prof_min,entero prof_max){
-			si prof_min > 0 entonces //no puede ser hoja
-				// generación del subarbol de operador
+		if (minD > 0){	//no puede ser hoja
+			// generación del subarbol de operador
+			operator = (byte) IGARandom.getRInt(5); // símbolo de operador aleatorio
+			tree.operator = operator;
+			// se generan los hijos
+			hIzq = new GAProgrammeTree();
+			hIzq.initTree(hIzq, minD - 1 , maxD - 1);
+			numNodes = numNodes + hIzq.getNumNodes();
+			
+			if (operator == 5) { //si tres_operandos
+				hCen = new GAProgrammeTree();
+				hCen.initTree(hCen, minD - 1 , maxD - 1);
+				numNodes = numNodes + hCen.getNumNodes();
+			}
+			else { // dos operandos
+				hDer = new GAProgrammeTree();
+				hDer.initTree(hDer, minD - 1 , maxD - 1);
+				numNodes = numNodes + hDer.getNumNodes();
+			}
+		}
+		else { // prof_min = 0
+			if (maxD == 0) { // sólo puede ser hoja
+				operator = (byte) IGARandom.getRInt(2); // símbolo de operador aleatorio AQUI HE PUESTO PARA QUE SOLO SALGA AVANZA, IZQ, O DER YA QUE ES UNA HOJA...
+				numNodes++;
+			}
+			else {
+				// se decide aleatoriamente operando u operador
+				if (IGARandom.getRInt(1) == 1) { // se genera operador
+					// generación del subarbol de operador
+					
+				}
+				else { // se genera operando
+					// generación del subarbol de operando
+					
+				}
+			}
+		}
+			
+		/*si prof_min > 0 entonces 
+				
 				
 				operador = operador_aleatorio; // símbolo de operador aleatorio
 				arbol.dato = operador;
@@ -68,13 +118,12 @@ public class GAProgrammeTree {
 						// generación del subarbol de operando
 						{  }
 			}
-		 * 
-		 * */
-		return null;
+		 */
+		return this;
 	}
 
-	public void setKindOf(byte kindOf) {
-		this.kindOf = kindOf;
+	public void setOperator(byte operator) {
+		this.operator = operator;
 	}
 
 	public GAProgrammeTree getLeftSon() {
@@ -101,7 +150,15 @@ public class GAProgrammeTree {
 		this.rigthSon = rigthSon;
 	}
 
-	public short getKindOf() {
-		return kindOf;
+	public short getOperator() {
+		return operator;
+	}
+
+	public int getNumNodes() {
+		return numNodes;
+	}
+
+	public void setNumNodes(int numNodes) {
+		this.numNodes = numNodes;
 	}
 }
