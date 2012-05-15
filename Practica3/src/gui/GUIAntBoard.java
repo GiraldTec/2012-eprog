@@ -76,8 +76,11 @@ class GUIAntBoard extends GObject {
 		}
 
 		// Pieces
+		for (GSegment s : pieces){
+			removeSegment(s);
+		}
+		
 		PieceType[] state = antBoardManager.getState();
-		int j = 0;
 		for (int i = 0; i < state.length; i++) {
 			if (state[i] != PieceType.NOTHING) {
 				double x = i % size + 1.084;
@@ -86,18 +89,20 @@ class GUIAntBoard extends GObject {
 				int[] xy = getTransformer().worldToDevice(x, y);
 
 				GSegment piece;
-				if (j < pieces.size())
+				/*if (j < pieces.size())
 					piece = (GSegment) pieces.get(j);
 				else {
 					piece = new GSegment();
 					pieces.add(piece);
 					addSegment(piece);
-				}
+				}*/
 
+				piece = new GSegment();
+				pieces.add(piece);
+				addSegment(piece);
+			
 				piece.setStyle(pieceStyle[state[i].id - 1]);					
 				piece.setGeometry(Geometry.createRectangle(xy[0], xy[1], 21, 16));
-				
-				j++;
 			}
 		}
 	}
