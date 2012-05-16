@@ -22,7 +22,7 @@ class GUIAntBoard extends GObject {
 		antBoardManager = boardManager;
 		board = new GSegment();
 		GStyle boardStyle = new GStyle();
-		boardStyle.setBackgroundColor(new Color(0, 200, 0));
+		boardStyle.setBackgroundColor(new Color(102, 204, 51));
 		board.setStyle(boardStyle);
 		addSegment(board);
 

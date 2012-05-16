@@ -1,16 +1,12 @@
 package GACore;
 
-import java.util.ArrayList;
 import java.util.logging.Logger;
-
-import GA.GAStudent;
 
 public abstract class IGAGene {
 	protected int[] gen;
 	
 	public abstract Boolean mutate(IGAMutator mutator, double prob);
-	public abstract double calcBalance(ArrayList<GAStudent> students);
-	public abstract double evaluate(ArrayList<GAStudent> students);
+	public abstract double evaluate();
 	
 	public static Logger log = Logger.getLogger("Engine");	
 	

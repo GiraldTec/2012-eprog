@@ -1,5 +1,7 @@
 package practica3;
 
+import gui.GAGUI;
+
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -7,8 +9,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import gui.GAGUI;
-import GA.GAStudentsEngine;
+import GA.GAAntEngine;
 import GACore.IGAEngine;
 import GACore.IGARandom;
 
@@ -27,7 +28,7 @@ public class MainAplication {
 	public static void main(String[] args) {
 		IGARandom.setSeed(55);					// damos valor a la semilla
 		
-		gaEngine = new GAStudentsEngine();		// creamos el motor genético
+		gaEngine = new GAAntEngine();		// creamos el motor genético
 		gui = new GAGUI(gaEngine);				// creamos la interfaz
 		gaEngine.loadConfig(gui.configData);	// cargamos configuración adicional (opcional)
 		gui.runGUI();

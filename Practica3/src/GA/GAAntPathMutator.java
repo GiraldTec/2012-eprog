@@ -2,7 +2,7 @@ package GA;
 
 import GACore.*;
 
-public class GAMutatorInversion extends IGAMutator{
+public class GAAntPathMutator extends IGAMutator{
 
 	@Override
 	public Boolean mutate(IGAGene gen, double prob) {

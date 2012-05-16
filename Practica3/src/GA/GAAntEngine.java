@@ -8,13 +8,11 @@ public class GAAntEngine extends IGAEngine{
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void loadConfig(String config) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -32,13 +30,11 @@ public class GAAntEngine extends IGAEngine{
 	@Override
 	protected void mutate() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	protected void reproducePopulation() {
 		// TODO Auto-generated method stub
-		
 	}
 
 }

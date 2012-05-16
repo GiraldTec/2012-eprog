@@ -27,8 +27,8 @@ public class AntBoardManager {
 		
 		move(0,0,PieceType.PATH);
 		move(0,1,PieceType.PATH);
-		move(0,2,PieceType.PATH);
-		move(0,3,PieceType.PATH);
+		move(0,2,PieceType.EATENFOOD);
+		move(0,3,PieceType.EATENFOOD);
 		move(0,4,PieceType.PATH);
 		move(1,4,PieceType.EATENFOOD);
 		move(2,4,PieceType.PATH);
