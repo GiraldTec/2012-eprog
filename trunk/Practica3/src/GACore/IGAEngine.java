@@ -24,7 +24,6 @@ public abstract class IGAEngine {
 	protected String mutName; 			// funcion de mutación seleccionada en GUI
 	protected boolean useElitism=true;  // si usamos elitismo o no (via GUI)
 	
-	protected double alfaValue=0.5;
 	protected double selecParams=1.0;
 	protected double crossParams=1.0;
 	protected double mutParams=1.0;
@@ -60,7 +59,7 @@ public abstract class IGAEngine {
 			population[i].setScore(population[i].getEvaluatedValue() / sum_EvaluatedValue);
 			population[i].setAcum_Score(population[i].getScore() + acum_Score);
 			acum_Score = acum_Score + population[i].getScore();
-			log.info("Cromosome "+i+" Unbalance: "+population[i].getUnbalance()+" EvaluatedValue: "+population[i].getEvaluatedValue()+" | Score: "+population[i].getScore()) ;
+			log.info("Cromosome "+i+" EvaluatedValue: "+population[i].getEvaluatedValue()+" | Score: "+population[i].getScore()) ;
 		}
 	}
 
@@ -150,12 +149,6 @@ public abstract class IGAEngine {
 	}
 	public void setUseElitism(boolean useElitism) {
 		this.useElitism = useElitism;
-	}
-	public double getAlfaValue() {
-		return alfaValue;
-	}
-	public void setAlfaValue(double alfaValue) {
-		this.alfaValue = alfaValue;
 	}
 	public String getMutName() {
 		return mutName;

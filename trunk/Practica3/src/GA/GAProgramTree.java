@@ -2,7 +2,7 @@ package GA;
 
 import GACore.IGARandom;
 
-public class GAProgrammeTree {
+public class GAProgramTree {
 
 	private byte operator; 
 	/* **************
@@ -19,9 +19,9 @@ public class GAProgrammeTree {
 	 *   
 	 * **************
 	 * */
-	private GAProgrammeTree leftSon;
-	private GAProgrammeTree centerSon;
-	private GAProgrammeTree rigthSon;
+	private GAProgramTree leftSon;
+	private GAProgramTree centerSon;
+	private GAProgramTree rigthSon;
 	
 	private int numNodes;
 	
@@ -29,7 +29,7 @@ public class GAProgrammeTree {
 	private int minDepth = 5;
 	private int maxDepth = 10;
 	
-	public GAProgrammeTree(){
+	public GAProgramTree(){
 		setOperator((byte) -1);
 		leftSon = null;
 		centerSon = null;
@@ -40,26 +40,26 @@ public class GAProgrammeTree {
 		initTree(this, minDepth, maxDepth);
 	}
 	
-	public GAProgrammeTree initTree(GAProgrammeTree tree, int minD, int maxD){
+	public GAProgramTree initTree(GAProgramTree tree, int minD, int maxD){
 		byte operator;
-		GAProgrammeTree hIzq, hDer, hCen;
+		GAProgramTree hIzq, hDer, hCen;
 		
 		if (minD > 0){	//no puede ser hoja
 			// generación del subarbol de operador
 			operator = (byte) IGARandom.getRInt(5); // símbolo de operador aleatorio
 			tree.operator = operator;
 			// se generan los hijos
-			hIzq = new GAProgrammeTree();
+			hIzq = new GAProgramTree();
 			hIzq.initTree(hIzq, minD - 1 , maxD - 1);
 			numNodes = numNodes + hIzq.getNumNodes();
 			
 			if (operator == 5) { //si tres_operandos
-				hCen = new GAProgrammeTree();
+				hCen = new GAProgramTree();
 				hCen.initTree(hCen, minD - 1 , maxD - 1);
 				numNodes = numNodes + hCen.getNumNodes();
 			}
 			else { // dos operandos
-				hDer = new GAProgrammeTree();
+				hDer = new GAProgramTree();
 				hDer.initTree(hDer, minD - 1 , maxD - 1);
 				numNodes = numNodes + hDer.getNumNodes();
 			}
@@ -126,27 +126,27 @@ public class GAProgrammeTree {
 		this.operator = operator;
 	}
 
-	public GAProgrammeTree getLeftSon() {
+	public GAProgramTree getLeftSon() {
 		return leftSon;
 	}
 
-	public void setLeftSon(GAProgrammeTree leftSon) {
+	public void setLeftSon(GAProgramTree leftSon) {
 		this.leftSon = leftSon;
 	}
 
-	public GAProgrammeTree getCenterSon() {
+	public GAProgramTree getCenterSon() {
 		return centerSon;
 	}
 
-	public void setCenterSon(GAProgrammeTree centerSon) {
+	public void setCenterSon(GAProgramTree centerSon) {
 		this.centerSon = centerSon;
 	}
 
-	public GAProgrammeTree getRigthSon() {
+	public GAProgramTree getRigthSon() {
 		return rigthSon;
 	}
 
-	public void setRigthSon(GAProgrammeTree rigthSon) {
+	public void setRigthSon(GAProgramTree rigthSon) {
 		this.rigthSon = rigthSon;
 	}
 

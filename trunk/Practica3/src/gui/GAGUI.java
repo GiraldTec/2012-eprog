@@ -57,7 +57,7 @@ import org.math.plot.Plot2DPanel;
 
 import practica3.AntBoardManager;
 import practica3.AntBoardManager.PieceType;
-import GA.GAStudentsEngine;
+import GA.GAAntEngine;
 import GACore.IGAEngine;
 import de.javasoft.plaf.synthetica.SyntheticaBlackEyeLookAndFeel;
 
@@ -275,7 +275,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 				}
 			}
 		});
-		panelCentral.add(boton);
+		panelCentral.add(boton, "center");
 
 		boton = new JButton("Stop");
 		boton.addActionListener(new ActionListener() {
@@ -499,10 +499,8 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
         
         //Group the radio buttons.
         final ButtonGroup radioButGroup = new ButtonGroup();
-        radioButGroup.add(tamGruposBut);
         radioButGroup.add(tamPobBut);
         radioButGroup.add(numGenBut);
-        radioButGroup.add(alfaBut);
         radioButGroup.add(selecBut);
         radioButGroup.add(crossBut);
         radioButGroup.add(mutBut);
@@ -549,37 +547,37 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 			    {
 			    	case 0 : break;
 			    	case 1 : 
-			    		currEvaluatedValue = (Integer)((GAStudentsEngine)gaEngine).getGroupSize();
+			    		//currEvaluatedValue = (Integer)((GAAntEngine)gaEngine).getGroupSize();
 			    		selectedIncrement = (Integer) ((SpinnerNumberModel)tamGruposIncr.getModel()).getNumber(); 
 			    		selectedMaxVal=(Integer)(tamGruposText.getValue());
 			    		break;
 			    	case 2 : 	
-			    		currEvaluatedValue = (Integer)((GAStudentsEngine)gaEngine).getPopulation_Size();
+			    		currEvaluatedValue = (Integer)((GAAntEngine)gaEngine).getPopulation_Size();
 			    		selectedIncrement=(Integer)((SpinnerNumberModel)tamPobIncr.getModel()).getNumber(); 
     					selectedMaxVal=(Integer)(tamPobText.getValue());
     					break;
 			    	case 3 : 
-			    		currEvaluatedValue = (Integer)((GAStudentsEngine)gaEngine).getNum_Max_Gen();
+			    		currEvaluatedValue = (Integer)((GAAntEngine)gaEngine).getNum_Max_Gen();
 			    		selectedIncrement=(Integer)(numGenIncr.getValue()); 
     					selectedMaxVal=(Integer)(numGenText.getValue());
     					break;
 			    	case 4 : 
-			    		currEvaluatedValue = ((GAStudentsEngine)gaEngine).getAlfaValue();
+			    		//currEvaluatedValue = ((GAAntEngine)gaEngine).getAlfaValue();
 			    		selectedIncrement=(Integer)(alfaIncr.getValue()); 
     					selectedMaxVal=(Integer)(alfaText.getValue());
     					break;
 			    	case 5 :
-			    		currEvaluatedValue = ((GAStudentsEngine)gaEngine).getSelecParams();
+			    		currEvaluatedValue = ((GAAntEngine)gaEngine).getSelecParams();
 			    		selectedIncrement=(Integer)(selecIncr.getValue()); 
     					selectedMaxVal=(Integer)(selecText.getValue());
     					break;
 			    	case 6 :
-			    		currEvaluatedValue = ((GAStudentsEngine)gaEngine).getCrossParams();
+			    		currEvaluatedValue = ((GAAntEngine)gaEngine).getCrossParams();
 			    		selectedIncrement=(Integer)(crossIncr.getValue()); 
     					selectedMaxVal=(Integer)(crossText.getValue());
     					break;
 			    	case 7 :
-			    		currEvaluatedValue = ((GAStudentsEngine)gaEngine).getMutParams();
+			    		currEvaluatedValue = ((GAAntEngine)gaEngine).getMutParams();
 			    		selectedIncrement=(Integer)(mutIncr.getValue()); 
 						selectedMaxVal=(Integer)(mutText.getValue());
 						break;
@@ -632,25 +630,25 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 					    {
 					    	case 0 : break;
 					    	case 1 :
-					    		((GAStudentsEngine)gaEngine).setGroupSize((int)currEvaluatedValue);
+					    		//((GAAntEngine)gaEngine).setGroupSize((int)currEvaluatedValue);
 					    		break;
 					    	case 2 :
-		    					((GAStudentsEngine)gaEngine).setPopulation_Size((int)currEvaluatedValue);
+		    					((GAAntEngine)gaEngine).setPopulation_Size((int)currEvaluatedValue);
 		    					break;
 					    	case 3 :
-		    					((GAStudentsEngine)gaEngine).setNum_Max_Gen((int)currEvaluatedValue);
+		    					((GAAntEngine)gaEngine).setNum_Max_Gen((int)currEvaluatedValue);
 		    					break;
 					    	case 4 :
-		    					((GAStudentsEngine)gaEngine).setAlfaValue(currEvaluatedValue);
+		    					//((GAAntEngine)gaEngine).setAlfaValue(currEvaluatedValue);
 		    					break;
 					    	case 5 : 	
-					    		((GAStudentsEngine)gaEngine).setSelecParams(currEvaluatedValue);
+					    		((GAAntEngine)gaEngine).setSelecParams(currEvaluatedValue);
 		    					break;
 					    	case 6 : 	
-					    		((GAStudentsEngine)gaEngine).setCrossParams(currEvaluatedValue);
+					    		((GAAntEngine)gaEngine).setCrossParams(currEvaluatedValue);
 		    					break;
 					    	case 7 : 	
-					    		((GAStudentsEngine)gaEngine).setMutParams(currEvaluatedValue);
+					    		((GAAntEngine)gaEngine).setMutParams(currEvaluatedValue);
 								break;
 					    }
 				}
@@ -659,25 +657,25 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 			    {
 			    	case 0 : break;
 			    	case 1 :
-			    		((GAStudentsEngine)gaEngine).setGroupSize((int)oldEvaluatedValue);
+			    		//((GAAntEngine)gaEngine).setGroupSize((int)oldEvaluatedValue);
 			    		break;
 			    	case 2 :
-    					((GAStudentsEngine)gaEngine).setPopulation_Size((int)oldEvaluatedValue);
+    					((GAAntEngine)gaEngine).setPopulation_Size((int)oldEvaluatedValue);
     					break;
 			    	case 3 :
-    					((GAStudentsEngine)gaEngine).setNum_Max_Gen((int)oldEvaluatedValue);
+    					((GAAntEngine)gaEngine).setNum_Max_Gen((int)oldEvaluatedValue);
     					break;
 			    	case 4 :
-    					((GAStudentsEngine)gaEngine).setAlfaValue(oldEvaluatedValue);
+    					//((GAAntEngine)gaEngine).setAlfaValue(oldEvaluatedValue);
     					break;
 			    	case 5 : 	
-			    		((GAStudentsEngine)gaEngine).setSelecParams(oldEvaluatedValue);
+			    		((GAAntEngine)gaEngine).setSelecParams(oldEvaluatedValue);
     					break;
 			    	case 6 : 	
-			    		((GAStudentsEngine)gaEngine).setCrossParams(oldEvaluatedValue);
+			    		((GAAntEngine)gaEngine).setCrossParams(oldEvaluatedValue);
     					break;
 			    	case 7 : 	
-			    		((GAStudentsEngine)gaEngine).setMutParams(oldEvaluatedValue);
+			    		((GAAntEngine)gaEngine).setMutParams(oldEvaluatedValue);
 						break;
 			    }
 				
@@ -688,7 +686,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		//***** Tabs ********//
 		
 		tabPanePrincipal.add(panelGenetics, "Algoritmo Genético");		
-		tabPanePrincipal.add(panelResultados, "Grupos Resultado");
+		tabPanePrincipal.add(panelResultados, "Recorrido Resultado");
 		tabPanePrincipal.add(panelPruebas, "Pruebas Automáticas");
 		
 		add(tabPanePrincipal);
@@ -702,11 +700,6 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		ConfigPanel<IGAEngine> config = new ConfigPanel<IGAEngine>();
 		
 		config.addOption(new IntegerOption<IGAEngine>(  // -- entero
-			"Tamaño grupos", 					// texto a usar como etiqueta del campo
-			"Número de estudiantes que forman cada grupo",  // texto a usar como 'tooltip' cuando pasas el puntero
-			"groupSize",  						     // campo (espera que haya un getGrosor y un setGrosor)
-			1, 500));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
-		config.addOption(new IntegerOption<IGAEngine>(  // -- entero
 			"Tamaño población", 					// texto a usar como etiqueta del campo
 			"Número de individuos que forman la población",  // texto a usar como 'tooltip' cuando pasas el puntero
 			"population_Size",  						     // campo (espera que haya un getGrosor y un setGrosor)
@@ -716,12 +709,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 			"Número de generaciones que dura la evolución",  // texto a usar como 'tooltip' cuando pasas el puntero
 			"num_Max_Gen",  						     // campo (espera que haya un getGrosor y un setGrosor)
 			1, 10000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
-	    config.addOption(new DoubleOption<IGAEngine>(  
-			"Parámetro Alfa", 						// texto a usar como etiqueta del campo
-			"Parámetro Alfa",       				// texto a usar como 'tooltip' cuando pasas el puntero
-			"alfaValue",  						    // campo (espera que haya un getGrosor y un setGrosor)
-			0.0, 1.0));								// min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
-
+	    
 		// Selection
 		functChoiceOpt = new ChoiceOption<IGAEngine>(
 				"Función de selección",
@@ -846,11 +834,6 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		ConfigPanel<IGAEngine> config = new ConfigPanel<IGAEngine>();
 		
 		config.addOption(new IntegerOption<IGAEngine>(  // -- entero
-			"Tamaño grupos", 					// texto a usar como etiqueta del campo
-			"Número de estudiantes que forman cada grupo",  // texto a usar como 'tooltip' cuando pasas el puntero
-			"groupSize",  						     // campo (espera que haya un getGrosor y un setGrosor)
-			1, 500));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
-		config.addOption(new IntegerOption<IGAEngine>(  // -- entero
 			"Tamaño población", 					// texto a usar como etiqueta del campo
 			"Número de individuos que forman la población",  // texto a usar como 'tooltip' cuando pasas el puntero
 			"population_Size",  						     // campo (espera que haya un getGrosor y un setGrosor)
@@ -860,12 +843,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 			"Número de generaciones que dura la evolución",  // texto a usar como 'tooltip' cuando pasas el puntero
 			"num_Max_Gen",  						     // campo (espera que haya un getGrosor y un setGrosor)
 			1, 10000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
-	    config.addOption(new DoubleOption<IGAEngine>(  
-			"Parámetro Alfa", 						// texto a usar como etiqueta del campo
-			"Parámetro Alfa",       				// texto a usar como 'tooltip' cuando pasas el puntero
-			"alfaValue",  						    // campo (espera que haya un getGrosor y un setGrosor)
-			0.0, 1.0));								// min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
-
+	    
 		// Selection
 			
 		config.addOption(new ChoiceOption<IGAEngine>(
