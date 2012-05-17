@@ -12,6 +12,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
@@ -56,6 +58,7 @@ import no.geosoft.cc.graphics.GWindow;
 import org.math.plot.Plot2DPanel;
 
 import practica3.AntBoardManager;
+import practica3.AntBoardManager.AntRotation;
 import practica3.AntBoardManager.PieceType;
 import GA.GAAntEngine;
 import GACore.IGAEngine;
@@ -301,7 +304,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		pGraphic.setPreferredSize(new Dimension(600, 600));
 		panelGenetics.add(pGraphic, "split, grow, gaptop 11, gapleft 20, gapbottom 11, gapright 11, dock east");
 		
-		//********** PANEL PRUEBAS RESULTADOS **************************************//
+		//********** PANEL RESULTADOS **************************************//
 		
 		// Create the graphic canvas
 		GWindow window = new GWindow(new Color(0, 220, 220));
@@ -387,6 +390,21 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		saveLoadPanel.add(boton);
 		
 		panelResultados.add(saveLoadPanel, BorderLayout.SOUTH);
+		boton.addKeyListener(new KeyAdapter(){			
+			public void keyPressed(KeyEvent ke){
+	            if(ke.getKeyCode() == KeyEvent.VK_UP){
+	            	boardManager.advanceAnt();
+	            }
+	            else if(ke.getKeyCode() == KeyEvent.VK_LEFT){
+	            	boardManager.rotateAnt(AntRotation.LEFT);
+	            }
+	            else if(ke.getKeyCode() == KeyEvent.VK_RIGHT){
+	            	boardManager.rotateAnt(AntRotation.RIGHT);
+	            }
+	            antBoard.redraw();
+	            antBoard.refresh();
+			}
+		});
 		                        
         //********** PANEL PRUEBAS AUTOMÁTICAS **************************************//
                 
@@ -944,6 +962,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 				break;
 	
 			case GWindow.BUTTON1_UP:
+				
 				if (boardManager.getPos(i,j) == PieceType.NOTHING){
 					boardManager.setPosValue(i, j, PieceType.FOOD);
 					interaction.removeSegments();
@@ -963,7 +982,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 					interaction.removeSegments();
 					scene.redraw();
 				}
-				break;			
+				break;	
 		}
 
 	scene.refresh();

@@ -95,6 +95,10 @@ public class AntBoard extends GObject {
 			
 				piece.setStyle(pieceStyle[state[i].id - 1]);					
 				piece.setGeometry(Geometry.createRectangle(xy[0], xy[1], 21, 16));	
+				
+				/*if (state[i] == PieceType.ANT){
+					piece.setGeometry(Geometry.createArrow(xy[0], xy[1], xy[0]+20, xy[1]+20, 20, 20, 1.0));
+				}*/
 			}
 		}
 	}
