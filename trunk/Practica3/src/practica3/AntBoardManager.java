@@ -7,8 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 
-import org.jfree.util.Rotation;
-
 import GACore.IGARandom;
 
 public class AntBoardManager {
@@ -67,32 +65,6 @@ public class AntBoardManager {
 		i = Math.abs(i-(size-1));
 		return state[i * size + j];
 	}
-
-	public boolean isLegalPos(int i, int j, AntRotation r) {
-		switch (currentAntRot){
-		case RIGHT :
-			if (antPosX == size-1)
-				return false;
-			else
-				return getPosGoodCoord(antPosX+1, antPosY) == PieceType.FOOD;
-		case DOWN :
-			if (antPosY == size-1)
-				return false;
-			else
-				return getPosGoodCoord(antPosX, antPosY+1) == PieceType.FOOD;
-		case LEFT :
-			if (antPosX == 0)
-				return false;
-			else
-				return getPosGoodCoord(antPosX-1, antPosY) == PieceType.FOOD;
-		case UP :
-			if (antPosY == 0)
-				return false;
-			else
-				return getPosGoodCoord(antPosX, antPosY-1) == PieceType.FOOD;
-	}
-	return false;
-	}
 	
 	public void move(int i, int j, PieceType p) {
 		i = Math.abs(i-(size-1));
@@ -117,40 +89,71 @@ public class AntBoardManager {
 	}	
 	
 	public void rotateAnt(AntRotation rot){
+		int newRot=currentAntRot.id;
+		
 		if (rot == AntRotation.RIGHT){
-			currentAntRot.id = (currentAntRot.id + 1) % 4; 
+			newRot = (currentAntRot.id + 1) % 4; 
 		}
 		else if(rot == AntRotation.LEFT){
-			currentAntRot.id = (currentAntRot.id - 1) % 4; 
+			if (currentAntRot.id == 0)
+				newRot = 3;
+			else
+				newRot = currentAntRot.id - 1;
 		}
 		else
 			System.err.println("Error rotating Ant: only Left ot Right rotations!");
+		
+		switch (newRot){
+			case 0: 
+				currentAntRot = AntRotation.UP;
+				break;
+			case 1: 
+				currentAntRot = AntRotation.RIGHT;
+				break;
+			case 2: 
+				currentAntRot = AntRotation.DOWN;
+				break;
+			case 3: 
+				currentAntRot = AntRotation.LEFT;
+				break;
+			default:
+				System.err.println("Error rotating Ant: new rotation is wrong");
+		} 
 	}
 	
 	public void advanceAnt() {
-		move(antPosX, antPosY, PieceType.PATH);
+		int oldX = antPosX;
+		int oldY = antPosY;
+		
 		switch (currentAntRot){
-		case RIGHT :
-			if (antPosX == size-1)
-				setAntPosGoodCoord(antPosX+1, antPosY);
-			else
-				setAntPosGoodCoord(antPosX+1, antPosY);
-		case DOWN :
-			if (antPosY == size-1)
-				return ;
-			else
-				setAntPosGoodCoord(antPosX, antPosY+1);
-		case LEFT :
-			if (antPosX == 0)
-				return ;
-			else
-				setAntPosGoodCoord(antPosX-1, antPosY);
-		case UP :
-			if (antPosY == 0)
-				return;
-			else
-				setAntPosGoodCoord(antPosX, antPosY-1);
-		}	
+			case RIGHT :
+				if (antPosX == size-1)
+					return;
+				else
+					setAntPosGoodCoord(antPosX+1, antPosY);
+				break;
+			case DOWN :
+				if (antPosY == size-1)
+					return ;
+				else
+					setAntPosGoodCoord(antPosX, antPosY+1);
+				break;
+			case LEFT :
+				if (antPosX == 0)
+					return ;
+				else
+					setAntPosGoodCoord(antPosX-1, antPosY);
+				break;
+			case UP :
+				if (antPosY == 0)
+					return;
+				else
+					setAntPosGoodCoord(antPosX, antPosY-1);
+				break;
+			default:
+				System.err.println("Error avanzando hormiga");
+		}
+		move(oldX, oldY, PieceType.PATH);
 	}
 	
 	public boolean foodInfront(){

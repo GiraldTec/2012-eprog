@@ -1,7 +1,6 @@
 package GA;
 import practica3.AntBoardManager;
 import practica3.AntBoardManager.AntRotation;
-import gui.AntBoard;
 
 public class GAAntEvaluator{
 	private static int steps=0;
@@ -68,12 +67,10 @@ public class GAAntEvaluator{
 				boardMngr.advanceAnt();
 				break;
 			default:
-				System.err.println("Error al evaluar: operador incorrecto");
-		
+				System.err.println("Error al evaluar: operador incorrecto");		
 		}
 		
 	}
-
 	
 	/*
 		Función de adaptación
