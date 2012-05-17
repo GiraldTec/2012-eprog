@@ -11,14 +11,14 @@ import no.geosoft.cc.graphics.GObject;
 import no.geosoft.cc.graphics.GSegment;
 import no.geosoft.cc.graphics.GStyle;
 
-class GUIAntBoard extends GObject {
+public class AntBoard extends GObject {
 	private GSegment board;
 	private GSegment[] grid;
 	private ArrayList<GSegment> pieces;
 	private GStyle[] pieceStyle;
 	private AntBoardManager antBoardManager;
 
-	public GUIAntBoard(AntBoardManager boardManager) {
+	public AntBoard(AntBoardManager boardManager) {
 		antBoardManager = boardManager;
 		board = new GSegment();
 		GStyle boardStyle = new GStyle();
@@ -89,20 +89,12 @@ class GUIAntBoard extends GObject {
 				int[] xy = getTransformer().worldToDevice(x, y);
 
 				GSegment piece;
-				/*if (j < pieces.size())
-					piece = (GSegment) pieces.get(j);
-				else {
-					piece = new GSegment();
-					pieces.add(piece);
-					addSegment(piece);
-				}*/
-
 				piece = new GSegment();
 				pieces.add(piece);
 				addSegment(piece);
 			
 				piece.setStyle(pieceStyle[state[i].id - 1]);					
-				piece.setGeometry(Geometry.createRectangle(xy[0], xy[1], 21, 16));
+				piece.setGeometry(Geometry.createRectangle(xy[0], xy[1], 21, 16));	
 			}
 		}
 	}

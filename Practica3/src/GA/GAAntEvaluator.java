@@ -1,21 +1,79 @@
 package GA;
+import practica3.AntBoardManager;
+import practica3.AntBoardManager.AntRotation;
+import gui.AntBoard;
 
-public class GAAntEvaluator {
+public class GAAntEvaluator{
+	private static int steps=0;
+	private static int food=0;
 	
-	public static double evaluate (int[][] board, int posX, int posY, int orient, GAProgramTree program){
-
-		if(program.getOperator() == 3){
-			
+	public double evaluate (AntBoardManager boardMngr, GAProgramTree program, int maxSteps, int maxFood){
+		steps = 0;
+		food = 0;
+		
+		while (steps < maxSteps && food < maxFood){
+			executeStep(boardMngr, program, maxSteps, maxFood);
 		}
-		if(program.getOperator() == 4){
-			
-		}
-		if(program.getOperator() == 5){
-			
+		return food;
+	}
+	
+	private void executeStep(AntBoardManager boardMngr, GAProgramTree program, int maxSteps, int maxFood) {
+		//mientras no se haya acabado el tiempo ni la comida
+		/*if (steps < maxSteps && food < maxFood) {
+			//si estamos encima de comida comemos
+			if (boardMngr.) {
+				matriz[posicionX][posicionY] = 0;
+				bocados++;
+		}*/
+		
+		/* **************
+		 * 	Tipos:
+		 * **************
+		 * 
+		 *  -1 -- > Nothing
+		 * 	 0 -- > Avanza
+		 *   1 -- > Izquierda
+		 *   2 -- > Derecha
+		 *   3 -- > SiComidaDelante
+		 *   4 -- > ProgN2
+		 *   5 -- > ProgN3
+		 *   
+		 * **************
+		 * */
+		
+		//acciones a realizar en función del nodo en el que estemos
+		switch (program.getOperator()){
+			case 5 : 
+				executeStep(boardMngr, program.getLeftSon(), maxSteps, maxFood);
+				executeStep(boardMngr, program.getCenterSon(), maxSteps, maxFood);
+				executeStep(boardMngr, program.getRigthSon(), maxSteps, maxFood);
+				break;
+			case 4:
+				executeStep(boardMngr, program.getLeftSon(), maxSteps, maxFood);
+				executeStep(boardMngr, program.getCenterSon(), maxSteps, maxFood);
+				break;
+			case 3:
+				if (boardMngr.foodInfront())
+					executeStep(boardMngr, program.getLeftSon(), maxSteps, maxFood);
+				else
+					executeStep(boardMngr, program.getCenterSon(), maxSteps, maxFood);
+				break;
+			case 2:
+				boardMngr.rotateAnt(AntRotation.RIGHT);
+				break;
+			case 1:
+				boardMngr.rotateAnt(AntRotation.LEFT);
+				break;
+			case 0:
+				boardMngr.advanceAnt();
+				break;
+			default:
+				System.err.println("Error al evaluar: operador incorrecto");
+		
 		}
 		
-		return 0;
 	}
+
 	
 	/*
 		Función de adaptación
