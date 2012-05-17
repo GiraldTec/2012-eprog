@@ -83,8 +83,6 @@ public class GAProgramTree {
 		}
 			
 		/*si prof_min > 0 entonces 
-				
-				
 				operador = operador_aleatorio; // símbolo de operador aleatorio
 				arbol.dato = operador;
 				// se generan los hijos
@@ -121,7 +119,7 @@ public class GAProgramTree {
 		 */
 		return this;
 	}
-
+	
 	public void setOperator(byte operator) {
 		this.operator = operator;
 	}

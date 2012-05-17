@@ -7,19 +7,30 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 
+import org.jfree.util.Rotation;
+
 import GACore.IGARandom;
 
 public class AntBoardManager {
-	private int size;
 	public enum PieceType {
 		NOTHING(0),	PATH(1), FOOD(2), EATENFOOD(3), ANT(4);		
 		public int id;		
 		PieceType(int i){id = i;}
 	};
+	public enum AntRotation {
+		UP(0),	RIGHT(1), DOWN(2), LEFT(3);	
+		public int id;
+		AntRotation(int i){id = i;}
+	};
+	
+	private int size;
 	private PieceType[] state;
+	private int antPosX=-1, antPosY=-1;
+	private AntRotation currentAntRot;
 
 	public AntBoardManager(int newSize) {
 		size = newSize;
+		currentAntRot = AntRotation.RIGHT;
 
 		state = new PieceType[size * size];
 		for (int i = 0; i < state.length; i++)
@@ -33,7 +44,7 @@ public class AntBoardManager {
 		move(1,4,PieceType.EATENFOOD);
 		move(2,4,PieceType.PATH);
 		move(3,4,PieceType.PATH);
-		move(4,4,PieceType.ANT);
+		setAntPosGoodCoord(4,4);
 	}
 	
 	public int getSize(){
@@ -51,29 +62,121 @@ public class AntBoardManager {
 	public PieceType getPos(int i, int j) {
 		return state[i * size + j];
 	}
-
-	public boolean isLegalPos(int i, int j) {
-		return state[i * size + j] == PieceType.NOTHING;
-	}
-	
-	public void move(int i, int j, PieceType p) {
-		i = Math.abs(i-31);
-		state[i * size + j] = p;
-	}
 	
 	public PieceType getPosGoodCoord(int i, int j) {
-		i = Math.abs(i-31);
+		i = Math.abs(i-(size-1));
 		return state[i * size + j];
 	}
 
+	public boolean isLegalPos(int i, int j, AntRotation r) {
+		switch (currentAntRot){
+		case RIGHT :
+			if (antPosX == size-1)
+				return false;
+			else
+				return getPosGoodCoord(antPosX+1, antPosY) == PieceType.FOOD;
+		case DOWN :
+			if (antPosY == size-1)
+				return false;
+			else
+				return getPosGoodCoord(antPosX, antPosY+1) == PieceType.FOOD;
+		case LEFT :
+			if (antPosX == 0)
+				return false;
+			else
+				return getPosGoodCoord(antPosX-1, antPosY) == PieceType.FOOD;
+		case UP :
+			if (antPosY == 0)
+				return false;
+			else
+				return getPosGoodCoord(antPosX, antPosY-1) == PieceType.FOOD;
+	}
+	return false;
+	}
+	
+	public void move(int i, int j, PieceType p) {
+		i = Math.abs(i-(size-1));
+		state[i * size + j] = p;
+	}
 	public void setAntPos(int i, int j) {
-		for (int t = 0; t < state.length; t++){
-			if (state[t] == PieceType.ANT){
-				state[t] = PieceType.NOTHING;
-				break;
-			}
+		// Clear old ant
+		move(antPosX, antPosY, PieceType.NOTHING);
+		setPosValue(i, j, PieceType.ANT);
+		antPosX = Math.abs(i-(size-1));
+		antPosY = j;
+	}
+	
+	public void setAntPosGoodCoord(int i, int j) {
+		// Clear old ant
+		if (antPosX != -1 && antPosY != -1)
+			move(antPosX, antPosY, PieceType.NOTHING);
+		
+		move(i, j, PieceType.ANT);
+		antPosX = i;
+		antPosY = j;
+	}	
+	
+	public void rotateAnt(AntRotation rot){
+		if (rot == AntRotation.RIGHT){
+			currentAntRot.id = (currentAntRot.id + 1) % 4; 
 		}
-		setPosValue(i, j, PieceType.ANT);	
+		else if(rot == AntRotation.LEFT){
+			currentAntRot.id = (currentAntRot.id - 1) % 4; 
+		}
+		else
+			System.err.println("Error rotating Ant: only Left ot Right rotations!");
+	}
+	
+	public void advanceAnt() {
+		move(antPosX, antPosY, PieceType.PATH);
+		switch (currentAntRot){
+		case RIGHT :
+			if (antPosX == size-1)
+				setAntPosGoodCoord(antPosX+1, antPosY);
+			else
+				setAntPosGoodCoord(antPosX+1, antPosY);
+		case DOWN :
+			if (antPosY == size-1)
+				return ;
+			else
+				setAntPosGoodCoord(antPosX, antPosY+1);
+		case LEFT :
+			if (antPosX == 0)
+				return ;
+			else
+				setAntPosGoodCoord(antPosX-1, antPosY);
+		case UP :
+			if (antPosY == 0)
+				return;
+			else
+				setAntPosGoodCoord(antPosX, antPosY-1);
+		}	
+	}
+	
+	public boolean foodInfront(){
+		switch (currentAntRot){
+			case RIGHT :
+				if (antPosX == size-1)
+					return false;
+				else
+					return getPosGoodCoord(antPosX+1, antPosY) == PieceType.FOOD;
+			case DOWN :
+				if (antPosY == size-1)
+					return false;
+				else
+					return getPosGoodCoord(antPosX, antPosY+1) == PieceType.FOOD;
+			case LEFT :
+				if (antPosX == 0)
+					return false;
+				else
+					return getPosGoodCoord(antPosX-1, antPosY) == PieceType.FOOD;
+			case UP :
+				if (antPosY == 0)
+					return false;
+				else
+					return getPosGoodCoord(antPosX, antPosY-1) == PieceType.FOOD;
+		}
+		return false;
 	}
 	
 	public void loadMapFromFile(String fileName){
@@ -99,7 +202,7 @@ public class AntBoardManager {
 					else if (data[j].compareTo("#") == 0)
 						move(i, j, PieceType.FOOD);
 					else if (data[j].compareTo("@") == 0)
-						move(i, j, PieceType.ANT);
+						setAntPosGoodCoord(i, j);
 					else
 						move(i, j, PieceType.NOTHING);
 				}

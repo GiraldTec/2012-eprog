@@ -85,7 +85,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 	private DoubleOption<IGAEngine> paramsCrossDouble;
 	private DoubleOption<IGAEngine> paramsMutDouble;
 	private int selectedRadio=0, boardSize=32;
-	private GUIAntBoard antBoard;
+	private AntBoard antBoard;
 	private AntBoardManager boardManager;
 	private double currEvaluatedValue=0, oldEvaluatedValue=0,selectedMaxVal=0, selectedIncrement=0;
 	public String configData, mapName;
@@ -314,7 +314,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		double w2[] = { 0.0, boardSize + 2.0, 0.0 };
 		scene.setWorldExtent(w0, w1, w2);
 
-		antBoard = new GUIAntBoard(boardManager);
+		antBoard = new AntBoard(boardManager);
 		scene.add(antBoard);
 
 		// Make sure plot can be scrolled
@@ -930,7 +930,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 
 		switch (event) {
 			case GWindow.MOTION:
-				if (boardManager.isLegalPos(i, j)) {
+				if (boardManager.getPos(i, j) == PieceType.NOTHING) {
 					GSegment highlight = new GSegment();
 					GStyle highlightStyle = new GStyle();
 					highlightStyle.setBackgroundColor(new Color(1.0f, 1.0f, 1.0f, 0.7f));
