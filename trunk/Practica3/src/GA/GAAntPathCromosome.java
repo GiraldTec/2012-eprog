@@ -4,11 +4,10 @@ import GACore.IGACromosome;
 
 public class GAAntPathCromosome extends IGACromosome{
 	GAProgramTree tree; // estrategia de rastreo	
-
-	// TODO: Hacer mutador de arboles
 	
-	public void initCromosome() {
-		
+	public void initCromosome(int minD, int maxD) {
+		tree = new GAProgramTree();
+		tree.initTree(tree, minD, maxD);
 	}
 
 	public void evaluate() {
@@ -38,5 +37,4 @@ public class GAAntPathCromosome extends IGACromosome{
 		}		*/
 		return true;
 	}
-
 }

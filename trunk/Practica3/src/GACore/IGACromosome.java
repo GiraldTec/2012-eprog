@@ -6,7 +6,7 @@ public abstract class IGACromosome{
 	protected double score;
 	protected double acum_score;
 	
-	public abstract void initCromosome();	
+	public abstract void initCromosome(int minD, int maxD);	
 	public abstract IGACromosome clone();
 	public abstract boolean equals(IGACromosome c);
 	public abstract void evaluate();

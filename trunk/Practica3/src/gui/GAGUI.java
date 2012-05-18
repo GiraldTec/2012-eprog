@@ -379,6 +379,17 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		saveLoadPanel.add(boton);
 		
 		saveLoadPanel.add(boton);
+		boton = new JButton("Restore");
+		boton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				boardManager.restoreInitialState();
+				antBoard.redraw();
+				antBoard.refresh();
+			}
+		});
+		saveLoadPanel.add(boton);
+		
+		saveLoadPanel.add(boton);
 		boton = new JButton("Reset");
 		boton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -695,8 +706,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 			    	case 7 : 	
 			    		((GAAntEngine)gaEngine).setMutParams(oldEvaluatedValue);
 						break;
-			    }
-				
+			    }				
 			}
 		});
 		panelPruebas.add(boton, "dock south, gapleft 80, gapright 600");
@@ -727,6 +737,16 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 			"Número de generaciones que dura la evolución",  // texto a usar como 'tooltip' cuando pasas el puntero
 			"num_Max_Gen",  						     // campo (espera que haya un getGrosor y un setGrosor)
 			1, 10000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
+		config.addOption(new IntegerOption<IGAEngine>(
+				"Profundidad Min", 					// texto a usar como etiqueta del campo
+				"Profundidad Minima del árbol programa",  // texto a usar como 'tooltip' cuando pasas el puntero
+				"minD",  						     // campo (espera que haya un getGrosor y un setGrosor)
+				1, 1000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
+		config.addOption(new IntegerOption<IGAEngine>(
+				"Profundidad Max", 					// texto a usar como etiqueta del campo
+				"Profundidad Máxima del árbol programa",  // texto a usar como 'tooltip' cuando pasas el puntero
+				"maxD",  						     // campo (espera que haya un getGrosor y un setGrosor)
+				1, 1000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
 	    
 		// Selection
 		functChoiceOpt = new ChoiceOption<IGAEngine>(

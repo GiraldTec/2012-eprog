@@ -3,13 +3,12 @@ package gui;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import practica3.AntBoardManager;
-import practica3.AntBoardManager.PieceType;
-
 import no.geosoft.cc.geometry.Geometry;
 import no.geosoft.cc.graphics.GObject;
 import no.geosoft.cc.graphics.GSegment;
 import no.geosoft.cc.graphics.GStyle;
+import practica3.AntBoardManager;
+import practica3.AntBoardManager.PieceType;
 
 public class AntBoard extends GObject {
 	private GSegment board;
@@ -36,7 +35,7 @@ public class AntBoard extends GObject {
 			grid[i].setStyle(gridStyle);
 			addSegment(grid[i]);
 		}
-
+		
 		pieceStyle = new GStyle[4];
 					
 		// Path
@@ -96,9 +95,36 @@ public class AntBoard extends GObject {
 				piece.setStyle(pieceStyle[state[i].id - 1]);					
 				piece.setGeometry(Geometry.createRectangle(xy[0], xy[1], 21, 16));	
 				
-				/*if (state[i] == PieceType.ANT){
-					piece.setGeometry(Geometry.createArrow(xy[0], xy[1], xy[0]+20, xy[1]+20, 20, 20, 1.0));
-				}*/
+				if (state[i] == PieceType.ANT){
+					int[] geom = Geometry.createRectangle(xy[0], xy[1], 21, 16);
+					int[] arrow = Geometry.createArrow(xy[0], xy[1]+5, xy[0]+20, xy[1]+5, 10, 0.5, 0.7);;
+					switch (antBoardManager.getCurrentAntRot()){
+					
+						case RIGHT:
+							arrow = Geometry.createArrow(xy[0], xy[1]+5, xy[0]+20, xy[1]+5, 10, 0.5, 0.7);
+							break;
+						case LEFT:
+							arrow = Geometry.createArrow(xy[0]+20, xy[1]+5, xy[0], xy[1]+5, 10, 0.5, 0.7);
+							break;
+						case UP:
+							arrow = Geometry.createArrow(xy[0]+10, xy[1]+20, xy[0]+10, xy[1], 10, 0.5, 0.7);
+							break;
+						case DOWN:
+							arrow = Geometry.createArrow(xy[0]+10, xy[1]-4, xy[0]+10, xy[1]+12, 10, 0.5, 0.7);
+							break;
+						default:
+							System.err.println("Error dibujando hormiga");
+					}
+					int[] both = new int[geom.length + arrow.length];
+				    System.arraycopy(arrow,0,both,0,arrow.length);
+				    System.arraycopy(geom,0,both,arrow.length,geom.length);
+					piece.setGeometry(both);
+					// int x0, int y0, int x1, int y1, double length, double angle, double inset
+					//right piece.setGeometry(Geometry.createArrow(xy[0], xy[1]+5, xy[0]+20, xy[1]+5, 10, 0.5, 0.7));
+					//left piece.setGeometry(Geometry.createArrow(xy[0]+20, xy[1]+5, xy[0], xy[1]+5, 10, 0.5, 0.7));
+					// bot piece.setGeometry(Geometry.createArrow(xy[0]+10, xy[1]-4, xy[0]+10, xy[1]+12, 10, 0.5, 0.7));
+					// top piece.setGeometry(Geometry.createArrow(xy[0]+10, xy[1]+20, xy[0]+10, xy[1], 10, 0.5, 0.7));
+				}
 			}
 		}
 	}
