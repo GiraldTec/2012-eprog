@@ -21,7 +21,7 @@ public class MainAplication {
 	private static SimpleFormatter myFormater = new SimpleFormatter() {
 
 		public synchronized String format(LogRecord record) {
-		return ""+record.getLevel() + " -- " + record.getMessage() + "\n";
+			return ""+record.getLevel() + " -- " + record.getMessage() + "\n";
 		}
 	};
 	

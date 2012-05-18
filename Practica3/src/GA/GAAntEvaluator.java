@@ -17,28 +17,16 @@ public class GAAntEvaluator{
 	}
 	
 	private void executeStep(AntBoardManager boardMngr, GAProgramTree program, int maxSteps, int maxFood) {
-		//mientras no se haya acabado el tiempo ni la comida
-		/*if (steps < maxSteps && food < maxFood) {
-			//si estamos encima de comida comemos
-			if (boardMngr.) {
-				matriz[posicionX][posicionY] = 0;
-				bocados++;
-		}*/
 		
-		/* **************
-		 * 	Tipos:
-		 * **************
-		 * 
+		 /* **************
 		 *  -1 -- > Nothing
 		 * 	 0 -- > Avanza
 		 *   1 -- > Izquierda
 		 *   2 -- > Derecha
 		 *   3 -- > SiComidaDelante
 		 *   4 -- > ProgN2
-		 *   5 -- > ProgN3
-		 *   
-		 * **************
-		 * */
+		 *   5 -- > ProgN3 
+		 * **************/
 		
 		//acciones a realizar en función del nodo en el que estemos
 		switch (program.getOperator()){
@@ -68,8 +56,7 @@ public class GAAntEvaluator{
 				break;
 			default:
 				System.err.println("Error al evaluar: operador incorrecto");		
-		}
-		
+		}		
 	}
 	
 	/*
@@ -115,5 +102,4 @@ public class GAAntEvaluator{
 			}
 		}
 		*/
-
 }

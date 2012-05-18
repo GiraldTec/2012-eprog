@@ -7,7 +7,7 @@ public abstract class IGAEngine {
 	protected IGACromosome generationBest;		// mejor especimen de la generación actual
 	protected IGACromosome elite; 	// mejor individuo de todas las generaciones
 	protected int population_Size=10;		// tamaño población
-	protected int num_Max_Gen=50; 			// número máximo de generaciones
+	protected int num_Max_Gen=30; 			// número máximo de generaciones
 	protected int pos_Best; 			// posición del mejor cromosoma
 	protected double population_Average;// media de la aptitud de la población
 	protected double prob_Cross=0.5;	// probabilidad de cruce

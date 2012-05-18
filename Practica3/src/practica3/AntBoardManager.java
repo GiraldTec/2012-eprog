@@ -23,26 +23,24 @@ public class AntBoardManager {
 	
 	private int size;
 	private PieceType[] state;
+	private PieceType[] initialState;
 	private int antPosX=-1, antPosY=-1;
+	private int oldX=-1, oldY=-1;
 	private AntRotation currentAntRot;
+	private int eatenFood = 0;
+	private boolean ateFood=false;
 
 	public AntBoardManager(int newSize) {
 		size = newSize;
 		currentAntRot = AntRotation.RIGHT;
 
 		state = new PieceType[size * size];
+		initialState = new PieceType[size * size];
+		
 		for (int i = 0; i < state.length; i++)
 			state[i] = Math.random() > 0.9 ? PieceType.FOOD : PieceType.NOTHING;
 		
-		move(0,0,PieceType.PATH);
-		move(0,1,PieceType.PATH);
-		move(0,2,PieceType.EATENFOOD);
-		move(0,3,PieceType.EATENFOOD);
-		move(0,4,PieceType.PATH);
-		move(1,4,PieceType.EATENFOOD);
-		move(2,4,PieceType.PATH);
-		move(3,4,PieceType.PATH);
-		setAntPosGoodCoord(4,4);
+		setAntPosGoodCoord(0,0);
 	}
 	
 	public int getSize(){
@@ -80,8 +78,15 @@ public class AntBoardManager {
 	
 	public void setAntPosGoodCoord(int i, int j) {
 		// Clear old ant
-		if (antPosX != -1 && antPosY != -1)
-			move(antPosX, antPosY, PieceType.NOTHING);
+		if (antPosX != -1 && antPosY != -1){
+			if (oldX != -1){
+				move(oldX, oldY, PieceType.EATENFOOD);
+				eatenFood++;
+				oldX = -1;
+			}
+			else
+				move(antPosX, antPosY, PieceType.PATH);
+		}
 		
 		move(i, j, PieceType.ANT);
 		antPosX = i;
@@ -118,66 +123,69 @@ public class AntBoardManager {
 				break;
 			default:
 				System.err.println("Error rotating Ant: new rotation is wrong");
-		} 
+		}
 	}
 	
-	public void advanceAnt() {
-		int oldX = antPosX;
-		int oldY = antPosY;
-		
+	public void advanceAnt() {				
+		ateFood = foodInfront();
+				
 		switch (currentAntRot){
 			case RIGHT :
-				if (antPosX == size-1)
-					return;
-				else
-					setAntPosGoodCoord(antPosX+1, antPosY);
-				break;
-			case DOWN :
 				if (antPosY == size-1)
-					return ;
+					return;
 				else
 					setAntPosGoodCoord(antPosX, antPosY+1);
 				break;
-			case LEFT :
-				if (antPosX == 0)
+			case DOWN :
+				if (antPosX == size-1)
 					return ;
 				else
-					setAntPosGoodCoord(antPosX-1, antPosY);
+					setAntPosGoodCoord(antPosX+1, antPosY);
 				break;
-			case UP :
+			case LEFT :
 				if (antPosY == 0)
-					return;
+					return ;
 				else
 					setAntPosGoodCoord(antPosX, antPosY-1);
+				break;
+			case UP :
+				if (antPosX == 0)
+					return;
+				else
+					setAntPosGoodCoord(antPosX-1, antPosY);
 				break;
 			default:
 				System.err.println("Error avanzando hormiga");
 		}
-		move(oldX, oldY, PieceType.PATH);
+				
+		if (ateFood){
+			oldX = antPosX;
+			oldY = antPosY;
+		}
 	}
 	
 	public boolean foodInfront(){
 		switch (currentAntRot){
 			case RIGHT :
-				if (antPosX == size-1)
-					return false;
-				else
-					return getPosGoodCoord(antPosX+1, antPosY) == PieceType.FOOD;
-			case DOWN :
 				if (antPosY == size-1)
 					return false;
 				else
 					return getPosGoodCoord(antPosX, antPosY+1) == PieceType.FOOD;
-			case LEFT :
-				if (antPosX == 0)
+			case DOWN :
+				if (antPosX == size-1)
 					return false;
 				else
-					return getPosGoodCoord(antPosX-1, antPosY) == PieceType.FOOD;
-			case UP :
+					return getPosGoodCoord(antPosX+1, antPosY) == PieceType.FOOD;
+			case LEFT :
 				if (antPosY == 0)
 					return false;
 				else
 					return getPosGoodCoord(antPosX, antPosY-1) == PieceType.FOOD;
+			case UP :
+				if (antPosX == 0)
+					return false;
+				else
+					return getPosGoodCoord(antPosX-1, antPosY) == PieceType.FOOD;
 		}
 		return false;
 	}
@@ -216,6 +224,8 @@ public class AntBoardManager {
 		}catch (Exception e){//Catch exception if any
 			System.err.println("Error: " + e.getMessage());
 		}
+		System.arraycopy(state,0,initialState,0,state.length); 
+		eatenFood = 0;
 	}
 	
 	public void saveMapToFile(String fileName){
@@ -254,13 +264,30 @@ public class AntBoardManager {
 	public void resetBoard(){
 		for (int i = 0; i < state.length; i++)
 			state[i] = PieceType.NOTHING;
-		move(0,0, PieceType.ANT);
+		setAntPosGoodCoord(0,0);
+		currentAntRot = AntRotation.RIGHT;
+		eatenFood = 0;
+		System.arraycopy(state,0,initialState,0,state.length);
 	}
 	
 	public void randomizeBoard(){
 		for (int i = 0; i < state.length; i++)
 			state[i] = IGARandom.getRDouble() > 0.9 ? PieceType.FOOD : PieceType.NOTHING;
-		move(0,0, PieceType.ANT);
+		setAntPosGoodCoord(0,0);
+		currentAntRot = AntRotation.RIGHT;
+		eatenFood = 0;
 	}
 	
+	public void restoreInitialState(){
+		System.arraycopy(initialState,0,state,0,initialState.length);
+	}
+	
+	//------- Getters & Setters -------------------------/
+	public AntRotation getCurrentAntRot() {
+		return currentAntRot;
+	}
+	public int getEatenFood() {
+		return eatenFood;
+	}
+
 }
