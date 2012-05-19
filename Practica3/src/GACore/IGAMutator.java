@@ -2,6 +2,6 @@ package GACore;
 
 public abstract class IGAMutator {
 	
-	public abstract Boolean mutate(IGAGene gen, double prob);
+	public abstract Boolean mutate(IGACromosome cromosoma, double prob);
 
 }

@@ -33,7 +33,7 @@ public class GAAntEngine extends IGAEngine{
 		cruzador = new GAAntPathCross();
 		
 		//crear el mutador
-		mutador = new GAAntPathMutator();	
+		mutador = new GAAntPathMutatorTerminal();	
 	}
 	
 	protected void mutate() {
