@@ -26,7 +26,7 @@ public class GAAntPathCromosome extends IGACromosome{
 		return clone;
 	}
 	
-	public void initTree(GAProgramTree tree, int minD, int maxD){
+	public static void initTree(GAProgramTree tree, int minD, int maxD){
 		byte operator;
 		
 		if (minD > 0){	//no puede ser hoja
