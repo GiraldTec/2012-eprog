@@ -89,11 +89,9 @@ public class GAAntPathCross extends IGACross {
 	public GAProgramTree getNodo(HashSet<GAProgramTree> nodos, int pto1) {
 		int i=0;
 		Iterator<GAProgramTree> iterador = nodos.iterator();
-		while(iterador.hasNext()&i<pto1) iterador.next();
-		if (iterador.hasNext())
-			return iterador.next();
-		else
-			return null;
+		while(iterador.hasNext()&i<pto1){ iterador.next(); i++;}
+		return iterador.next();
+
 	}
 	
 
