@@ -1,30 +1,20 @@
 package GACore;
 
 public abstract class IGACromosome{
-	protected IGAGene gen; 					// permutacion de alumnos
 	protected double evaluatedValue;     // valor de la funcion de evaluacion
 	protected double score;
 	protected double acum_score;
 	
 	public abstract void initCromosome(int minD, int maxD);	
 	public abstract IGACromosome clone();
-	public abstract boolean equals(IGACromosome c);
 	public abstract void evaluate();
 	
 	public Boolean mutate(IGAMutator mutator,double prob){
-		return gen.mutate(mutator,  prob);
+		return mutator.mutate(this, prob);
 	}
 
 	//---- Getters & Setters ------------------------------------------------------//
 
-	//GEN
-	public IGAGene getGene() {
-		return this.gen;
-	}
-	public void setGene(IGAGene gen) {
-		this.gen = gen;
-	}
-	
 	//EVALUATED VALUE
 	public double getEvaluatedValue() {
 		return evaluatedValue;
