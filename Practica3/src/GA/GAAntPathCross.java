@@ -45,7 +45,7 @@ public class GAAntPathCross extends IGACross {
 		GAProgramTree pand2 = nodo2.getFather();
 		
 		// obtenemos dos nodos aleatorios de cada uno de ellos
-		
+		nodo1.setFather(pand2);
 		if(pand2.getLeftSon()==nodo1){
 			pand2.setLeftSon(nodo1);
 		}else{
@@ -55,6 +55,7 @@ public class GAAntPathCross extends IGACross {
 				pand2.setRigthSon(nodo1);
 			}
 		}
+		nodo2.setFather(pand1);
 		if(pand1.getLeftSon()==nodo2){
 			pand1.setLeftSon(nodo2);
 		}else{
