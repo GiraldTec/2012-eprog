@@ -85,13 +85,12 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 	private JProgressBar progBar;
 	private ChoiceOption<IGAEngine> functChoiceOpt;
 	private DoubleOption<IGAEngine> paramsSelecDouble;
-	private DoubleOption<IGAEngine> paramsCrossDouble;
-	private DoubleOption<IGAEngine> paramsMutDouble;
 	private int selectedRadio=0, boardSize=32;
-	private AntBoard antBoard;
-	private AntBoardManager boardManager;
+	private volatile AntBoard antBoard;
+	private volatile AntBoardManager boardManager;
 	private double currEvaluatedValue=0, oldEvaluatedValue=0,selectedMaxVal=0, selectedIncrement=0;
-	public String configData, mapName;
+	public Object configData;
+	public String mapName;
 	
 	
 	public GAGUI(final IGAEngine gaEngine) {
@@ -108,7 +107,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		//WARN: No usar EXIT_ON_CLOSE, threads petan con Plot2DPanel y bugs del JVM
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
-	    @Override
+
 	    public void windowClosed(WindowEvent e) {
 	        PrintStream nullStream = new PrintStream(new OutputStream() {
 	            public void write(int b) throws IOException {}
@@ -123,6 +122,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		
 		JTabbedPane tabPanePrincipal = new JTabbedPane();
 		boardManager = new AntBoardManager(boardSize);
+		configData = boardManager;
 		
         //********** PANEL GENETICS **************************************//
 		
@@ -192,6 +192,34 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		});
 		panelGenetics.add(checkBoxElite, "wrap, gaptop 11");
 		
+		JCheckBox checkBoxSimulation = new JCheckBox("Activar Simulación", false);
+		checkBoxSimulation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				JCheckBox cb = (JCheckBox)evt.getSource();
+				((GAAntEngine)gaEngine).setUseSimulation(cb.isSelected());
+			}
+		});
+		panelGenetics.add(checkBoxSimulation, "wrap");
+		
+		panelGenetics.add(new JLabel("Velocidad de Simulación"), "split, gaptop 10");
+		panelGenetics.add(new JSeparator(), "growx, wrap, gaptop 10");
+		
+		// Slider simulation Speed
+		JSlider simulationSlider = new JSlider(0,1500,1000);
+		simulationSlider.setMajorTickSpacing(150);
+		simulationSlider.setPaintTicks(true);
+		panelGenetics.add(simulationSlider, "wrap, growx");
+		
+		simulationSlider.addChangeListener(new ChangeListener() {
+		    public void stateChanged(ChangeEvent evt) {
+		        JSlider slider = (JSlider)evt.getSource();
+
+		        if (!slider.getValueIsAdjusting()) {
+		        	((GAAntEngine)gaEngine).setSimulationSpeed(1600 - slider.getValue());
+		        }
+		    }
+		});
+		
 		panelGenetics.add(new JLabel("Mensajes"), "split, gaptop 10");
 		panelGenetics.add(new JSeparator(), "growx, wrap, gaptop 10");
 		
@@ -255,7 +283,6 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 								pGraphic.addLinePlot("Mejor Absoluto", Color.blue, dataGenerationCount,	dataAbsoluteBest);
 								pGraphic.addLinePlot("Mejor de la Generación", Color.red, dataGenerationCount, dataGenerationBest);
 								pGraphic.addLinePlot("Media de la Generación", Color.green, dataGenerationCount, dataGenerationAverage);
-								
 								
 							} catch (Exception e) {
 								JOptionPane.showMessageDialog(GAGUI.this, "Error", "Hubo un error durante la evolución.", JOptionPane.ERROR_MESSAGE);
@@ -722,9 +749,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 	
 	public ConfigPanel<IGAEngine> creaPanelConfiguracion() {
 		String[] selectorNames = new String[] { "Ruleta", "Torneo Det", "Torneo Prob", "Ranking", "Shuffle" };
-		String[] crossNames = new String[] { "PMX", "OX", "Variante OX", "Ordinal", "Cremallera" };
-		String[] mutNames = new String[] { "Inserción", "Intercambio", "Inversión", "Heurística" };
-	
+		
 		ConfigPanel<IGAEngine> config = new ConfigPanel<IGAEngine>();
 		
 		config.addOption(new IntegerOption<IGAEngine>(  // -- entero
@@ -738,15 +763,15 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 			"num_Max_Gen",  						     // campo (espera que haya un getGrosor y un setGrosor)
 			1, 10000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
 		config.addOption(new IntegerOption<IGAEngine>(
-				"Profundidad Min", 					// texto a usar como etiqueta del campo
-				"Profundidad Minima del árbol programa",  // texto a usar como 'tooltip' cuando pasas el puntero
-				"minD",  						     // campo (espera que haya un getGrosor y un setGrosor)
-				1, 1000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
+			"Profundidad Min", 					// texto a usar como etiqueta del campo
+			"Profundidad Minima del árbol programa",  // texto a usar como 'tooltip' cuando pasas el puntero
+			"minD",  						     // campo (espera que haya un getGrosor y un setGrosor)
+			1, 1000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
 		config.addOption(new IntegerOption<IGAEngine>(
-				"Profundidad Max", 					// texto a usar como etiqueta del campo
-				"Profundidad Máxima del árbol programa",  // texto a usar como 'tooltip' cuando pasas el puntero
-				"maxD",  						     // campo (espera que haya un getGrosor y un setGrosor)
-				1, 1000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
+			"Profundidad Max", 					// texto a usar como etiqueta del campo
+			"Profundidad Máxima del árbol programa",  // texto a usar como 'tooltip' cuando pasas el puntero
+			"maxD",  						     // campo (espera que haya un getGrosor y un setGrosor)
+			1, 1000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
 	    
 		// Selection
 		functChoiceOpt = new ChoiceOption<IGAEngine>(
@@ -794,80 +819,11 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 			}
 		});
 		
-		// Cross
-		functChoiceOpt = new ChoiceOption<IGAEngine>(
-				"Función de cruce",
-				"Función cruce",
-				"crossName",
-				crossNames);
-		config.addOption(functChoiceOpt);
-		
-		paramsCrossDouble = new DoubleOption<IGAEngine>(
-				"Parametros Cruce",
-				"Parametros Cruce",
-				"crossParams", 1.0, 100.0);
-		config.addOption(paramsCrossDouble);
-		
-		((JComboBox)functChoiceOpt.getControlRef()).addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JComboBox combo = (JComboBox)e.getSource();
-		        String funcName = (String)combo.getSelectedItem();
-		        paramsCrossDouble.getTextFieldRef().setEnabled(false);
-				if(funcName == "PMX")
-					paramsCrossDouble.getLabelRef().setText("Params PMX");
-				else if(funcName == "OX")
-					paramsCrossDouble.getLabelRef().setText("Params OX");
-				else if(funcName == "Variante OX")
-					paramsCrossDouble.getLabelRef().setText("Params Variante OX");
-				else if(funcName == "Ordinal")
-					paramsCrossDouble.getLabelRef().setText("Params Ordinal");
-				else if(funcName == "Cremallera")
-					paramsCrossDouble.getLabelRef().setText("Params Cremallera");
-			}
-		});
-		
-		// Mutation
-		functChoiceOpt = new ChoiceOption<IGAEngine>(
-				"Función de mutación",
-				"Función mutación",
-				"mutName",
-				mutNames);
-		config.addOption(functChoiceOpt);
-		
-		paramsMutDouble = new DoubleOption<IGAEngine>(
-				"Parametros Mutación",
-				"Parametros Mutación",
-				"mutParams", 1.0, 100.0);
-		config.addOption(paramsMutDouble);
-		
-		((JComboBox)functChoiceOpt.getControlRef()).addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JComboBox combo = (JComboBox)e.getSource();
-		        String funcName = (String)combo.getSelectedItem();
-		        paramsMutDouble.getTextFieldRef().setEnabled(false);
-				if(funcName == "Inserción"){
-					paramsMutDouble.getLabelRef().setText("Params Inserción");
-				}
-				else if(funcName == "Intercambio"){
-					paramsMutDouble.getLabelRef().setText("Params Intercambio");
-				}
-				else if(funcName == "Inversión"){
-					paramsMutDouble.getLabelRef().setText("Params Inversión");
-				}
-				else if(funcName == "Heurística")
-				{
-					paramsMutDouble.getLabelRef().setText("Params Heurística");
-				}
-			}
-		});
-		
 		return config;
 	}
 	
 	public ConfigPanel<IGAEngine> creaPanelPruebasAuto() {
 		String[] selectorNames = new String[] { "Ruleta", "Torneo Det", "Torneo Prob", "Ranking", "Método Propio" };
-		String[] crossNames = new String[] { "PMX", "OX", "Variante OX", "Ordinal", "Método Propio" };
-		String[] mutNames = new String[] { "Inserción", "Intercambio", "Inversión", "Heurística" };
 	
 		ConfigPanel<IGAEngine> config = new ConfigPanel<IGAEngine>();
 		
@@ -894,30 +850,6 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 				"Parametros Seleccion",
 				"Parametros Seleccion",
 				"selecParams", 1.0, 100.0));
-		
-		// Cross
-		config.addOption(new ChoiceOption<IGAEngine>(
-				"Función de cruce",
-				"Función cruce",
-				"crossName",
-				crossNames));
-		
-		config.addOption(new DoubleOption<IGAEngine>(
-				"Parametros Cruce",
-				"Parametros Cruce",
-				"crossParams", 1.0, 100.0));
-		
-		// Mutation
-		config.addOption(new ChoiceOption<IGAEngine>(
-				"Función de mutación",
-				"Función mutación",
-				"mutName",
-				mutNames));
-		
-		config.addOption(new DoubleOption<IGAEngine>(
-				"Parametros Mutación",
-				"Parametros Mutación",
-				"mutParams", 1.0, 100.0));
 		
 		return config;
 	}

@@ -1,5 +1,7 @@
 package practica3;
 
+import gui.AntBoard;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -29,6 +31,7 @@ public class AntBoardManager {
 	private AntRotation currentAntRot;
 	private int eatenFood = 0;
 	private boolean ateFood=false;
+	private AntBoard board;
 
 	public AntBoardManager(int newSize) {
 		size = newSize;
@@ -41,6 +44,7 @@ public class AntBoardManager {
 			state[i] = Math.random() > 0.9 ? PieceType.FOOD : PieceType.NOTHING;
 		
 		setAntPosGoodCoord(0,0);
+		System.arraycopy(state,0,initialState,0,state.length);		
 	}
 	
 	public int getSize(){
@@ -224,8 +228,9 @@ public class AntBoardManager {
 		}catch (Exception e){//Catch exception if any
 			System.err.println("Error: " + e.getMessage());
 		}
-		System.arraycopy(state,0,initialState,0,state.length); 
 		eatenFood = 0;
+		currentAntRot = AntRotation.RIGHT;
+		System.arraycopy(state,0,initialState,0,state.length); 
 	}
 	
 	public void saveMapToFile(String fileName){
@@ -267,7 +272,6 @@ public class AntBoardManager {
 		setAntPosGoodCoord(0,0);
 		currentAntRot = AntRotation.RIGHT;
 		eatenFood = 0;
-		System.arraycopy(state,0,initialState,0,state.length);
 	}
 	
 	public void randomizeBoard(){
@@ -276,10 +280,23 @@ public class AntBoardManager {
 		setAntPosGoodCoord(0,0);
 		currentAntRot = AntRotation.RIGHT;
 		eatenFood = 0;
+		System.arraycopy(state,0,initialState,0,state.length);
 	}
 	
 	public void restoreInitialState(){
 		System.arraycopy(initialState,0,state,0,initialState.length);
+		currentAntRot = AntRotation.RIGHT;
+		eatenFood = 0;
+	}
+
+	public void setBoardRef(AntBoard antBoard) {
+		board = antBoard;
+		
+	}
+	
+	public void forceUpdateBoard() {
+		board.redraw();
+		board.refresh();
 	}
 	
 	//------- Getters & Setters -------------------------/
@@ -289,5 +306,4 @@ public class AntBoardManager {
 	public int getEatenFood() {
 		return eatenFood;
 	}
-
 }
