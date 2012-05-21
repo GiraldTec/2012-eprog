@@ -1,21 +1,20 @@
 package GA;
 
-import java.util.HashSet;
-
 import GACore.IGACromosome;
 import GACore.IGARandom;
 
-public class GAAntPathCromosome extends IGACromosome{
+public class GAAntPathCromosome extends IGACromosome {
 	private GAProgramTree treeP; // estrategia de rastreo
+	private GAAntPathEvaluator evaluator;
 	
-	
-	public void initCromosome(int minD, int maxD) {
+	public void initCromosome(GAAntPathEvaluator eval, int minD, int maxD) {
+		evaluator = eval;
 		treeP = new GAProgramTree();
 		initTree(treeP, minD, maxD);
 	}
 
 	public void evaluate() {
-		
+		evaluator.evaluate(treeP);
 	}
 	
 	public IGACromosome clone() {
@@ -75,7 +74,7 @@ public class GAAntPathCromosome extends IGACromosome{
 						tree.setRigthSon(new GAProgramTree());
 						initTree(tree.getRigthSon(), minD - 1 , maxD - 1);
 						tree.getRigthSon().setFather(tree);
-					}		
+					}
 				
 				
 				}else { // se genera operando

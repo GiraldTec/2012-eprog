@@ -21,7 +21,6 @@ public abstract class IGAEngine {
 	protected String functionName; 		// funcion de evaluación seleccionada en GUI
 	protected String selectorName; 		// funcion de selección seleccionada en GUI
 	protected String crossName; 		// funcion de cruce seleccionada en GUI
-	protected String mutName; 			// funcion de mutación seleccionada en GUI
 	protected boolean useElitism=true;  // si usamos elitismo o no (via GUI)
 	
 	protected double selecParams=1.0;
@@ -31,7 +30,7 @@ public abstract class IGAEngine {
 	public static Logger log = Logger.getLogger("Engine");
 	
 	public abstract void init();
-	public abstract void loadConfig(String config);	// carga configuración adicional (si es necesario)
+	public abstract void loadConfig(Object config);	// carga configuración adicional (si es necesario)
 	public abstract IGACromosome getAbsoluteBest();		// devuelve el mejor resultado obtenido hasta el momento
 	public abstract IGACromosome getGenerationBest();		// devuelve el mejor resultado de la generación actual
 	
@@ -43,6 +42,7 @@ public abstract class IGAEngine {
 		log.info("Engine: evaluatePopulation");	
 		
 		for (int i=0; i<population_Size; i++) {
+			population[i].evaluate();
 			sum_EvaluatedValue = sum_EvaluatedValue + population[i].getEvaluatedValue();	
 			if (population[i].getEvaluatedValue() < best_EvaluatedValue){
 				pos_Best = i;
@@ -149,12 +149,6 @@ public abstract class IGAEngine {
 	}
 	public void setUseElitism(boolean useElitism) {
 		this.useElitism = useElitism;
-	}
-	public String getMutName() {
-		return mutName;
-	}
-	public void setMutName(String mutName) {
-		this.mutName = mutName;
 	}
 	public double getSelecParams() {
 		return selecParams;

@@ -19,6 +19,7 @@ public class AntBoard extends GObject {
 
 	public AntBoard(AntBoardManager boardManager) {
 		antBoardManager = boardManager;
+		antBoardManager.setBoardRef(this);
 		board = new GSegment();
 		GStyle boardStyle = new GStyle();
 		boardStyle.setBackgroundColor(new Color(102, 204, 51));

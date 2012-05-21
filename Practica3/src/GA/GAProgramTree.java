@@ -1,6 +1,5 @@
 package GA;
 
-import GACore.IGARandom;
 
 public class GAProgramTree {
 
@@ -20,11 +19,7 @@ public class GAProgramTree {
 	 * **************
 	 * */
 	private GAProgramTree leftSon,centerSon,rigthSon,father;
-	
-	// valores por defecto
-	private int minDepth = 5;
-	private int maxDepth = 10;
-	
+		
 	public GAProgramTree(){
 		setOperator((byte) -1);
 		leftSon = null;
@@ -70,14 +65,9 @@ public class GAProgramTree {
 		return operator;
 	}
 
-
-
 	public void setFather(GAProgramTree father) {
 		this.father = father;
 	}
-
-
-
 	public GAProgramTree getFather() {
 		return father;
 	}

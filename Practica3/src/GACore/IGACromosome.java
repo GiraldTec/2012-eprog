@@ -1,11 +1,13 @@
 package GACore;
 
+import GA.GAAntPathEvaluator;
+
 public abstract class IGACromosome{
 	protected double evaluatedValue;     // valor de la funcion de evaluacion
 	protected double score;
 	protected double acum_score;
 	
-	public abstract void initCromosome(int minD, int maxD);	
+	public abstract void initCromosome(GAAntPathEvaluator eval, int minD, int maxD);	
 	public abstract IGACromosome clone();
 	public abstract void evaluate();
 	

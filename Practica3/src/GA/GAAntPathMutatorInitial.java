@@ -18,7 +18,7 @@ public class GAAntPathMutatorInitial extends IGAMutator{
 		GAProgramTree nodoTerminal = getNodo(hashNodo,IGARandom.getRInt(hashNodo.size()));
 		if(IGARandom.getRDouble()<= prob){
 			//// Mutacion de arbol!! xD ¿QUE VALORES METEMOS AQUIi¡?
-			GAAntPathCromosome.initTree(nodoTerminal, minD, maxD);
+			GAAntPathCromosome.initTree(nodoTerminal, 3, 12);
 			res=true;
 		}
 		return res;
