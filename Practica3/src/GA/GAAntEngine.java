@@ -9,7 +9,7 @@ public class GAAntEngine extends IGAEngine{
 	private int maxD=15;
 	private int maxSteps=400;
 	private int maxFood=90;
-	protected boolean useSimulation=true;
+	protected boolean useSimulation=false;
 	protected int simulationSpeed=500;
 	private GAAntPathEvaluator evaluator;
 	private AntBoardManager boardMngr;
@@ -29,8 +29,6 @@ public class GAAntEngine extends IGAEngine{
 		
 		//crear función de evaluación
 		evaluator = new GAAntPathEvaluator(boardMngr, maxSteps, maxFood);
-		evaluator.enableSimulation(useSimulation);
-		evaluator.setSimulationSpeed(simulationSpeed);
 		
 		// inicializar generación
 		current_Generation = 0;
@@ -41,7 +39,7 @@ public class GAAntEngine extends IGAEngine{
 		// crear población inicial
 		for (int i = 0; i < population_Size; i++) {
 			population[i] = new GAAntPathCromosome();
-			((GAAntPathCromosome)population[i]).initCromosome(evaluator, 10, 15);
+			((GAAntPathCromosome)population[i]).initCromosome(evaluator, 2, 5);
 		}
 		
 		// asignar un individuo elite inicial
@@ -107,6 +105,7 @@ public class GAAntEngine extends IGAEngine{
 
 	public void setUseSimulation(boolean useSimulation) {
 		this.useSimulation = useSimulation;
+		evaluator.enableSimulation(useSimulation);
 	}
 
 	public int getSimulationSpeed() {
@@ -115,6 +114,7 @@ public class GAAntEngine extends IGAEngine{
 
 	public void setSimulationSpeed(int simulationSpeed) {
 		this.simulationSpeed = simulationSpeed;
+		evaluator.setSimulationSpeed(simulationSpeed);
 	}
 
 

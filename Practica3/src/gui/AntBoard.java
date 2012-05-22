@@ -1,21 +1,26 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
 
 import no.geosoft.cc.geometry.Geometry;
 import no.geosoft.cc.graphics.GObject;
+import no.geosoft.cc.graphics.GPosition;
 import no.geosoft.cc.graphics.GSegment;
 import no.geosoft.cc.graphics.GStyle;
+import no.geosoft.cc.graphics.GText;
 import practica3.AntBoardManager;
 import practica3.AntBoardManager.PieceType;
 
 public class AntBoard extends GObject {
 	private GSegment board;
 	private GSegment[] grid;
+	private GSegment title;
 	private ArrayList<GSegment> pieces;
 	private GStyle[] pieceStyle;
 	private AntBoardManager antBoardManager;
+	private GText foodText;
 
 	public AntBoard(AntBoardManager boardManager) {
 		antBoardManager = boardManager;
@@ -37,6 +42,16 @@ public class AntBoard extends GObject {
 			addSegment(grid[i]);
 		}
 		
+		title = new GSegment();
+		foodText = new GText (" - Eaten food: 0 - ", GPosition.CENTER);
+		GStyle textStyle = new GStyle();
+		textStyle.setForegroundColor (new Color (255, 204, 51));
+		textStyle.setBackgroundColor(new Color (255, 102, 51));
+		textStyle.setFont (new Font ("Dialog", Font.BOLD, 23));
+		foodText.setStyle (textStyle);
+		title.setText(foodText);
+		addSegment(title);
+				
 		pieceStyle = new GStyle[4];
 					
 		// Path
@@ -120,13 +135,14 @@ public class AntBoard extends GObject {
 				    System.arraycopy(arrow,0,both,0,arrow.length);
 				    System.arraycopy(geom,0,both,arrow.length,geom.length);
 					piece.setGeometry(both);
-					// int x0, int y0, int x1, int y1, double length, double angle, double inset
-					//right piece.setGeometry(Geometry.createArrow(xy[0], xy[1]+5, xy[0]+20, xy[1]+5, 10, 0.5, 0.7));
-					//left piece.setGeometry(Geometry.createArrow(xy[0]+20, xy[1]+5, xy[0], xy[1]+5, 10, 0.5, 0.7));
-					// bot piece.setGeometry(Geometry.createArrow(xy[0]+10, xy[1]-4, xy[0]+10, xy[1]+12, 10, 0.5, 0.7));
-					// top piece.setGeometry(Geometry.createArrow(xy[0]+10, xy[1]+20, xy[0]+10, xy[1], 10, 0.5, 0.7));
 				}
 			}
 		}
+		
+		title.setGeometry (360, 15);
+	}
+	
+	public void setFoodText(int ammount){
+		foodText.setText("- Eaten food: "+ammount+" -");
 	}
 }

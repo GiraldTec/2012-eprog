@@ -86,8 +86,8 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 	private ChoiceOption<IGAEngine> functChoiceOpt;
 	private DoubleOption<IGAEngine> paramsSelecDouble;
 	private int selectedRadio=0, boardSize=32;
-	private volatile AntBoard antBoard;
-	private volatile AntBoardManager boardManager;
+	private AntBoard antBoard;
+	private AntBoardManager boardManager;
 	private double currEvaluatedValue=0, oldEvaluatedValue=0,selectedMaxVal=0, selectedIncrement=0;
 	public Object configData;
 	public String mapName;
@@ -143,7 +143,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		panelGenetics.add(new JSeparator(), "growx, wrap, gaptop 10");
 		
 		// Slider prob cruce
-		JSlider crossSlider = new JSlider(0,100,40);
+		JSlider crossSlider = new JSlider(0,100,0);
 		crossSlider.setMajorTickSpacing(20);
 		crossSlider.setMinorTickSpacing(5);
 		crossSlider.setPaintTicks(true);
@@ -166,7 +166,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		panelGenetics.add(new JSeparator(), "growx, wrap, gaptop 10");
 		
 		// Slider prob mutación
-		JSlider mutationSlider = new JSlider(0,100,40);
+		JSlider mutationSlider = new JSlider(0,100,0);
 		mutationSlider.setMajorTickSpacing(20);
 		mutationSlider.setMinorTickSpacing(5);
 		mutationSlider.setPaintTicks(true);
@@ -341,7 +341,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		GScene scene = new GScene(window);
 		double w0[] = { 0.0, 0.0, 0.0 };
 		double w1[] = { boardSize + 2.0, 0.0, 0.0 };
-		double w2[] = { 0.0, boardSize + 2.0, 0.0 };
+		double w2[] = { 0.0, boardSize + 2.7, 0.0 };
 		scene.setWorldExtent(w0, w1, w2);
 
 		antBoard = new AntBoard(boardManager);
