@@ -85,7 +85,6 @@ public class AntBoardManager {
 		if (antPosX != -1 && antPosY != -1){
 			if (oldX != -1){
 				move(oldX, oldY, PieceType.EATENFOOD);
-				eatenFood++;
 				oldX = -1;
 			}
 			else
@@ -165,6 +164,9 @@ public class AntBoardManager {
 		if (ateFood){
 			oldX = antPosX;
 			oldY = antPosY;
+			
+			eatenFood++;
+			board.setFoodText(eatenFood);
 		}
 	}
 	
@@ -229,6 +231,7 @@ public class AntBoardManager {
 			System.err.println("Error: " + e.getMessage());
 		}
 		eatenFood = 0;
+		board.setFoodText(0);
 		currentAntRot = AntRotation.RIGHT;
 		System.arraycopy(state,0,initialState,0,state.length); 
 	}
@@ -272,6 +275,7 @@ public class AntBoardManager {
 		setAntPosGoodCoord(0,0);
 		currentAntRot = AntRotation.RIGHT;
 		eatenFood = 0;
+		board.setFoodText(0);
 	}
 	
 	public void randomizeBoard(){
@@ -280,6 +284,7 @@ public class AntBoardManager {
 		setAntPosGoodCoord(0,0);
 		currentAntRot = AntRotation.RIGHT;
 		eatenFood = 0;
+		board.setFoodText(0);
 		System.arraycopy(state,0,initialState,0,state.length);
 	}
 	
@@ -287,11 +292,11 @@ public class AntBoardManager {
 		System.arraycopy(initialState,0,state,0,initialState.length);
 		currentAntRot = AntRotation.RIGHT;
 		eatenFood = 0;
+		board.setFoodText(0);
 	}
 
 	public void setBoardRef(AntBoard antBoard) {
 		board = antBoard;
-		
 	}
 	
 	public void forceUpdateBoard() {

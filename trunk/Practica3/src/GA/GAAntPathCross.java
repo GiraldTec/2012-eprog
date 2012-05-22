@@ -11,11 +11,6 @@ public class GAAntPathCross extends IGACross {
 
 	@Override
 	public IGACromosome[] cross(IGACromosome[] parents) {
-
-		
-		
-
-		
 		GAAntPathCromosome[] descendientes= new GAAntPathCromosome[2];
 		
 		descendientes[0] = (GAAntPathCromosome) parents[0].clone();

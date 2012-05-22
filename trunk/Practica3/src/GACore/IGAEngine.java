@@ -44,10 +44,10 @@ public abstract class IGAEngine {
 		for (int i=0; i<population_Size; i++) {
 			population[i].evaluate();
 			sum_EvaluatedValue = sum_EvaluatedValue + population[i].getEvaluatedValue();	
-			if (population[i].getEvaluatedValue() < best_EvaluatedValue){
+			if (population[i].getEvaluatedValue() > best_EvaluatedValue){
 				pos_Best = i;
 				best_EvaluatedValue = population[i].getEvaluatedValue();
-				if(best_EvaluatedValue < elite.getEvaluatedValue())
+				if(best_EvaluatedValue > elite.getEvaluatedValue())
 					elite = (IGACromosome)population[i].clone();
 			}
 		}
@@ -55,7 +55,6 @@ public abstract class IGAEngine {
 		population_Average = sum_EvaluatedValue/population_Size;
 		
 		for (int i=0; i<population_Size; i++) {
-			//double aptitud_revised = population[i].getAptitude()+best_Aptitude;
 			population[i].setScore(population[i].getEvaluatedValue() / sum_EvaluatedValue);
 			population[i].setAcum_Score(population[i].getScore() + acum_Score);
 			acum_Score = acum_Score + population[i].getScore();
