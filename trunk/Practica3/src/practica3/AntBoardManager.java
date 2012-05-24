@@ -290,6 +290,7 @@ public class AntBoardManager {
 	
 	public void restoreInitialState(){
 		System.arraycopy(initialState,0,state,0,initialState.length);
+		setAntPosGoodCoord(0,0);
 		currentAntRot = AntRotation.RIGHT;
 		eatenFood = 0;
 		board.setFoodText(0);

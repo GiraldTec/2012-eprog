@@ -7,7 +7,7 @@ import GACore.IGAEngine;
 public class GAAntEngine extends IGAEngine{
 	private int minD=5;
 	private int maxD=15;
-	private int maxSteps=400;
+	private int maxSteps=100;
 	private int maxFood=90;
 	protected boolean useSimulation=false;
 	protected int simulationSpeed=500;
@@ -28,7 +28,7 @@ public class GAAntEngine extends IGAEngine{
 		mutador = new GAAntPathMutatorTerminal();	
 		
 		//crear función de evaluación
-		evaluator = new GAAntPathEvaluator(boardMngr, maxSteps, maxFood);
+		evaluator = new GAAntPathEvaluator(boardMngr, maxSteps, maxFood, useSimulation, simulationSpeed);
 		
 		// inicializar generación
 		current_Generation = 0;
@@ -105,7 +105,8 @@ public class GAAntEngine extends IGAEngine{
 
 	public void setUseSimulation(boolean useSimulation) {
 		this.useSimulation = useSimulation;
-		evaluator.enableSimulation(useSimulation);
+		if (evaluator != null)
+			evaluator.enableSimulation(useSimulation);
 	}
 
 	public int getSimulationSpeed() {
@@ -114,7 +115,8 @@ public class GAAntEngine extends IGAEngine{
 
 	public void setSimulationSpeed(int simulationSpeed) {
 		this.simulationSpeed = simulationSpeed;
-		evaluator.setSimulationSpeed(simulationSpeed);
+		if (evaluator != null)
+			evaluator.setSimulationSpeed(simulationSpeed);
 	}
 
 
