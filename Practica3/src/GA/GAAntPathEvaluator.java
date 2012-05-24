@@ -5,16 +5,18 @@ import practica3.AntBoardManager.AntRotation;
 public class GAAntPathEvaluator {
 	private int maxSteps;
 	private int maxFood;
-	private int steps=0;
-	private int food=0;
-	private int simSpeed=400;
-	private boolean useSim=false;
+	private static int steps=0;
+	private static int food=0;
+	private int simSpeed=200;
+	private boolean useSim=true;
 	private AntBoardManager boardMngr;
 	
-	public GAAntPathEvaluator(AntBoardManager boardMngr, int maxSteps, int maxFood) {
+	public GAAntPathEvaluator(AntBoardManager boardMngr, int maxSteps, int maxFood, boolean useSimulation, int simulationSpeed) {
 		this.maxFood = maxFood;
 		this.maxSteps = maxSteps;
 		this.boardMngr = boardMngr;
+		this.useSim = useSimulation;
+		this.simSpeed = simulationSpeed;
 	}
 	
 	public double evaluate(GAProgramTree program){
@@ -24,10 +26,9 @@ public class GAAntPathEvaluator {
 		boardMngr.restoreInitialState();
 		while (steps < maxSteps && food < maxFood){
 			executeStep(boardMngr, program);
-			food = boardMngr.getEatenFood();
-			steps++;
 		}
 		boardMngr.forceUpdateBoard();
+		System.out.println("Programa completado");
 		return food;
 	}
 	
@@ -43,7 +44,7 @@ public class GAAntPathEvaluator {
 		 *   5 -- > ProgN3
 		 * **************/
 		
-		if (/*useSim*/ program.getOperator() < 3) {
+		if (useSim && program.getOperator() < 3) {
 			try {
 				boardMngr.forceUpdateBoard();
 				Thread.sleep(simSpeed);
@@ -51,6 +52,9 @@ public class GAAntPathEvaluator {
 				e.printStackTrace();
 			}
 		}
+		
+		steps++;
+		food = boardMngr.getEatenFood();
 		
 		//acciones a realizar en función del nodo en el que estemos
 		System.out.println("Operator: "+program.getOperator()+" ");
