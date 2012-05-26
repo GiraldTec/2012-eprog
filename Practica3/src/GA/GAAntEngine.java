@@ -48,7 +48,21 @@ public class GAAntEngine extends IGAEngine{
 	}
 	
 	protected void mutate() {
-		// TODO Auto-generated method stub
+		log.info("Engine: mutate");
+        
+        for (int i=0; i < population_Size; i++) {
+                //METER EL TIPO DE LA MUTACIÓN Y LOS ESTUDIANTES
+                if (mutador.mutate(population[i], prob_Mut)) {
+                        population[i].evaluate();
+                }
+                
+                log.info("Grupos tras mutación: ");
+//                for (Integer j : population[i].getGene().getGen())
+//                {
+//                        log.info(j + " ");
+//                }
+//                log.info("\n");
+        }
 	}
 
 	protected void reproducePopulation() {
