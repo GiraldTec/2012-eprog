@@ -1,8 +1,11 @@
 package GA;
 
+import java.util.PriorityQueue;
+
 import practica3.AntBoardManager;
 import GACore.IGACromosome;
 import GACore.IGAEngine;
+import GACore.IGARandom;
 
 public class GAAntEngine extends IGAEngine{
 	private int minD=5;
@@ -66,7 +69,84 @@ public class GAAntEngine extends IGAEngine{
 	}
 
 	protected void reproducePopulation() {
-		// TODO Auto-generated method stub
+		int[] sel_Cross = new int[population_Size];     //seleccionados para reproducir
+        int num_Sel_Cross = 0;                                          //contador seleccionados                        
+        double rand_prob_Cross;                                         //probabilidad de producirse un cruce
+        
+        log.info("Engine: reproducePopulation");
+        
+        //Se eligen los individuos a cruzar
+        for (int i=0; i<population_Size; i++) {
+                //se generan tam_pob números aleatorios en [0 1)
+                rand_prob_Cross = IGARandom.getRDouble();
+                //se eligen los individuos de las posiciones i si prob < prob_cruce
+                if (rand_prob_Cross < prob_Cross){
+                        sel_Cross[num_Sel_Cross] = i;
+                        num_Sel_Cross++;
+                }
+        }
+        
+        // el numero de seleccionados se hace par
+        if ((num_Sel_Cross % 2) == 1)
+                num_Sel_Cross--;
+        
+        // se cruzan los individuos elegidos en un punto al azar
+        
+        for (int i=0; i<num_Sel_Cross; i+=2){
+        		GAAntPathCromosome[] parents = new GAAntPathCromosome[2];
+                parents[0] = (GAAntPathCromosome) auxiliar_population[sel_Cross[i]];
+                parents[1] = (GAAntPathCromosome) auxiliar_population[sel_Cross[i+1]];
+                GAAntPathCromosome[] descendientes = (GAAntPathCromosome[]) cruzador.cross(parents);
+                // los nuevos individuos sustituyen a sus progenitores
+                auxiliar_population[sel_Cross[i]] = descendientes[0];
+                auxiliar_population[sel_Cross[i]].evaluate();
+                auxiliar_population[sel_Cross[i+1]] = descendientes[1];
+                auxiliar_population[sel_Cross[i+1]].evaluate();
+        }
+        
+        // si usamos elitismo sustituir a los peores individuos de la población por los hijos
+        if (useElitism) {
+                final class CromoData implements Comparable<CromoData> {
+                        private double aptitud;
+                        private int possition;
+
+                        public CromoData(double apt, int pos) {
+                                aptitud = apt;
+                                possition = pos;
+                        }
+
+                        public int compareTo(CromoData o) {
+
+                                if (this.aptitud == o.getAptitude())
+                                        return 0;
+                                else {
+                                        if (this.aptitud < o.getAptitude()) {
+                                                return 1;
+                                        } else
+                                                return -1;
+                                }
+                        }
+
+                        public double getAptitude() {
+                                return aptitud;
+                        }
+                }
+
+                PriorityQueue<CromoData> rank = new PriorityQueue<CromoData>();
+                for (int i=0; i<population_Size;i++){
+                        rank.add(new CromoData(population[i].getEvaluatedValue(),i));
+                }
+                for(int i=0;i<num_Sel_Cross;i++){
+                        population[rank.poll().possition]=auxiliar_population[sel_Cross[i]];
+                }
+        }
+        
+        // si no usamos elitismo sustituir padres por hijos directamente
+        else {
+                for(int i=0;i<num_Sel_Cross;i++){
+                        population[sel_Cross[i]]=auxiliar_population[sel_Cross[i]];
+                }
+        }
 	}
 
 	public void loadConfig(Object config) {
