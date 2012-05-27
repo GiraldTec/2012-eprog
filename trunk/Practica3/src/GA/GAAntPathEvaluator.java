@@ -28,7 +28,6 @@ public class GAAntPathEvaluator {
 		while (steps < maxSteps && food < maxFood){
 			executeStep(boardMngr, program);
 		}
-		boardMngr.forceUpdateBoard();
 		System.out.println("Programa completado");
 		return food;
 	}

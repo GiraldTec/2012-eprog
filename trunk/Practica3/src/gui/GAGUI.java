@@ -303,19 +303,20 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 							} catch (IllegalAccessException e1) {
 								e1.printStackTrace();
 							}
+							
+							// actualizar resultados
+							dataAbsoluteBest[currGeneration] = gaEngine.getAbsoluteBest().getEvaluatedValue();
+							dataGenerationBest[currGeneration] = gaEngine.getGenerationBest().getEvaluatedValue();
+							dataGenerationAverage[currGeneration] = gaEngine.getPopulation_Average();
+							dataGenerationCount[currGeneration] = currGeneration;
+							currGeneration = gaEngine.getCurrent_Generation();
 
+							progBar.setValue((currGeneration * 100) / gaEngine.getNum_Max_Gen());
 						}
-						// actualizar resultados
-						dataAbsoluteBest[currGeneration] = gaEngine.getAbsoluteBest().getEvaluatedValue();
-						dataGenerationBest[currGeneration] = gaEngine.getGenerationBest().getEvaluatedValue();
-						dataGenerationAverage[currGeneration] = gaEngine.getPopulation_Average();
-						dataGenerationCount[currGeneration] = currGeneration;
-						currGeneration = gaEngine.getCurrent_Generation();
-
-						progBar.setValue((currGeneration * 100) / gaEngine.getNum_Max_Gen());
 					}
 					progBar.setValue(0);
 					panelEnEdicion.setText("Evolución completada");
+					
 					pGraphic.addLinePlot("Mejor Absoluto", Color.blue, dataGenerationCount,	dataAbsoluteBest);
 					pGraphic.addLinePlot("Mejor de la Generación", Color.red, dataGenerationCount, dataGenerationBest);
 					pGraphic.addLinePlot("Media de la Generación", Color.green, dataGenerationCount, dataGenerationAverage);	
