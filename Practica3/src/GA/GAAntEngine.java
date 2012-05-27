@@ -120,7 +120,7 @@ public class GAAntEngine extends IGAEngine{
                                 if (this.aptitud == o.getAptitude())
                                         return 0;
                                 else {
-                                        if (this.aptitud < o.getAptitude()) {
+                                        if (this.aptitud > o.getAptitude()) {
                                                 return 1;
                                         } else
                                                 return -1;
@@ -153,12 +153,8 @@ public class GAAntEngine extends IGAEngine{
 		boardMngr = (AntBoardManager) config;
 	}
 
-	public IGACromosome getAbsoluteBest() {
-		return elite;
-	}
-
-	public IGACromosome getGenerationBest() {
-		return generationBest;
+	public void evaluateElite(){
+		elite.evaluate();
 	}
 	
 	
@@ -212,6 +208,13 @@ public class GAAntEngine extends IGAEngine{
 		if (evaluator != null)
 			evaluator.setSimulationSpeed(simulationSpeed);
 	}
+	
+	public IGACromosome getAbsoluteBest() {
+		return elite;
+	}
 
+	public IGACromosome getGenerationBest() {
+		return generationBest;
+	}
 
 }
