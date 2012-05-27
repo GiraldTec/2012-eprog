@@ -1,5 +1,7 @@
 package GA;
 
+import java.util.Stack;
+
 import GACore.IGACromosome;
 import GACore.IGARandom;
 
@@ -7,6 +9,7 @@ public class GAAntPathCromosome extends IGACromosome {
 	private GAProgramTree treeP; // estrategia de rastreo
 	private GAAntPathEvaluator evaluator;
 	private int minD, maxD;
+	private static Integer ultimoMov;
 	
 	public void initCromosome(GAAntPathEvaluator eval, int minD, int maxD) {
 		evaluator = eval;
@@ -15,6 +18,7 @@ public class GAAntPathCromosome extends IGACromosome {
 		treeP = new GAProgramTree();
 		initTree(treeP, minD, maxD);
 		treeP.setFather(null);
+		ultimoMov = null;
 	}
 
 	public GAAntPathEvaluator getEvaluator() {
@@ -87,7 +91,15 @@ public class GAAntPathCromosome extends IGACromosome {
 		else { // prof_min = 0
 			if (maxD == 0) { // sólo puede ser hoja
 				operator = IGARandom.getRInt(4) > 0 ? (byte)0 : (byte) IGARandom.getRInt(3);// símbolo de operador aleatorio
-				tree.setOperator(operator);
+				if(ultimoMov == null){
+					ultimoMov = new Integer(operator);
+				}else{
+					while((ultimoMov == 1 && operator == 2)||(ultimoMov == 2 && operator == 1)){
+						operator = IGARandom.getRInt(4) > 0 ? (byte)0 : (byte) IGARandom.getRInt(3);// símbolo de operador aleatorio
+					}
+					ultimoMov = new Integer(operator);
+					tree.setOperator(operator);
+				}
 			}
 			else {
 				// se decide aleatoriamente operando u operador
@@ -111,7 +123,15 @@ public class GAAntPathCromosome extends IGACromosome {
 				}else { // se genera operando
 					// generación del subarbol de operando
 					operator = IGARandom.getRInt(4) > 0 ? (byte)0 : (byte) IGARandom.getRInt(3);// símbolo de operador aleatorio
-					tree.setOperator(operator);
+					if(ultimoMov == null){
+						ultimoMov = new Integer(operator);
+					}else{
+						while((ultimoMov == 1 && operator == 2)||(ultimoMov == 2 && operator == 1)){
+							operator = IGARandom.getRInt(4) > 0 ? (byte)0 : (byte) IGARandom.getRInt(3);// símbolo de operador aleatorio
+						}
+						ultimoMov = new Integer(operator);
+						tree.setOperator(operator);
+					}
 				}
 			}
 		}
