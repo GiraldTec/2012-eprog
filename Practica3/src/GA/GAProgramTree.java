@@ -32,10 +32,17 @@ public class GAProgramTree {
 		GAProgramTree clon = new GAProgramTree();
 		
 		clon.setOperator((byte)this.getOperator());
-		clon.setLeftSon(this.getLeftSon().clone());
-		clon.setCenterSon(this.getCenterSon().clone());
-		clon.setRigthSon(this.getRigthSon().clone());
-		clon.setFather(this.getFather().clone());
+		if(this.getLeftSon()!=null)	clon.setLeftSon(this.getLeftSon().clone()); 
+		else clon.setLeftSon(null);
+		
+		if(this.getCenterSon()!=null)	clon.setCenterSon(this.getCenterSon().clone()); 
+		else clon.setCenterSon(null);
+		
+		if(this.getRigthSon()!=null)	clon.setRigthSon(this.getLeftSon().clone()); 
+		else clon.setRigthSon(null);
+		
+		if(this.getFather()!=null) clon.setFather(this.getFather().clone());
+		else clon.setFather(null);
 		
 		return clon;
 	}
