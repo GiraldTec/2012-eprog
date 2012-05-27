@@ -25,7 +25,7 @@ public class GAProgramTree {
 		leftSon = null;
 		centerSon = null;
 		rigthSon = null;
-		setFather(null);
+		father = null;
 	}
 	
 	public GAProgramTree clone(GAProgramTree papa){

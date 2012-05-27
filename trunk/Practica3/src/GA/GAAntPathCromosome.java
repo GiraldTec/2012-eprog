@@ -14,6 +14,7 @@ public class GAAntPathCromosome extends IGACromosome {
 		this.maxD = maxD;
 		treeP = new GAProgramTree();
 		initTree(treeP, minD, maxD);
+		treeP.setFather(null);
 	}
 
 	public GAAntPathEvaluator getEvaluator() {
@@ -75,15 +76,12 @@ public class GAAntPathCromosome extends IGACromosome {
 				initTree(tree.getCenterSon(), minD - 1 , maxD - 1);
 				tree.getCenterSon().setFather(tree);
 				
+			}
+			// dos operandos
 				tree.setRigthSon(new GAProgramTree());
 				initTree(tree.getRigthSon(), minD - 1 , maxD - 1);
 				tree.getRigthSon().setFather(tree);
-			}
-			else { // dos operandos
-				tree.setCenterSon(new GAProgramTree());
-				initTree(tree.getCenterSon(), minD - 1 , maxD - 1);
-				tree.getCenterSon().setFather(tree);
-			}
+			
 		}
 		else { // prof_min = 0
 			if (maxD == 0) { // sólo puede ser hoja
@@ -103,17 +101,11 @@ public class GAAntPathCromosome extends IGACromosome {
 					if (operator == 5) { //si tres_operandos
 						tree.setCenterSon(new GAProgramTree());
 						initTree(tree.getCenterSon(), minD - 1 , maxD - 1);
-						tree.getCenterSon().setFather(tree);
-						
-						tree.setRigthSon(new GAProgramTree());
-						initTree(tree.getRigthSon(), minD - 1 , maxD - 1);
-						tree.getRigthSon().setFather(tree);
+						tree.getCenterSon().setFather(tree);						
 					}
-					else { // dos operandos
-						tree.setCenterSon(new GAProgramTree());
-						initTree(tree.getCenterSon(), minD - 1 , maxD - 1);
-						tree.getCenterSon().setFather(tree);
-					}
+					tree.setRigthSon(new GAProgramTree());
+					initTree(tree.getRigthSon(), minD - 1 , maxD - 1);
+					tree.getRigthSon().setFather(tree);
 				
 				}else { // se genera operando
 					// generación del subarbol de operando
