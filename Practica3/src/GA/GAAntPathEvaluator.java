@@ -67,13 +67,13 @@ public class GAAntPathEvaluator {
 				break;
 			case 4:
 				executeStep(boardMngr, program.getLeftSon());
-				executeStep(boardMngr, program.getCenterSon());
+				executeStep(boardMngr, program.getRigthSon());
 				break;
 			case 3:
 				if (boardMngr.foodInfront())
 					executeStep(boardMngr, program.getLeftSon());
 				else
-					executeStep(boardMngr, program.getCenterSon());
+					executeStep(boardMngr, program.getRigthSon());
 				break;
 			case 2:
 				boardMngr.rotateAnt(AntRotation.RIGHT);

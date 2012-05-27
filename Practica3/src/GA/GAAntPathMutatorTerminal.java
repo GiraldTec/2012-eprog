@@ -19,8 +19,8 @@ public class GAAntPathMutatorTerminal extends IGAMutator{
 	}
 
 	private GAProgramTree getNodoTerminalAleatorio(GAProgramTree treeP) {
-		if(treeP.getLeftSon()==null &&
-				treeP.getCenterSon()==null &&
+		if(treeP.getLeftSon()==null &
+				treeP.getCenterSon()==null &
 					treeP.getRigthSon()==null){
 			return treeP;
 		}else{
