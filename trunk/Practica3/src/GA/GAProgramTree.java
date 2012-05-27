@@ -29,8 +29,15 @@ public class GAProgramTree {
 	}
 	
 	public GAProgramTree clone(){
-		/* */
-		return null;
+		GAProgramTree clon = new GAProgramTree();
+		
+		clon.setOperator((byte)this.getOperator());
+		clon.setLeftSon(this.getLeftSon().clone());
+		clon.setCenterSon(this.getCenterSon().clone());
+		clon.setRigthSon(this.getRigthSon().clone());
+		clon.setFather(this.getFather().clone());
+		
+		return clon;
 	}
 	
 	public void setOperator(byte operator) {
