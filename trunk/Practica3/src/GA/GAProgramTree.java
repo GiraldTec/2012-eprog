@@ -28,21 +28,23 @@ public class GAProgramTree {
 		setFather(null);
 	}
 	
-	public GAProgramTree clone(){
+	public GAProgramTree clone(GAProgramTree papa){
 		GAProgramTree clon = new GAProgramTree();
 		
 		clon.setOperator((byte)this.getOperator());
-		if(this.getLeftSon()!=null)	clon.setLeftSon(this.getLeftSon().clone()); 
+		if(this.getLeftSon()!=null)	
+			clon.setLeftSon(this.getLeftSon().clone(clon)); 
 		else clon.setLeftSon(null);
 		
-		if(this.getCenterSon()!=null)	clon.setCenterSon(this.getCenterSon().clone()); 
+		if(this.getCenterSon()!=null)	
+			clon.setCenterSon(this.getCenterSon().clone(clon)); 
 		else clon.setCenterSon(null);
 		
-		if(this.getRigthSon()!=null)	clon.setRigthSon(this.getLeftSon().clone()); 
+		if(this.getRigthSon()!=null)	
+			clon.setRigthSon(this.getRigthSon().clone(clon)); 
 		else clon.setRigthSon(null);
 		
-		if(this.getFather()!=null) clon.setFather(this.getFather().clone());
-		else clon.setFather(null);
+		clon.setFather(papa);
 		
 		return clon;
 	}
