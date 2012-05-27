@@ -25,7 +25,7 @@ public class GAAntPathCromosome extends IGACromosome {
 		clon.setAcum_Score(this.getAcum_Score());
 		clon.setEvaluatedValue(this.getEvaluatedValue());
 		clon.setScore(this.getScore());
-		clon.setTreeP((GAProgramTree) this.getTreeP().clone());
+		clon.setTreeP((GAProgramTree) this.getTreeP().clone(null));
 		return clon;
 	}
 	
