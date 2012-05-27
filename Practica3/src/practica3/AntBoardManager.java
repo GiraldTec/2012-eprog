@@ -294,6 +294,8 @@ public class AntBoardManager {
 		currentAntRot = AntRotation.RIGHT;
 		eatenFood = 0;
 		board.setFoodText(0);
+		oldX=-1;
+		antPosX=-1;
 	}
 
 	public void setBoardRef(AntBoard antBoard) {

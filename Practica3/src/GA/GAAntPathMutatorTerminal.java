@@ -7,7 +7,6 @@ import GACore.IGARandom;
 public class GAAntPathMutatorTerminal extends IGAMutator{
 
 	
-	@Override
 	public Boolean mutate(IGACromosome cromosoma, double prob) {
 		System.out.print("entraamos a mutar");
 		Boolean res = new Boolean(false);
@@ -37,11 +36,6 @@ public class GAAntPathMutatorTerminal extends IGAMutator{
 					return getNodoTerminalAleatorio(treeP.getLeftSon());
 		}
 	}
-
-
-
-
-
 
 }
 

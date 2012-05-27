@@ -5,7 +5,7 @@ import practica3.AntBoardManager.AntRotation;
 public class GAAntPathEvaluator {
 	private int maxSteps;
 	private int maxFood;
-	private static int steps=0;
+	private static Integer steps=0;
 	private static int food=0;
 	private int simSpeed=200;
 	private boolean useSim=true;
@@ -53,6 +53,10 @@ public class GAAntPathEvaluator {
 			}
 		}
 		
+		synchronized (steps) {
+			
+		
+		
 		steps++;
 		food = boardMngr.getEatenFood();
 		
@@ -85,6 +89,8 @@ public class GAAntPathEvaluator {
 				break;
 			default:
 				System.err.println("Error al evaluar: operador incorrecto");		
+		}
+		
 		}
 	}
 		
