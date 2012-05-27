@@ -23,6 +23,7 @@ public class GAAntPathEvaluator {
 		steps = 0;
 		food = 0;
 		
+		System.out.println("Comenzando Evaluación de programa");
 		boardMngr.restoreInitialState();
 		while (steps < maxSteps && food < maxFood){
 			executeStep(boardMngr, program);
@@ -52,10 +53,6 @@ public class GAAntPathEvaluator {
 				e.printStackTrace();
 			}
 		}
-		
-		synchronized (steps) {
-			
-		
 		
 		steps++;
 		food = boardMngr.getEatenFood();
@@ -89,8 +86,6 @@ public class GAAntPathEvaluator {
 				break;
 			default:
 				System.err.println("Error al evaluar: operador incorrecto");		
-		}
-		
 		}
 	}
 		
