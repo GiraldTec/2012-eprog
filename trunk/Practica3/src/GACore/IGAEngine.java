@@ -16,11 +16,10 @@ public abstract class IGAEngine {
 	protected int current_Generation;	// generación en la que estamos
 	protected IGASelector selector;		// método de selección
 	protected IGACross cruzador;		// método de cruzado
-	protected IGAMutator mutador; 		// método de mutación
+	protected IGAMutator mutator; 		// método de mutación
 	
-	protected String functionName; 		// funcion de evaluación seleccionada en GUI
 	protected String selectorName; 		// funcion de selección seleccionada en GUI
-	protected String crossName; 		// funcion de cruce seleccionada en GUI
+	protected String mutatorName; 		// funcion de mutación seleccionada en GUI
 	protected boolean useElitism=true;  // si usamos elitismo o no (via GUI)
 	
 	protected double selecParams=1.0;
@@ -98,12 +97,6 @@ public abstract class IGAEngine {
 	public void setPopulation_Size(int population_Size) {
 		this.population_Size = population_Size;
 	}
-	public String getFunctionName() {
-		return functionName;
-	}
-	public void setFunctionName(String functionName) {
-		this.functionName = functionName;
-	}
 	public int getNum_Max_Gen() {
 		return num_Max_Gen;
 	}
@@ -115,12 +108,6 @@ public abstract class IGAEngine {
 	}
 	public void setSelectorName(String selectorName) {
 		this.selectorName = selectorName;
-	}
-	public String getCrossName() {
-		return crossName;
-	}
-	public void setCrossName(String crossName) {
-		this.crossName = crossName;
 	}
 	public double getProb_Cross() {
 		return prob_Cross;
@@ -166,5 +153,11 @@ public abstract class IGAEngine {
 	}
 	public void setMutParams(double mutParams) {
 		this.mutParams = mutParams;
+	}
+	public String getMutatorName() {
+		return mutatorName;
+	}
+	public void setMutatorName(String mutatorName) {
+		this.mutatorName = mutatorName;
 	}
 }

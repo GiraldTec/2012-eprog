@@ -28,7 +28,14 @@ public class GAAntEngine extends IGAEngine{
 		cruzador = new GAAntPathCross();
 		
 		//crear función de mutación
-		mutador = new GAAntPathMutatorTerminal();	
+		if (mutatorName.equals("Inicial"))
+			mutator = new GAAntPathMutatorInitial();
+		else if (mutatorName.equals("Operacional"))
+			mutator = new GAAntPathMutatorFuncional();
+		else if (mutatorName.equals("Terminal"))
+			mutator = new GAAntPathMutatorTerminal();
+		else
+			System.err.println("Error al elegir la función de selección");
 		
 		//crear función de evaluación
 		evaluator = new GAAntPathEvaluator(boardMngr, maxSteps, maxFood, useSimulation, simulationSpeed);
@@ -55,7 +62,7 @@ public class GAAntEngine extends IGAEngine{
         
         for (int i=0; i < population_Size; i++) {
                 //METER EL TIPO DE LA MUTACIÓN Y LOS ESTUDIANTES
-                if (mutador.mutate(population[i], prob_Mut)) {
+                if (mutator.mutate(population[i], prob_Mut)) {
                         population[i].evaluate();
                 }
                 
