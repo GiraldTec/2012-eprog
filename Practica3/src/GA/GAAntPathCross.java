@@ -39,36 +39,32 @@ public class GAAntPathCross extends IGACross {
 		GAProgramTree nodo2 = getNodo(gNodos2, pto2);
 		GAProgramTree pand2 = nodo2.getFather();
 		
-		// Averiguamos en que posicion respecto a sus padres están
-		int posNod1, posNod2;
-		if(pand1.getLeftSon()==nodo1){
-			posNod1=0;
-		}else{
-			if(pand1.getCenterSon()==nodo1){
-				posNod1=1;
-			}else{ //if(pand2.getRigthSon()==nodo1)
-				posNod1=2;
-			}
+		// Averiguamos en que posicion respecto a sus padres están, si los tienen
+		int posNod1 = -1;
+		int posNod2 = -1;
+		
+		if(pand1!=null){
+			if(pand1.getLeftSon()==nodo1)				posNod1=0;
+			else	if(pand1.getCenterSon()==nodo1)		posNod1=1;
+					else								posNod1=2;
 		}
-		if(pand2.getLeftSon()==nodo2){
-			posNod2=0;
-		}else{
-			if(pand2.getCenterSon()==nodo2){
-				posNod2=1;
-			}else{ //if(pand2.getRigthSon()==nodo1)
-				posNod2=2;
-			}
+		if(pand2!=null){
+			if(pand2.getLeftSon()==nodo2)				posNod2=0;
+			else	if(pand2.getCenterSon()==nodo2)		posNod2=1;
+				else									posNod2=2;
 		}
 		
-		// Recolocamos los nodos bajo los padres que deben
-		if(posNod1==0)			pand2.setLeftSon(nodo1);
-		else 	if(posNod1==1)	pand2.setCenterSon(nodo1);
-				else 			pand2.setRigthSon(nodo1);
+		// Recolocamos los nodos bajo los padres que deben, si los tienen
+		if(pand2!=null)
+			if(posNod1==0)			pand2.setLeftSon(nodo1);
+			else 	if(posNod1==1)	pand2.setCenterSon(nodo1);
+					else 			pand2.setRigthSon(nodo1);
+		
 		nodo1.setFather(pand2); // Y le ponemos un nuevo padre
-		
-		if(posNod2==0)			pand1.setLeftSon(nodo2);
-		else 	if(posNod2==1)	pand1.setCenterSon(nodo2);
-				else 			pand1.setRigthSon(nodo2);
+		if(pand1!=null)
+			if(posNod2==0)			pand1.setLeftSon(nodo2);
+			else 	if(posNod2==1)	pand1.setCenterSon(nodo2);
+					else 			pand1.setRigthSon(nodo2);
 		nodo2.setFather(pand1); // Y le ponemos un nuevo padre
 		
 		// Y los intercambiamos, de esta forma devolvemos los hijos y los-padres-sin-modificar
