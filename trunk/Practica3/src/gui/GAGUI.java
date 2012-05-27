@@ -275,7 +275,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 					{
 					
 					// bucle de evolución, ejecutamos cada step en un thread distinto (para no bloquar la interfaz)
-					stepThread = new GAStepThread(gaEngine,(Object) dataAbsoluteBest,(Object) dataGenerationAverage,(Object) dataGenerationBest,(Object) dataGenerationCount) {
+					/*stepThread = new GAStepThread(gaEngine,(Object) dataAbsoluteBest,(Object) dataGenerationAverage,(Object) dataGenerationBest,(Object) dataGenerationCount) {
 						protected void done() {
 							try {
 								progBar.setValue(0);
@@ -288,20 +288,37 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 								JOptionPane.showMessageDialog(GAGUI.this, "Error", "Hubo un error durante la evolución.", JOptionPane.ERROR_MESSAGE);
 							}
 						}
-					};
+					};*/
+						
+						int currGeneration = gaEngine.getCurrent_Generation();
+						//Initialize progress property.
+						progBar.setValue(0);
 
-					// A property listener used to update the progress bar
-					PropertyChangeListener listener = new PropertyChangeListener() {
-						public void propertyChange(PropertyChangeEvent event) {
-							if ("progress".equals(event.getPropertyName())) {
-								progBar.setValue((Integer) event.getNewValue());
+						while (!gaEngine.isEvol_Complete() && currGeneration < gaEngine.getNum_Max_Gen()){
+							// ejecutamos un step de la evolución
+							try {
+								gaEngine.runEvolutionStep();
+							} catch (InstantiationException e1) {
+								e1.printStackTrace();
+							} catch (IllegalAccessException e1) {
+								e1.printStackTrace();
 							}
+
 						}
-					};
-					stepThread.addPropertyChangeListener(listener);
-					stepThread.execute();
+						// actualizar resultados
+						dataAbsoluteBest[currGeneration] = gaEngine.getAbsoluteBest().getEvaluatedValue();
+						dataGenerationBest[currGeneration] = gaEngine.getGenerationBest().getEvaluatedValue();
+						dataGenerationAverage[currGeneration] = gaEngine.getPopulation_Average();
+						dataGenerationCount[currGeneration] = currGeneration;
+						currGeneration = gaEngine.getCurrent_Generation();
+
+						progBar.setValue((currGeneration * 100) / gaEngine.getNum_Max_Gen());
 					}
-					
+					progBar.setValue(0);
+					panelEnEdicion.setText("Evolución completada");
+					pGraphic.addLinePlot("Mejor Absoluto", Color.blue, dataGenerationCount,	dataAbsoluteBest);
+					pGraphic.addLinePlot("Mejor de la Generación", Color.red, dataGenerationCount, dataGenerationBest);
+					pGraphic.addLinePlot("Media de la Generación", Color.green, dataGenerationCount, dataGenerationAverage);	
 				}
 			}
 		});
