@@ -10,7 +10,7 @@ import GACore.IGARandom;
 public class GAAntEngine extends IGAEngine{
 	private int minD=5;
 	private int maxD=15;
-	private int maxSteps=100;
+	private int maxSteps=400;
 	private int maxFood=90;
 	protected boolean useSimulation=false;
 	protected int simulationSpeed=500;
@@ -42,7 +42,7 @@ public class GAAntEngine extends IGAEngine{
 		// crear población inicial
 		for (int i = 0; i < population_Size; i++) {
 			population[i] = new GAAntPathCromosome();
-			((GAAntPathCromosome)population[i]).initCromosome(evaluator, 2, 5);
+			((GAAntPathCromosome)population[i]).initCromosome(evaluator, minD, maxD);
 		}
 		
 		// asignar un individuo elite inicial

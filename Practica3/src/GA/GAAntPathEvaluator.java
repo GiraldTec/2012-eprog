@@ -23,12 +23,12 @@ public class GAAntPathEvaluator {
 		steps = 0;
 		food = 0;
 		
-		System.out.println("Comenzando Evaluación de programa");
+		//System.out.println("Comenzando Evaluación de programa");
 		boardMngr.restoreInitialState();
 		while (steps < maxSteps && food < maxFood){
 			executeStep(boardMngr, program);
 		}
-		System.out.println("Programa completado");
+		//System.out.println("Programa completado");
 		return food;
 	}
 	
@@ -57,7 +57,7 @@ public class GAAntPathEvaluator {
 		food = boardMngr.getEatenFood();
 		
 		//acciones a realizar en función del nodo en el que estemos
-		System.out.println("Operator: "+program.getOperator()+" ");
+		//System.out.println("Operator: "+program.getOperator()+" ");
 		switch (program.getOperator()){
 			case 5 : 
 				executeStep(boardMngr, program.getLeftSon());
