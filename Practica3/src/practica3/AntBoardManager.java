@@ -39,10 +39,7 @@ public class AntBoardManager {
 
 		state = new PieceType[size * size];
 		initialState = new PieceType[size * size];
-		
-		for (int i = 0; i < state.length; i++)
-			state[i] = Math.random() > 0.9 ? PieceType.FOOD : PieceType.NOTHING;
-		
+				
 		setAntPosGoodCoord(0,0);
 		System.arraycopy(state,0,initialState,0,state.length);		
 	}

@@ -33,8 +33,8 @@ public class GAAntPathCromosome extends IGACromosome {
 		this.maxD = maxD;
 	}
 
-	public void evaluate() {
-		evaluatedValue = evaluator.evaluate(this.treeP);
+	public void evaluate(boolean sim) {
+		evaluatedValue = evaluator.evaluate(this.treeP, sim);
 	}
 	
 	public IGACromosome clone() {
@@ -85,12 +85,13 @@ public class GAAntPathCromosome extends IGACromosome {
 		}
 		else { // prof_min = 0
 			if (maxD == 0) { // sólo puede ser hoja
-				operator = (byte) IGARandom.getRInt(3); // símbolo de operador aleatorio AQUI HE PUESTO PARA QUE SOLO SALGA AVANZA, IZQ, O DER YA QUE ES UNA HOJA...
+				// símbolo de operador aleatorio, favorecemos el avance
+				operator = IGARandom.getRInt(6) > 1 ? (byte) IGARandom.getRInt(3) : (byte)0; 
 				tree.setOperator(operator);
 			}
 			else {
 				// se decide aleatoriamente operando u operador
-				if (IGARandom.getRInt(2) == 1) { // se genera operador					
+				if (IGARandom.getRInt(2) == 1) { // se genera operador
 					operator = (byte) (IGARandom.getRInt(3)+3); // símbolo de operador aleatorio
 					tree.setOperator(operator);
 					// se generan los hijos
@@ -109,7 +110,7 @@ public class GAAntPathCromosome extends IGACromosome {
 				
 				}else { // se genera operando
 					// generación del subarbol de operando
-					operator = (byte) IGARandom.getRInt(3); // símbolo de operador aleatorio
+					operator = IGARandom.getRInt(6) > 1 ? (byte) IGARandom.getRInt(3) : (byte)0;// símbolo de operador aleatorio
 					tree.setOperator(operator);
 				}
 			}

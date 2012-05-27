@@ -11,7 +11,7 @@ public class GAAntPathMutatorFuncional extends IGAMutator{
 
 	
 	public Boolean mutate(IGACromosome cromosoma, double prob) {
-		System.out.print("entraamos a mutar");
+		System.out.println("entraamos a mutar");
 		Boolean res = new Boolean(false);
 		GAProgramTree nodoTerminal = getNodoFuncionalAleatorio(((GAAntPathCromosome)cromosoma).getTreeP());
 		if(IGARandom.getRDouble()<= prob){

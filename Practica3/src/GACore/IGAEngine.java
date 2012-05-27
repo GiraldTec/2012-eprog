@@ -6,8 +6,8 @@ public abstract class IGAEngine {
 	protected IGACromosome[] auxiliar_population; // población auxiliar(para la selección)
 	protected IGACromosome generationBest;		// mejor especimen de la generación actual
 	protected IGACromosome elite; 	// mejor individuo de todas las generaciones
-	protected int population_Size=10;		// tamaño población
-	protected int num_Max_Gen=30; 			// número máximo de generaciones
+	protected int population_Size=100;		// tamaño población
+	protected int num_Max_Gen=100; 			// número máximo de generaciones
 	protected int pos_Best; 			// posición del mejor cromosoma
 	protected double population_Average;// media de la aptitud de la población
 	protected double prob_Cross=0.5;	// probabilidad de cruce
@@ -33,7 +33,7 @@ public abstract class IGAEngine {
 	public abstract IGACromosome getAbsoluteBest();		// devuelve el mejor resultado obtenido hasta el momento
 	public abstract IGACromosome getGenerationBest();		// devuelve el mejor resultado de la generación actual
 	
-	protected void evaluatePopulation()	{
+	protected void evaluatePopulation(boolean sim)	{
 		double acum_Score = 0; 		// puntuación acumulada
 		double best_EvaluatedValue = 0; 	// mejor aptitud
 		double sum_EvaluatedValue = 0;	// suma de la aptitud
@@ -41,7 +41,7 @@ public abstract class IGAEngine {
 		log.info("Engine: evaluatePopulation");	
 		
 		for (int i=0; i<population_Size; i++) {
-			population[i].evaluate();
+			population[i].evaluate(false);
 			sum_EvaluatedValue = sum_EvaluatedValue + population[i].getEvaluatedValue();	
 			if (population[i].getEvaluatedValue() > best_EvaluatedValue){
 				pos_Best = i;
@@ -75,11 +75,11 @@ public abstract class IGAEngine {
 	public void runEvolutionStep() throws InstantiationException, IllegalAccessException {
 		log.info("Engine: runEvolutionStep");
 		
-		evaluatePopulation();	//evalúa los individuos y coge el mejor
+		evaluatePopulation(false);	//evalúa los individuos y coge el mejor
 		selectPopulation();  // selecciona los que van a cruce (permite repetidos)
 		reproducePopulation(); // cruza segun la probabilidad entre los seleccionados
 		mutate(); // suplanta segun la probabilidad
-		evaluatePopulation();
+		evaluatePopulation(true);
 		generationBest = population[pos_Best];
 		
 		log.info("Generation -> "+current_Generation+" <- Results");
