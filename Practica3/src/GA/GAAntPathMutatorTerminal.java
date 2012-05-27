@@ -8,7 +8,6 @@ public class GAAntPathMutatorTerminal extends IGAMutator{
 
 	
 	public Boolean mutate(IGACromosome cromosoma, double prob) {
-		System.out.println("entraamos a mutar");
 		Boolean res = new Boolean(false);
 		GAProgramTree nodoTerminal = getNodoTerminalAleatorio(((GAAntPathCromosome)cromosoma).getTreeP());
 		if(IGARandom.getRDouble()<= prob){

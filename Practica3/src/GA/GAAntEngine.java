@@ -21,6 +21,14 @@ public class GAAntEngine extends IGAEngine{
 		// crear función de selección
 		if (selectorName.equals("Ruleta"))
 			selector = new GARouletteSelection();
+		else if (selectorName.equals("Torneo Det"))
+			selector = new GATournametSelectionDet();
+		else if (selectorName.equals("Torneo Prob"))
+			selector = new GATournamentSelectionProb();
+		else if (selectorName.equals("Ranking"))
+			selector = new GARankingSelection();
+		else if (selectorName.equals("Shuffle"))
+			selector = new GAShuffleSelection();
 		else
 			System.err.println("Error al elegir la función de selección");
 		

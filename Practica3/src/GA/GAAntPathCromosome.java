@@ -86,7 +86,7 @@ public class GAAntPathCromosome extends IGACromosome {
 		}
 		else { // prof_min = 0
 			if (maxD == 0) { // sólo puede ser hoja
-				operator = (byte) IGARandom.getRInt(3); // símbolo de operador aleatorio AQUI HE PUESTO PARA QUE SOLO SALGA AVANZA, IZQ, O DER YA QUE ES UNA HOJA...
+				operator = IGARandom.getRInt(6) > 1 ? (byte) IGARandom.getRInt(3) : (byte)0;// símbolo de operador aleatorio
 				tree.setOperator(operator);
 			}
 			else {
@@ -110,7 +110,7 @@ public class GAAntPathCromosome extends IGACromosome {
 				
 				}else { // se genera operando
 					// generación del subarbol de operando
-					operator = (byte) IGARandom.getRInt(3); // símbolo de operador aleatorio
+					operator = IGARandom.getRInt(6) > 1 ? (byte) IGARandom.getRInt(3) : (byte)0;// símbolo de operador aleatorio
 					tree.setOperator(operator);
 				}
 			}

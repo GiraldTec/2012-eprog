@@ -12,7 +12,6 @@ public class GAAntPathMutatorInitial extends IGAMutator{
 	
 	@Override
 	public Boolean mutate(IGACromosome cromosoma, double prob) {
-		System.out.println("entraamos a mutar");
 		Boolean res = new Boolean(false);
 		HashSet<GAProgramTree> hashNodo = formHash(((GAAntPathCromosome)cromosoma).getTreeP());
 		GAProgramTree nodoTerminal = getNodo(hashNodo,IGARandom.getRInt(hashNodo.size()));
