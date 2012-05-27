@@ -16,6 +16,22 @@ public class GAAntPathCromosome extends IGACromosome {
 		initTree(treeP, minD, maxD);
 	}
 
+	public GAAntPathEvaluator getEvaluator() {
+		return evaluator;
+	}
+
+	public void setEvaluator(GAAntPathEvaluator evaluator) {
+		this.evaluator = evaluator;
+	}
+
+	public void setMinD(int minD) {
+		this.minD = minD;
+	}
+
+	public void setMaxD(int maxD) {
+		this.maxD = maxD;
+	}
+
 	public void evaluate() {
 		evaluatedValue = evaluator.evaluate(this.treeP);
 	}
@@ -26,6 +42,9 @@ public class GAAntPathCromosome extends IGACromosome {
 		clon.setEvaluatedValue(this.getEvaluatedValue());
 		clon.setScore(this.getScore());
 		clon.setTreeP((GAProgramTree) this.getTreeP().clone(null));
+		clon.setEvaluator(this.getEvaluator());
+		clon.setMaxD(this.getMaxD());
+		clon.setMinD(this.getMinD());
 		return clon;
 	}
 	
