@@ -274,21 +274,21 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 					if (stepThread == null || (stepThread != null && stepThread.isDone()))
 					{
 					
-					// bucle de evolución, ejecutamos cada step en un thread distinto (para no bloquar la interfaz)
-					/*stepThread = new GAStepThread(gaEngine,(Object) dataAbsoluteBest,(Object) dataGenerationAverage,(Object) dataGenerationBest,(Object) dataGenerationCount) {
-						protected void done() {
-							try {
-								progBar.setValue(0);
-								panelEnEdicion.setText("Evolución completada");
-								pGraphic.addLinePlot("Mejor Absoluto", Color.blue, dataGenerationCount,	dataAbsoluteBest);
-								pGraphic.addLinePlot("Mejor de la Generación", Color.red, dataGenerationCount, dataGenerationBest);
-								pGraphic.addLinePlot("Media de la Generación", Color.green, dataGenerationCount, dataGenerationAverage);
-								
-							} catch (Exception e) {
-								JOptionPane.showMessageDialog(GAGUI.this, "Error", "Hubo un error durante la evolución.", JOptionPane.ERROR_MESSAGE);
+						// bucle de evolución, ejecutamos cada step en un thread distinto (para no bloquar la interfaz)
+						/*stepThread = new GAStepThread(gaEngine,(Object) dataAbsoluteBest,(Object) dataGenerationAverage,(Object) dataGenerationBest,(Object) dataGenerationCount) {
+							protected void done() {
+								try {
+									progBar.setValue(0);
+									panelEnEdicion.setText("Evolución completada");
+									pGraphic.addLinePlot("Mejor Absoluto", Color.blue, dataGenerationCount,	dataAbsoluteBest);
+									pGraphic.addLinePlot("Mejor de la Generación", Color.red, dataGenerationCount, dataGenerationBest);
+									pGraphic.addLinePlot("Media de la Generación", Color.green, dataGenerationCount, dataGenerationAverage);
+									
+								} catch (Exception e) {
+									JOptionPane.showMessageDialog(GAGUI.this, "Error", "Hubo un error durante la evolución.", JOptionPane.ERROR_MESSAGE);
+								}
 							}
-						}
-					};*/
+						};*/
 						
 						int currGeneration = gaEngine.getCurrent_Generation();
 						//Initialize progress property.
@@ -769,6 +769,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 	
 	public ConfigPanel<IGAEngine> creaPanelConfiguracion() {
 		String[] selectorNames = new String[] { "Ruleta", "Torneo Det", "Torneo Prob", "Ranking", "Shuffle" };
+		String[] mutatorNames = new String[] { "Inicial", "Operacional", "Terminal" };
 		
 		ConfigPanel<IGAEngine> config = new ConfigPanel<IGAEngine>();
 		
@@ -792,6 +793,16 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 			"Profundidad Máxima del árbol programa",  // texto a usar como 'tooltip' cuando pasas el puntero
 			"maxD",  						     // campo (espera que haya un getGrosor y un setGrosor)
 			1, 1000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
+		config.addOption(new IntegerOption<IGAEngine>(
+			"Max Pasos", 					// texto a usar como etiqueta del campo
+			"Número Máximo de pasos a ejecutar del programa",  // texto a usar como 'tooltip' cuando pasas el puntero
+			"maxSteps",  						     // campo (espera que haya un getGrosor y un setGrosor)
+			1, 10000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
+		config.addOption(new IntegerOption<IGAEngine>(
+			"Max Comida", 					// texto a usar como etiqueta del campo
+			"Máxima comida a recoger antes de parar",  // texto a usar como 'tooltip' cuando pasas el puntero
+			"maxFood",  						     // campo (espera que haya un getGrosor y un setGrosor)
+			1, 10000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
 	    
 		// Selection
 		functChoiceOpt = new ChoiceOption<IGAEngine>(
@@ -838,6 +849,14 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 				}
 			}
 		});
+		
+		// Mutación
+		functChoiceOpt = new ChoiceOption<IGAEngine>(
+			"Función de mutación",
+			"Función mutación",
+			"mutatorName",
+			mutatorNames);
+		config.addOption(functChoiceOpt);
 		
 		return config;
 	}
