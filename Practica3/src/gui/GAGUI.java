@@ -143,7 +143,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		panelGenetics.add(new JSeparator(), "growx, wrap, gaptop 10");
 		
 		// Slider prob cruce
-		JSlider crossSlider = new JSlider(40,100,0);
+		JSlider crossSlider = new JSlider(0,100,40);
 		crossSlider.setMajorTickSpacing(20);
 		crossSlider.setMinorTickSpacing(5);
 		crossSlider.setPaintTicks(true);
@@ -166,7 +166,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		panelGenetics.add(new JSeparator(), "growx, wrap, gaptop 10");
 		
 		// Slider prob mutación
-		JSlider mutationSlider = new JSlider(10,100,0);
+		JSlider mutationSlider = new JSlider(0,100,10);
 		mutationSlider.setMajorTickSpacing(20);
 		mutationSlider.setMinorTickSpacing(5);
 		mutationSlider.setPaintTicks(true);
