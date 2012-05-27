@@ -35,6 +35,7 @@ public class GAAntPathCromosome extends IGACromosome {
 
 	public void evaluate(boolean sim) {
 		evaluatedValue = evaluator.evaluate(this.treeP, sim);
+		porPantalla(treeP);
 	}
 	
 	public IGACromosome clone() {
@@ -85,13 +86,12 @@ public class GAAntPathCromosome extends IGACromosome {
 		}
 		else { // prof_min = 0
 			if (maxD == 0) { // sólo puede ser hoja
-				// símbolo de operador aleatorio, favorecemos el avance
-				operator = IGARandom.getRInt(6) > 1 ? (byte) IGARandom.getRInt(3) : (byte)0; 
+				operator = (byte) IGARandom.getRInt(3); // símbolo de operador aleatorio AQUI HE PUESTO PARA QUE SOLO SALGA AVANZA, IZQ, O DER YA QUE ES UNA HOJA...
 				tree.setOperator(operator);
 			}
 			else {
 				// se decide aleatoriamente operando u operador
-				if (IGARandom.getRInt(2) == 1) { // se genera operador
+				if (IGARandom.getRInt(2) == 1) { // se genera operador					
 					operator = (byte) (IGARandom.getRInt(3)+3); // símbolo de operador aleatorio
 					tree.setOperator(operator);
 					// se generan los hijos
@@ -110,7 +110,7 @@ public class GAAntPathCromosome extends IGACromosome {
 				
 				}else { // se genera operando
 					// generación del subarbol de operando
-					operator = IGARandom.getRInt(6) > 1 ? (byte) IGARandom.getRInt(3) : (byte)0;// símbolo de operador aleatorio
+					operator = (byte) IGARandom.getRInt(3); // símbolo de operador aleatorio
 					tree.setOperator(operator);
 				}
 			}
@@ -130,5 +130,26 @@ public class GAAntPathCromosome extends IGACromosome {
 
 	public int getMaxD() {
 		return maxD;
+	}
+	
+	public void porPantalla(GAProgramTree prog){
+		if(prog!=null){
+			if(prog.getOperator()>=3){
+				switch (prog.getOperator()){
+					case 3: System.out.print("SC("); break;
+					case 4: System.out.print("P2("); break;
+					case 5: System.out.print("P3("); break;
+				}
+				porPantalla(prog.getLeftSon()); System.out.print(",");
+				porPantalla(prog.getCenterSon()); System.out.print(",");
+				porPantalla(prog.getRigthSon()); System.out.print(")");
+			}else{
+				switch (prog.getOperator()){
+				case 0: System.out.print("avanza"); break;
+				case 1: System.out.print("izquierda"); break;
+				case 2: System.out.print("derecha"); break;
+			}
+			}
+		}
 	}
 }
