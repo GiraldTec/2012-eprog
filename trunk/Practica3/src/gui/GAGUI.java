@@ -316,6 +316,8 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 					}
 					progBar.setValue(0);
 					panelEnEdicion.setText("Evolución completada");
+					((GAAntEngine)gaEngine).evaluateElite();
+					boardManager.forceUpdateBoard();
 					
 					pGraphic.addLinePlot("Mejor Absoluto", Color.blue, dataGenerationCount,	dataAbsoluteBest);
 					pGraphic.addLinePlot("Mejor de la Generación", Color.red, dataGenerationCount, dataGenerationBest);

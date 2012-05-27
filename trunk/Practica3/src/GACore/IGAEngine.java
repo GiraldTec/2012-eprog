@@ -36,7 +36,7 @@ public abstract class IGAEngine {
 	
 	protected void evaluatePopulation()	{
 		double acum_Score = 0; 		// puntuación acumulada
-		double best_EvaluatedValue = Double.MAX_VALUE; 	// mejor aptitud
+		double best_EvaluatedValue = 0; 	// mejor aptitud
 		double sum_EvaluatedValue = 0;	// suma de la aptitud
 		
 		log.info("Engine: evaluatePopulation");	
