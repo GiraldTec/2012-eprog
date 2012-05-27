@@ -9,8 +9,9 @@ public class GAAntPathMutatorTerminal extends IGAMutator{
 	
 	public Boolean mutate(IGACromosome cromosoma, double prob) {
 		Boolean res = new Boolean(false);
-		GAProgramTree nodoTerminal = getNodoTerminalAleatorio(((GAAntPathCromosome)cromosoma).getTreeP());
+		
 		if(IGARandom.getRDouble()<= prob){
+			GAProgramTree nodoTerminal = getNodoTerminalAleatorio(((GAAntPathCromosome)cromosoma).getTreeP());
 			nodoTerminal.setOperator((byte)IGARandom.getRInt(3));
 			res=true;
 		}

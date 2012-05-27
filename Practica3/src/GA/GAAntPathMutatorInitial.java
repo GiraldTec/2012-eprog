@@ -13,9 +13,10 @@ public class GAAntPathMutatorInitial extends IGAMutator{
 	@Override
 	public Boolean mutate(IGACromosome cromosoma, double prob) {
 		Boolean res = new Boolean(false);
-		HashSet<GAProgramTree> hashNodo = formHash(((GAAntPathCromosome)cromosoma).getTreeP());
-		GAProgramTree nodoTerminal = getNodo(hashNodo,IGARandom.getRInt(hashNodo.size()));
+		
 		if(IGARandom.getRDouble()<= prob){
+			HashSet<GAProgramTree> hashNodo = formHash(((GAAntPathCromosome)cromosoma).getTreeP());
+			GAProgramTree nodoTerminal = getNodo(hashNodo,IGARandom.getRInt(hashNodo.size()));
 			GAAntPathCromosome.initTree(nodoTerminal, ((GAAntPathCromosome)cromosoma).getMinD(), ((GAAntPathCromosome)cromosoma).getMaxD());
 			res=true;
 		}
