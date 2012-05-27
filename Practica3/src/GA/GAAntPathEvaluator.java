@@ -57,6 +57,8 @@ public class GAAntPathEvaluator {
 		steps++;
 		food = boardMngr.getEatenFood();
 		
+		if (useSim && simOverride) System.out.println("Steps"+steps);
+		
 		//acciones a realizar en función del nodo en el que estemos
 		//System.out.println("Operator: "+program.getOperator()+" ");
 		switch (program.getOperator()){

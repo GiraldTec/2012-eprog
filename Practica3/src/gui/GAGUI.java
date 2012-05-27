@@ -94,7 +94,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 	
 	
 	public GAGUI(final IGAEngine gaEngine) {
-		super("Programación Evolutiva - Práctica 2");
+		super("Programación Evolutiva - Práctica 3");
 		pGraphic = new Plot2DPanel();
 		pGraphicPruebsAuto = new Plot2DPanel();
 		panelGenetics = new JPanel();
@@ -143,7 +143,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		panelGenetics.add(new JSeparator(), "growx, wrap, gaptop 10");
 		
 		// Slider prob cruce
-		JSlider crossSlider = new JSlider(0,100,0);
+		JSlider crossSlider = new JSlider(40,100,0);
 		crossSlider.setMajorTickSpacing(20);
 		crossSlider.setMinorTickSpacing(5);
 		crossSlider.setPaintTicks(true);
@@ -166,7 +166,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		panelGenetics.add(new JSeparator(), "growx, wrap, gaptop 10");
 		
 		// Slider prob mutación
-		JSlider mutationSlider = new JSlider(0,100,0);
+		JSlider mutationSlider = new JSlider(10,100,0);
 		mutationSlider.setMajorTickSpacing(20);
 		mutationSlider.setMinorTickSpacing(5);
 		mutationSlider.setPaintTicks(true);
