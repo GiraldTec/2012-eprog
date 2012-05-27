@@ -35,7 +35,7 @@ public class GAAntPathCromosome extends IGACromosome {
 
 	public void evaluate(boolean sim) {
 		evaluatedValue = evaluator.evaluate(this.treeP, sim);
-		porPantalla(treeP);
+		//porPantalla(treeP);
 	}
 	
 	public IGACromosome clone() {
