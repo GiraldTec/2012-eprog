@@ -9,7 +9,7 @@ public abstract class IGACromosome{
 	
 	public abstract void initCromosome(GAAntPathEvaluator eval, int minD, int maxD);	
 	public abstract IGACromosome clone();
-	public abstract void evaluate();
+	public abstract void evaluate(boolean sim);
 	
 	public Boolean mutate(IGAMutator mutator,double prob){
 		return mutator.mutate(this, prob);

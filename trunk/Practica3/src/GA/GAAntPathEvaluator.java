@@ -8,7 +8,7 @@ public class GAAntPathEvaluator {
 	private static Integer steps=0;
 	private static int food=0;
 	private int simSpeed=200;
-	private boolean useSim=true;
+	private boolean useSim=true, simOverride=false;
 	private AntBoardManager boardMngr;
 	
 	public GAAntPathEvaluator(AntBoardManager boardMngr, int maxSteps, int maxFood, boolean useSimulation, int simulationSpeed) {
@@ -19,16 +19,17 @@ public class GAAntPathEvaluator {
 		this.simSpeed = simulationSpeed;
 	}
 	
-	public double evaluate(GAProgramTree program){
+	public double evaluate(GAProgramTree program, boolean sim){
 		steps = 0;
 		food = 0;
+		simOverride = sim;
 		
-		//System.out.println("Comenzando Evaluación de programa");
 		boardMngr.restoreInitialState();
+		if (useSim && simOverride) System.out.println("Comenzando Evaluación de programa");
 		while (steps < maxSteps && food < maxFood){
 			executeStep(boardMngr, program);
 		}
-		//System.out.println("Programa completado");
+		if (useSim && simOverride) System.out.println("Programa completado");
 		return food;
 	}
 	
@@ -44,7 +45,7 @@ public class GAAntPathEvaluator {
 		 *   5 -- > ProgN3
 		 * **************/
 		
-		if (useSim && program.getOperator() < 3) {
+		if (useSim && program.getOperator() < 3 && simOverride) {
 			try {
 				boardMngr.forceUpdateBoard();
 				Thread.sleep(simSpeed);

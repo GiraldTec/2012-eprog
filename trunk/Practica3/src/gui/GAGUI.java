@@ -215,7 +215,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		        JSlider slider = (JSlider)evt.getSource();
 
 		        if (!slider.getValueIsAdjusting()) {
-		        	((GAAntEngine)gaEngine).setSimulationSpeed(1600 - slider.getValue());
+		        	((GAAntEngine)gaEngine).setSimulationSpeed(1500 - slider.getValue());
 		        }
 		    }
 		});
@@ -765,6 +765,8 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		tabPanePrincipal.add(panelPruebas, "Pruebas Automáticas");
 		
 		add(tabPanePrincipal);
+		
+		boardManager.loadMapFromFile("santa fe");
 	}
 	
 	public ConfigPanel<IGAEngine> creaPanelConfiguracion() {

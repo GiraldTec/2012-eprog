@@ -8,8 +8,8 @@ import GACore.IGAEngine;
 import GACore.IGARandom;
 
 public class GAAntEngine extends IGAEngine{
-	private int minD=5;
-	private int maxD=15;
+	private int minD=1;
+	private int maxD=5;
 	private int maxSteps=400;
 	private int maxFood=90;
 	protected boolean useSimulation=false;
@@ -63,7 +63,7 @@ public class GAAntEngine extends IGAEngine{
         for (int i=0; i < population_Size; i++) {
                 //METER EL TIPO DE LA MUTACIÓN Y LOS ESTUDIANTES
                 if (mutator.mutate(population[i], prob_Mut)) {
-                        population[i].evaluate();
+                        population[i].evaluate(false);
                 }
                 
                 log.info("Grupos tras mutación: ");
@@ -106,9 +106,9 @@ public class GAAntEngine extends IGAEngine{
                 GAAntPathCromosome[] descendientes = (GAAntPathCromosome[]) cruzador.cross(parents);
                 // los nuevos individuos sustituyen a sus progenitores
                 auxiliar_population[sel_Cross[i]] = descendientes[0];
-                auxiliar_population[sel_Cross[i]].evaluate();
+                auxiliar_population[sel_Cross[i]].evaluate(false);
                 auxiliar_population[sel_Cross[i+1]] = descendientes[1];
-                auxiliar_population[sel_Cross[i+1]].evaluate();
+                auxiliar_population[sel_Cross[i+1]].evaluate(false);
         }
         
         // si usamos elitismo sustituir a los peores individuos de la población por los hijos
@@ -161,7 +161,7 @@ public class GAAntEngine extends IGAEngine{
 	}
 
 	public void evaluateElite(){
-		elite.evaluate();
+		elite.evaluate(true);
 	}
 	
 	
