@@ -86,13 +86,13 @@ public class GAAntPathCromosome extends IGACromosome {
 		}
 		else { // prof_min = 0
 			if (maxD == 0) { // sólo puede ser hoja
-				operator = IGARandom.getRInt(6) > 1 ? (byte) IGARandom.getRInt(3) : (byte)0;// símbolo de operador aleatorio
+				operator = IGARandom.getRInt(4) > 0 ? (byte)0 : (byte) IGARandom.getRInt(3);// símbolo de operador aleatorio
 				tree.setOperator(operator);
 			}
 			else {
 				// se decide aleatoriamente operando u operador
 				if (IGARandom.getRInt(2) == 1) { // se genera operador					
-					operator = (byte) (IGARandom.getRInt(3)+3); // símbolo de operador aleatorio
+					operator = IGARandom.getRInt(3) > 0 ? (byte)3 : (byte) IGARandom.getRInt(3); // símbolo de operador aleatorio
 					tree.setOperator(operator);
 					// se generan los hijos
 					tree.setLeftSon(new GAProgramTree());
@@ -110,7 +110,7 @@ public class GAAntPathCromosome extends IGACromosome {
 				
 				}else { // se genera operando
 					// generación del subarbol de operando
-					operator = IGARandom.getRInt(6) > 1 ? (byte) IGARandom.getRInt(3) : (byte)0;// símbolo de operador aleatorio
+					operator = IGARandom.getRInt(4) > 0 ? (byte)0 : (byte) IGARandom.getRInt(3);// símbolo de operador aleatorio
 					tree.setOperator(operator);
 				}
 			}

@@ -43,7 +43,7 @@ public class AntBoard extends GObject {
 		}
 		
 		title = new GSegment();
-		foodText = new GText (" - Eaten food: 0 - ", GPosition.CENTER);
+		foodText = new GText (" - Food eaten: 0 - ", GPosition.CENTER);
 		GStyle textStyle = new GStyle();
 		textStyle.setForegroundColor (new Color (255, 204, 51));
 		textStyle.setBackgroundColor(new Color (255, 102, 51));
@@ -143,6 +143,6 @@ public class AntBoard extends GObject {
 	}
 	
 	public void setFoodText(int ammount){
-		foodText.setText("- Eaten food: "+ammount+" -");
+		foodText.setText("- Food eaten: "+ammount+" -");
 	}
 }
