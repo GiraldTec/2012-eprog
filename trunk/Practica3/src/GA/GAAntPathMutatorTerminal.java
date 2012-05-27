@@ -25,7 +25,7 @@ public class GAAntPathMutatorTerminal extends IGAMutator{
 			return treeP;
 		}else{
 			int hijos=2; // Por defecto siempre tienen dos hijos
-			if(treeP.getCenterSon()==null){
+			if(treeP.getCenterSon()!=null){
 				hijos=3;
 			}// Dos hijos
 			int aux= IGARandom.getRInt(hijos);
