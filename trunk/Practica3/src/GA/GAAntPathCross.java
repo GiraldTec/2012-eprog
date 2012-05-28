@@ -62,22 +62,22 @@ public class GAAntPathCross extends IGACross {
 		
 		// Recolocamos los nodos bajo los padres que deben, si los tienen
 		if(pand2!=null){
-			if(posNod1==0)			pand2.setLeftSon(nodo1);
-			else 	if(posNod1==1)	pand2.setCenterSon(nodo1);
+			if(posNod2==0)			pand2.setLeftSon(nodo1);
+			else 	if(posNod2==1)	pand2.setCenterSon(nodo1);
 					else 			pand2.setRigthSon(nodo1);
 		}
 		nodo1.setFather(pand2); // Y le ponemos un nuevo padre
 		if(pand1!=null){
-			if(posNod2==0)			pand1.setLeftSon(nodo2);
-			else 	if(posNod2==1)	pand1.setCenterSon(nodo2);
+			if(posNod1==0)			pand1.setLeftSon(nodo2);
+			else 	if(posNod1==1)	pand1.setCenterSon(nodo2);
 					else 			pand1.setRigthSon(nodo2);
 		}
 		nodo2.setFather(pand1); // Y le ponemos un nuevo padre
 		
 		// Si por algun casual alguno de los nodos que hemos 
 		// intercambiado se encuentran ahora en la raiz del arbol
-		if(nodo1.getFather()==null) padre2.setTreeP(nodo1);
-		if(nodo2.getFather()==null) padre1.setTreeP(nodo2);
+//		if(nodo1.getFather()==null) padre2.setTreeP(nodo1);
+//		if(nodo2.getFather()==null) padre1.setTreeP(nodo2);
 		
 		
 		// Y los intercambiamos, de esta forma devolvemos los hijos y los-padres-sin-modificar
