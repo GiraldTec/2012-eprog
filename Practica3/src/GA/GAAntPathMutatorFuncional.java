@@ -15,8 +15,16 @@ public class GAAntPathMutatorFuncional extends IGAMutator{
 		
 		if(IGARandom.getRDouble()<= prob){
 			GAProgramTree nodoTerminal = getNodoFuncionalAleatorio(((GAAntPathCromosome)cromosoma).getTreeP());
-			if (nodoTerminal.getOperator() == 4)nodoTerminal.setOperator((byte) 3);
-			else if (nodoTerminal.getOperator() == 3)nodoTerminal.setOperator((byte) 4);
+			if (nodoTerminal.getOperator() == 4){
+				nodoTerminal.setOperator((byte) 3);
+			}
+			else 	if (nodoTerminal.getOperator() == 3){
+						nodoTerminal.setOperator((byte) 4);
+					}
+					else	{
+						nodoTerminal.setOperator((byte) (IGARandom.getRInt(2)+3));
+						nodoTerminal.setCenterSon(null);
+					}
 			res=true;
 		}
 		return res;
