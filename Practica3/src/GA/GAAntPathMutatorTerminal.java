@@ -12,7 +12,11 @@ public class GAAntPathMutatorTerminal extends IGAMutator{
 		
 		if(IGARandom.getRDouble()<= prob){
 			GAProgramTree nodoTerminal = getNodoTerminalAleatorio(((GAAntPathCromosome)cromosoma).getTreeP());
-			nodoTerminal.setOperator((byte)IGARandom.getRInt(3));
+			if(nodoTerminal.getOperator()==0){
+				nodoTerminal.setOperator((byte)(IGARandom.getRInt(2)+1)); // lo obligamos a hacer un giro
+			}else{
+				nodoTerminal.setOperator((byte)0); // lo obligamos a avanzar
+			}
 			res=true;
 		}
 		return res;
