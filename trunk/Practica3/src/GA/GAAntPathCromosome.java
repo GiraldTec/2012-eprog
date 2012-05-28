@@ -1,7 +1,5 @@
 package GA;
 
-import java.util.Stack;
-
 import GACore.IGACromosome;
 import GACore.IGARandom;
 
@@ -68,7 +66,8 @@ public class GAAntPathCromosome extends IGACromosome {
 		
 		if (minD > 0){	//no puede ser hoja
 			// generación del subarbol de operador
-			operator = (byte) (IGARandom.getRInt(3)+3); // símbolo de operador aleatorio
+			operator = IGARandom.getRInt(4) > 1 ? (byte)3 : (byte) (IGARandom.getRInt(2)+4);
+			//operator = (byte) (IGARandom.getRInt(3)+3); // símbolo de operador aleatorio
 			tree.setOperator(operator);
 			// se generan los hijos
 			tree.setLeftSon(new GAProgramTree());
@@ -82,23 +81,23 @@ public class GAAntPathCromosome extends IGACromosome {
 				
 			}
 			// dos operandos
-				tree.setRigthSon(new GAProgramTree());
-				initTree(tree.getRigthSon(), minD - 1 , maxD - 1);
-				tree.getRigthSon().setFather(tree);
+			tree.setRigthSon(new GAProgramTree());
+			initTree(tree.getRigthSon(), minD - 1 , maxD - 1);
+			tree.getRigthSon().setFather(tree);
 			
 		}
 		else { // prof_min = 0
 			if (maxD == 0) { // sólo puede ser hoja
-				operator = IGARandom.getRInt(5) > 1 ? (byte)0 : (byte) IGARandom.getRInt(3);// símbolo de operador aleatorio
-				if(ultimoMov == -1){
+				operator = IGARandom.getRInt(4) > 0 ? (byte)0 : (byte) (IGARandom.getRInt(2)+1);// símbolo de operador aleatorio
+				/*if(ultimoMov == -1){
 					ultimoMov = operator;
 				}
 				else{
-					while((ultimoMov == 1 && operator == 2)||(ultimoMov == 2 && operator == 1)||(ultimoMov == 1 && operator == 1)||(ultimoMov == 2 && operator == 2)){
-						operator = (byte)IGARandom.getRInt(3);
+					if((ultimoMov == 1 && operator == 2)||(ultimoMov == 2 && operator == 1)){
+						operator = (byte)0;
 					}
 					ultimoMov = operator;
-				}				
+				}	*/			
 				//operator = (byte)IGARandom.getRInt(3);
 				//operator = IGARandom.getRInt(5) > 1 ? (byte)0 : (byte) IGARandom.getRInt(3);
 				tree.setOperator(operator);
@@ -106,8 +105,7 @@ public class GAAntPathCromosome extends IGACromosome {
 			else {
 				// se decide aleatoriamente operando u operador
 				if (IGARandom.getRInt(2) == 1) { // se genera operador					
-					/*operator = IGARandom.getRInt(3) > 0 ? (byte)3 : (byte) (IGARandom.getRInt(3)+3); // símbolo de operador aleatorio
-					tree.setOperator(operator);*/
+					//operator = IGARandom.getRInt(4) > 1 ? (byte)3 : (byte) (IGARandom.getRInt(3)+3); // símbolo de operador aleatorio
 					operator = (byte) (IGARandom.getRInt(3)+3);
 					tree.setOperator(operator);
 					// se generan los hijos
@@ -126,13 +124,13 @@ public class GAAntPathCromosome extends IGACromosome {
 				
 				}else { // se genera operando
 					// generación del subarbol de operando
-					operator = IGARandom.getRInt(5) > 1 ? (byte)0 : (byte) IGARandom.getRInt(3);// símbolo de operador aleatorio
+					operator = (byte)IGARandom.getRInt(3);// símbolo de operador aleatorio
 					if(ultimoMov == -1){
 						ultimoMov = operator;
 					}
 					else {
-						while((ultimoMov == 1 && operator == 2)||(ultimoMov == 2 && operator == 1)||(ultimoMov == 1 && operator == 1)||(ultimoMov == 2 && operator == 2)){
-							operator = (byte)IGARandom.getRInt(3);
+						if(ultimoMov == 1 || ultimoMov == 2){
+							operator = (byte)0;
 						}							
 						ultimoMov = operator;
 					}

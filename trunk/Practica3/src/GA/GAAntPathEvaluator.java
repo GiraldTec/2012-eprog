@@ -1,4 +1,6 @@
 package GA;
+import java.util.logging.Logger;
+
 import practica3.AntBoardManager;
 import practica3.AntBoardManager.AntRotation;
 
@@ -12,6 +14,7 @@ public class GAAntPathEvaluator {
 	private int simSpeed=200;
 	private boolean useSim=true, simOverride=false;
 	private AntBoardManager boardMngr;
+	public static Logger log = Logger.getLogger("Engine");
 	
 	public GAAntPathEvaluator(AntBoardManager boardMngr, int maxSteps, int maxFood, boolean useSimulation, int simulationSpeed) {
 		this.maxFood = maxFood;
@@ -29,12 +32,12 @@ public class GAAntPathEvaluator {
 		giros=0;
 				
 		boardMngr.restoreInitialState();
-		if (useSim && simOverride) System.out.println("Comenzando Evaluación de programa");
+		log.info("Comenzando Evaluación de programa");
 		while (steps < maxSteps && food < maxFood){
 			executeStep(boardMngr, program);
 		}
-		System.out.println("Steps: "+steps+" Avanzas: "+avanzas+ " Giros: "+giros);
-		if (useSim && simOverride) System.out.println("Programa completado");
+		log.info("Steps: "+steps+" Avanzas: "+avanzas+ " Giros: "+giros);
+		log.info("Programa completado");
 		return food;
 	}
 	
