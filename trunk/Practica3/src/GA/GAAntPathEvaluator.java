@@ -7,6 +7,8 @@ public class GAAntPathEvaluator {
 	private int maxFood;
 	private static Integer steps=0;
 	private static int food=0;
+	private static int giros=0;
+	private static int avanzas=0;
 	private int simSpeed=200;
 	private boolean useSim=true, simOverride=false;
 	private AntBoardManager boardMngr;
@@ -23,13 +25,15 @@ public class GAAntPathEvaluator {
 		steps = 0;
 		food = 0;
 		simOverride = sim;
+		avanzas=0;
+		giros=0;
 				
 		boardMngr.restoreInitialState();
 		if (useSim && simOverride) System.out.println("Comenzando Evaluación de programa");
 		while (steps < maxSteps && food < maxFood){
 			executeStep(boardMngr, program);
 		}
-		
+		System.out.println("Steps: "+steps+" Avanzas: "+avanzas+ " Giros: "+giros);
 		if (useSim && simOverride) System.out.println("Programa completado");
 		return food;
 	}
@@ -55,11 +59,13 @@ public class GAAntPathEvaluator {
 			}
 		}
 		
-		steps++;
-		//System.out.println("steps "+steps);
-		food = boardMngr.getEatenFood();
+		if (program.getOperator()<3)
+		{
+			steps++;
+			food = boardMngr.getEatenFood();
+		}
 		if (steps >= maxSteps || food >= maxFood)
-			return;		
+			return;
 		
 		//acciones a realizar en función del nodo en el que estemos
 		//System.out.println("Operator: "+program.getOperator()+" ");
@@ -80,12 +86,15 @@ public class GAAntPathEvaluator {
 					executeStep(boardMngr, program.getRigthSon());
 				break;
 			case 2:
+				giros++;
 				boardMngr.rotateAnt(AntRotation.RIGHT);
 				break;
 			case 1:
+				giros++;
 				boardMngr.rotateAnt(AntRotation.LEFT);
 				break;
 			case 0:
+				avanzas++;
 				boardMngr.advanceAnt();
 				break;
 			default:
