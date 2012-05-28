@@ -78,7 +78,6 @@ public abstract class IGAEngine {
 		log.info("Engine: runEvolutionStep");
 		
 		evaluatePopulation(false);	//evalúa los individuos y coge el mejor
-		//porPantalla(population);
 		selectPopulation();  // selecciona los que van a cruce (permite repetidos)
 		reproducePopulation(); // cruza segun la probabilidad entre los seleccionados
 		mutate(); // suplanta segun la probabilidad
