@@ -9,7 +9,7 @@ public class GAAntPathCromosome extends IGACromosome {
 	private GAProgramTree treeP; // estrategia de rastreo
 	private GAAntPathEvaluator evaluator;
 	private int minD, maxD;
-	private static byte ultimoMov=-1;
+	private static byte ultimoMov = -1; 
 	
 	public void initCromosome(GAAntPathEvaluator eval, int minD, int maxD) {
 		evaluator = eval;
@@ -17,8 +17,7 @@ public class GAAntPathCromosome extends IGACromosome {
 		this.maxD = maxD;
 		treeP = new GAProgramTree();
 		initTree(treeP, minD, maxD);
-		treeP.setFather(null);
-		ultimoMov = -1;
+		ultimoMov=-1;
 	}
 
 	public GAAntPathEvaluator getEvaluator() {
@@ -54,7 +53,7 @@ public class GAAntPathCromosome extends IGACromosome {
 		return clon;
 	}
 	
-	public static void initTree(GAProgramTree tree, int minD, int maxD){
+	public void initTree(GAProgramTree tree, int minD, int maxD){
 		byte operator;
 		
 		 /* **************
@@ -95,7 +94,7 @@ public class GAAntPathCromosome extends IGACromosome {
 					ultimoMov = operator;
 				}
 				else{
-					while((ultimoMov == 1 && operator == 2)||(ultimoMov == 2 && operator == 1)){
+					while((ultimoMov == 1 && operator == 2)||(ultimoMov == 2 && operator == 1)||(ultimoMov == 1 && operator == 1)||(ultimoMov == 2 && operator == 2)){
 						operator = IGARandom.getRInt(4) > 0 ? (byte)0 : (byte) IGARandom.getRInt(3);// símbolo de operador aleatorio
 					}
 					ultimoMov = operator;
@@ -105,7 +104,7 @@ public class GAAntPathCromosome extends IGACromosome {
 			else {
 				// se decide aleatoriamente operando u operador
 				if (IGARandom.getRInt(2) == 1) { // se genera operador					
-					operator = IGARandom.getRInt(2) > 0 ? (byte)3 : (byte) IGARandom.getRInt(3); // símbolo de operador aleatorio
+					operator = IGARandom.getRInt(3) + 3 > 0 ? (byte)3 : (byte) IGARandom.getRInt(3); // símbolo de operador aleatorio
 					tree.setOperator(operator);
 					// se generan los hijos
 					tree.setLeftSon(new GAProgramTree());
@@ -128,7 +127,7 @@ public class GAAntPathCromosome extends IGACromosome {
 						ultimoMov = operator;
 					}
 					else {
-						while((ultimoMov == 1 && operator == 2)||(ultimoMov == 2 && operator == 1)){
+						while((ultimoMov == 1 && operator == 2)||(ultimoMov == 2 && operator == 1)||(ultimoMov == 1 && operator == 1)||(ultimoMov == 2 && operator == 2)){
 							operator = IGARandom.getRInt(4) > 0 ? (byte)0 : (byte) IGARandom.getRInt(3);// símbolo de operador aleatorio
 						}							
 						ultimoMov = operator;
@@ -154,7 +153,7 @@ public class GAAntPathCromosome extends IGACromosome {
 		return maxD;
 	}
 	
-	public void porPantalla(GAProgramTree prog){
+	public static void porPantalla(GAProgramTree prog){
 		if(prog!=null){
 			if(prog.getOperator()>=3){
 				switch (prog.getOperator()){

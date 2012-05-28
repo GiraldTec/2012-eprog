@@ -1,6 +1,8 @@
 package GACore;
 import java.util.logging.Logger;
 
+import GA.GAAntPathCromosome;
+
 public abstract class IGAEngine {
 	protected IGACromosome[] population; 		// población
 	protected IGACromosome[] auxiliar_population; // población auxiliar(para la selección)
@@ -76,6 +78,7 @@ public abstract class IGAEngine {
 		log.info("Engine: runEvolutionStep");
 		
 		evaluatePopulation(true);	//evalúa los individuos y coge el mejor
+		//porPantalla(population);
 		selectPopulation();  // selecciona los que van a cruce (permite repetidos)
 		reproducePopulation(); // cruza segun la probabilidad entre los seleccionados
 		mutate(); // suplanta segun la probabilidad
@@ -88,7 +91,12 @@ public abstract class IGAEngine {
 		current_Generation++;
 	}
 	
-	
+	public void porPantalla(IGACromosome[] population){
+		for(int i=0;i<population.length;i++){
+			GAAntPathCromosome.porPantalla(((GAAntPathCromosome)population[i]).getTreeP());
+			System.out.println("");
+		}
+	}
 //---- Getters & Setters ------------------------------------------------------//
 	
 	public int getPopulation_Size() {
