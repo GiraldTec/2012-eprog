@@ -59,14 +59,14 @@ public class GAAntPathEvaluator {
 			}
 		}
 		
+		if (steps >= maxSteps || food >= maxFood)
+			return;
 		if (program.getOperator()<3)
 		{
 			steps++;
 			food = boardMngr.getEatenFood();
 		}
-		if (steps >= maxSteps || food >= maxFood)
-			return;
-		
+				
 		//acciones a realizar en función del nodo en el que estemos
 		//System.out.println("Operator: "+program.getOperator()+" ");
 		switch (program.getOperator()){
