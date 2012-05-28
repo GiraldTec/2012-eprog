@@ -15,12 +15,12 @@ public class GAAntPathCross extends IGACross {
 		
 		descendientes[0] = (GAAntPathCromosome) parents[0].clone();
 		descendientes[1] = (GAAntPathCromosome) parents[1].clone();
-		System.out.print("Padre0>>");
-		GAAntPathCromosome.porPantalla(descendientes[0].getTreeP());
-		System.out.println("");
-		System.out.println("Padre1>>");
-		GAAntPathCromosome.porPantalla(descendientes[1].getTreeP());
-		System.out.println("");
+//		System.out.print("Padre0>>");
+//		GAAntPathCromosome.porPantalla(descendientes[0].getTreeP());
+//		System.out.println("");
+//		System.out.println("Padre1>>");
+//		GAAntPathCromosome.porPantalla(descendientes[1].getTreeP());
+//		System.out.println("");
 		// A estas alturas nuestros descendientes son copias identicas de sus padres
 		
 		// vamos a trastocarlos un poco..
@@ -61,26 +61,33 @@ public class GAAntPathCross extends IGACross {
 		}
 		
 		// Recolocamos los nodos bajo los padres que deben, si los tienen
-		if(pand2!=null)
+		if(pand2!=null){
 			if(posNod1==0)			pand2.setLeftSon(nodo1);
 			else 	if(posNod1==1)	pand2.setCenterSon(nodo1);
 					else 			pand2.setRigthSon(nodo1);
-		
+		}
 		nodo1.setFather(pand2); // Y le ponemos un nuevo padre
-		if(pand1!=null)
+		if(pand1!=null){
 			if(posNod2==0)			pand1.setLeftSon(nodo2);
 			else 	if(posNod2==1)	pand1.setCenterSon(nodo2);
 					else 			pand1.setRigthSon(nodo2);
+		}
 		nodo2.setFather(pand1); // Y le ponemos un nuevo padre
 		
-		// Y los intercambiamos, de esta forma devolvemos los hijos y los-padres-sin-modificar
-		System.out.println("Hijo0>>");
-		GAAntPathCromosome.porPantalla(descendientes[0].getTreeP());
-		System.out.println("");
+		// Si por algun casual alguno de los nodos que hemos 
+		// intercambiado se encuentran ahora en la raiz del arbol
+		if(nodo1.getFather()==null) padre2.setTreeP(nodo1);
+		if(nodo2.getFather()==null) padre1.setTreeP(nodo2);
 		
-		System.out.println("Hijo1>>");
-		GAAntPathCromosome.porPantalla(descendientes[1].getTreeP());
-		System.out.println("");
+		
+		// Y los intercambiamos, de esta forma devolvemos los hijos y los-padres-sin-modificar
+//		System.out.println("Hijo0>>");
+//		GAAntPathCromosome.porPantalla(descendientes[0].getTreeP());
+//		System.out.println("");
+//		
+//		System.out.println("Hijo1>>");
+//		GAAntPathCromosome.porPantalla(descendientes[1].getTreeP());
+//		System.out.println("");
 		
 		return descendientes;
 	}
