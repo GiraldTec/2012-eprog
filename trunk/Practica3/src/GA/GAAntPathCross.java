@@ -15,12 +15,12 @@ public class GAAntPathCross extends IGACross {
 		
 		descendientes[0] = (GAAntPathCromosome) parents[0].clone();
 		descendientes[1] = (GAAntPathCromosome) parents[1].clone();
-//		System.out.print("Padre0>>");
-//		GAAntPathCromosome.porPantalla(descendientes[0].getTreeP());
-//		System.out.println("");
-//		System.out.println("Padre1>>");
-//		GAAntPathCromosome.porPantalla(descendientes[1].getTreeP());
-//		System.out.println("");
+		System.out.print("Padre0>>");
+		GAAntPathCromosome.porPantalla(descendientes[0].getTreeP());
+		System.out.println("");
+		System.out.println("Padre1>>");
+		GAAntPathCromosome.porPantalla(descendientes[1].getTreeP());
+		System.out.println("");
 		// A estas alturas nuestros descendientes son copias identicas de sus padres
 		
 		// vamos a trastocarlos un poco..
@@ -74,13 +74,13 @@ public class GAAntPathCross extends IGACross {
 		nodo2.setFather(pand1); // Y le ponemos un nuevo padre
 		
 		// Y los intercambiamos, de esta forma devolvemos los hijos y los-padres-sin-modificar
-//		System.out.println("Hijo0>>");
-//		GAAntPathCromosome.porPantalla(descendientes[0].getTreeP());
-//		System.out.println("");
-//		
-//		System.out.println("Hijo1>>");
-//		GAAntPathCromosome.porPantalla(descendientes[1].getTreeP());
-//		System.out.println("");
+		System.out.println("Hijo0>>");
+		GAAntPathCromosome.porPantalla(descendientes[0].getTreeP());
+		System.out.println("");
+		
+		System.out.println("Hijo1>>");
+		GAAntPathCromosome.porPantalla(descendientes[1].getTreeP());
+		System.out.println("");
 		
 		return descendientes;
 	}

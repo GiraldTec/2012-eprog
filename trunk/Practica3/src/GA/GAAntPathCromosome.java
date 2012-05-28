@@ -104,7 +104,7 @@ public class GAAntPathCromosome extends IGACromosome {
 			else {
 				// se decide aleatoriamente operando u operador
 				if (IGARandom.getRInt(2) == 1) { // se genera operador					
-					operator = IGARandom.getRInt(3) + 3 > 0 ? (byte)3 : (byte) IGARandom.getRInt(3); // símbolo de operador aleatorio
+					operator = (byte) (IGARandom.getRInt(3) > 0 ? (byte)3 : (byte) IGARandom.getRInt(3)+3); // símbolo de operador aleatorio
 					tree.setOperator(operator);
 					// se generan los hijos
 					tree.setLeftSon(new GAProgramTree());
