@@ -9,7 +9,7 @@ import GACore.IGARandom;
 
 public class GAAntEngine extends IGAEngine{
 	private int minD=1;
-	private int maxD=5;
+	private int maxD=3;
 	private int maxSteps=400;
 	private int maxFood=90;
 	protected boolean useSimulation=false;
@@ -73,13 +73,6 @@ public class GAAntEngine extends IGAEngine{
                 if (mutator.mutate(population[i], prob_Mut)) {
                         population[i].evaluate(false);
                 }
-                
-                log.info("Grupos tras mutación: ");
-//                for (Integer j : population[i].getGene().getGen())
-//                {
-//                        log.info(j + " ");
-//                }
-//                log.info("\n");
         }
 	}
 

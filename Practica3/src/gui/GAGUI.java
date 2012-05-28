@@ -8,7 +8,6 @@ import gui.ConfigPanel.IntegerOption;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,11 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.Enumeration;
 
-import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -36,12 +31,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
-import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
@@ -73,7 +65,6 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 	
 	private static final long serialVersionUID = 5393378737313833016L;
 	private JPanel panelGenetics;
-	private JPanel panelPruebas;
 	private JPanel panelResultados;
 	private boolean inputFieldsOK;
 	private GAStepThread stepThread;
@@ -82,28 +73,22 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 	private double[] dataGenerationAverage;
 	private double[] dataGenerationCount;
 	private Plot2DPanel pGraphic;
-	private Plot2DPanel pGraphicPruebsAuto;
 	private JProgressBar progBar;
 	private ChoiceOption<IGAEngine> functChoiceOpt;
 	private DoubleOption<IGAEngine> paramsSelecDouble;
-	private int selectedRadio=0, boardSize=32;
+	private int boardSize=32;
 	private AntBoard antBoard;
 	private AntBoardManager boardManager;
-	private double currEvaluatedValue=0, oldEvaluatedValue=0,selectedMaxVal=0, selectedIncrement=0;
 	public Object configData;
 	public String mapName;
 	
 	
 	public GAGUI(final IGAEngine gaEngine) {
 		super("Programación Evolutiva - Práctica 3");
-		pGraphic = new Plot2DPanel();
-		pGraphicPruebsAuto = new Plot2DPanel();
-		panelGenetics = new JPanel();
+		pGraphic = new Plot2DPanel();panelGenetics = new JPanel();
 		panelGenetics.setLayout(new MigLayout("", "[center]"));
 		panelResultados = new JPanel();
 		panelResultados.setLayout(new BorderLayout());
-		panelPruebas = new JPanel();
-		panelPruebas.setLayout(new MigLayout("flowy", "[left]"));
 		
 		//WARN: No usar EXIT_ON_CLOSE, threads petan con Plot2DPanel y bugs del JVM
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -144,7 +129,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		panelGenetics.add(new JSeparator(), "growx, wrap, gaptop 10");
 		
 		// Slider prob cruce
-		JSlider crossSlider = new JSlider(0,100,40);
+		JSlider crossSlider = new JSlider(0,100,60);
 		crossSlider.setMajorTickSpacing(20);
 		crossSlider.setMinorTickSpacing(5);
 		crossSlider.setPaintTicks(true);
@@ -167,7 +152,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		panelGenetics.add(new JSeparator(), "growx, wrap, gaptop 10");
 		
 		// Slider prob mutación
-		JSlider mutationSlider = new JSlider(0,100,10);
+		JSlider mutationSlider = new JSlider(0,100,40);
 		mutationSlider.setMajorTickSpacing(20);
 		mutationSlider.setMinorTickSpacing(5);
 		mutationSlider.setPaintTicks(true);
@@ -265,6 +250,9 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 					
 					pGraphic.removeAllPlots();
 					
+					// nueva semilla
+					IGARandom.setSeed(System.currentTimeMillis());
+					
 					// cargamos configuración adicional
 					gaEngine.loadConfig(configData);
 					
@@ -276,11 +264,13 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 					{
 					
 						// bucle de evolución, ejecutamos cada step en un thread distinto (para no bloquar la interfaz)
-						/*stepThread = new GAStepThread(gaEngine,(Object) dataAbsoluteBest,(Object) dataGenerationAverage,(Object) dataGenerationBest,(Object) dataGenerationCount) {
+						stepThread = new GAStepThread(gaEngine,(Object) dataAbsoluteBest,(Object) dataGenerationAverage,(Object) dataGenerationBest,(Object) dataGenerationCount) {
 							protected void done() {
 								try {
 									progBar.setValue(0);
 									panelEnEdicion.setText("Evolución completada");
+									((GAAntEngine)gaEngine).evaluateElite();
+									boardManager.forceUpdateBoard();
 									pGraphic.addLinePlot("Mejor Absoluto", Color.blue, dataGenerationCount,	dataAbsoluteBest);
 									pGraphic.addLinePlot("Mejor de la Generación", Color.red, dataGenerationCount, dataGenerationBest);
 									pGraphic.addLinePlot("Media de la Generación", Color.green, dataGenerationCount, dataGenerationAverage);
@@ -289,8 +279,9 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 									JOptionPane.showMessageDialog(GAGUI.this, "Error", "Hubo un error durante la evolución.", JOptionPane.ERROR_MESSAGE);
 								}
 							}
-						};*/
+						};
 						
+						/* Descomentar para versión no paralela
 						int currGeneration = gaEngine.getCurrent_Generation();
 						//Initialize progress property.
 						progBar.setValue(0);
@@ -317,6 +308,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 					}
 					progBar.setValue(0);
 					panelEnEdicion.setText("Evolución completada");
+					
 					((GAAntEngine)gaEngine).evaluateElite();
 					boardManager.forceUpdateBoard();
 					
@@ -324,7 +316,20 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 					pGraphic.addLinePlot("Mejor de la Generación", Color.red, dataGenerationCount, dataGenerationBest);
 					pGraphic.addLinePlot("Media de la Generación", Color.green, dataGenerationCount, dataGenerationAverage);
 					
-					IGARandom.setSeed(System.currentTimeMillis());
+					IGARandom.setSeed(System.currentTimeMillis());*/
+						
+
+					// A property listener used to update the progress bar
+					PropertyChangeListener listener = new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent event) {
+							if ("progress".equals(event.getPropertyName())) {
+								progBar.setValue((Integer) event.getNewValue());
+							}
+						}
+					};
+					stepThread.addPropertyChangeListener(listener);
+					stepThread.execute();
+					}					
 				}
 			}
 		});
@@ -467,306 +472,11 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 	            System.out.println("Hay comida delante "+ boardManager.foodInfront());
 			}
 		});
-		                        
-        //********** PANEL PRUEBAS AUTOMÁTICAS **************************************//
-                
-        JLabel titleLabel = new JLabel("Pruebas Automáticas:");
-        Font font = new Font("Verdana", Font.BOLD, 15);
-        titleLabel.setFont(font);
-        panelPruebas.add(titleLabel, "span, wrap, gaptop 15, gapleft 5");
-        
-        final ConfigPanel<IGAEngine> cpauto = creaPanelPruebasAuto();
-        cpauto.setBorder(BorderFactory.createTitledBorder("Valor inicial:"));
-        // asocia el panel con la figura
-        cpauto.setTarget(gaEngine);
-		// carga los valores de la figura en el panel
-        cpauto.initialize();
-        final JPanel panelconfigu = new JPanel();
-        panelconfigu.setLayout(new GridLayout(1,1,0,0));
-        panelconfigu.add(cpauto);        
-        panelPruebas.add(panelconfigu, "split, wrap, gapleft 10, top, gaptop 40");
-        
-        final JPanel panelInterval = new JPanel();
-        panelInterval.setLayout(new GridLayout(10,1,0,0));
-        panelInterval.setBorder(BorderFactory.createTitledBorder("Valor final:"));
-        
-        final JSpinner tamGruposText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        tamGruposText.setMinimumSize(new Dimension(30,5));
-        panelInterval.add(tamGruposText);
-        final JSpinner tamPobText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelInterval.add(tamPobText);
-        final JSpinner numGenText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelInterval.add(numGenText);
-        final JSpinner alfaText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelInterval.add(alfaText);
-        JSpinner blankText = new JSpinner();
-        panelInterval.add(blankText);
-        blankText.setVisible(false);
-        final JSpinner selecText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelInterval.add(selecText);
-        JSpinner blankText2 = new JSpinner();
-        panelInterval.add(blankText2);
-        blankText2.setVisible(false);
-        final JSpinner crossText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelInterval.add(crossText);
-        JSpinner blankText3 = new JSpinner();
-        panelInterval.add(blankText3);  
-        blankText3.setVisible(false);
-        final JSpinner mutText = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelInterval.add(mutText);
-        
-        panelPruebas.add(panelInterval, "gapbottom 2, wrap, top, gaptop 40");
-        
-        final JPanel panelIncrements = new JPanel();
-        panelIncrements.setLayout(new GridLayout(10,1,0,0));
-        panelIncrements.setBorder(BorderFactory.createTitledBorder("Incremento"));
-        
-        final JSpinner tamGruposIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        tamGruposIncr.setMinimumSize(new Dimension(30,5));
-        panelIncrements.add(tamGruposIncr);
-        final JSpinner tamPobIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelIncrements.add(tamPobIncr);
-        final JSpinner numGenIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelIncrements.add(numGenIncr);
-        final JSpinner alfaIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelIncrements.add(alfaIncr);
-        JSpinner blankIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelIncrements.add(blankIncr);
-        blankIncr.setVisible(false);
-        final JSpinner selecIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelIncrements.add(selecIncr);
-        JSpinner blankIncr2 = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelIncrements.add(blankIncr2);
-        blankIncr2.setVisible(false);
-        final JSpinner crossIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelIncrements.add(crossIncr);
-        JSpinner blankIncr3 = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelIncrements.add(blankIncr3);  
-        blankIncr3.setVisible(false);
-        final JSpinner mutIncr = new JSpinner(new SpinnerNumberModel(10, 1, 5000, 1));
-        panelIncrements.add(mutIncr);  
-        
-        panelPruebas.add(panelIncrements, "gapbottom 2, wrap, top, gaptop 40");
-        
-        final JPanel panleRadioBut = new JPanel();
-        panleRadioBut.setLayout(new GridLayout(10,1,0,-8));
-        panleRadioBut.setBorder(BorderFactory.createTitledBorder("Select"));
-        
-        JRadioButton tamGruposBut = new JRadioButton();
-        panleRadioBut.add(tamGruposBut);
-        tamGruposBut.setSelected(true);
-        JRadioButton tamPobBut = new JRadioButton();
-        panleRadioBut.add(tamPobBut);
-        JRadioButton numGenBut = new JRadioButton();
-        panleRadioBut.add(numGenBut);
-        JRadioButton alfaBut = new JRadioButton();
-        panleRadioBut.add(alfaBut);
-        JRadioButton blankBut = new JRadioButton();
-        panleRadioBut.add(blankBut);
-        blankBut.setVisible(false);
-        JRadioButton selecBut = new JRadioButton();
-        panleRadioBut.add(selecBut);
-        JRadioButton blankBut2 = new JRadioButton();
-        panleRadioBut.add(blankBut2);
-        blankBut2.setVisible(false);
-        JRadioButton crossBut = new JRadioButton();
-        panleRadioBut.add(crossBut);
-        JRadioButton blankBut3 = new JRadioButton();
-        panleRadioBut.add(blankBut3);  
-        blankBut3.setVisible(false);
-        JRadioButton mutBut = new JRadioButton();
-        panleRadioBut.add(mutBut);        
-        
-        //Group the radio buttons.
-        final ButtonGroup radioButGroup = new ButtonGroup();
-        radioButGroup.add(tamPobBut);
-        radioButGroup.add(numGenBut);
-        radioButGroup.add(selecBut);
-        radioButGroup.add(crossBut);
-        radioButGroup.add(mutBut);
-                        
-        panelPruebas.add(panleRadioBut, "wrap, top, gaptop 40");
-        
-        pGraphicPruebsAuto.addLegend("SOUTH");
-        pGraphicPruebsAuto.setPreferredSize(new Dimension(350, 510));
-        panelPruebas.add(pGraphicPruebsAuto, "gapleft 5, gaptop 5, top");
-                
-        boton = new JButton("Stop");
-		boton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(stepThread != null)
-				{
-					JRadioButton selected = (JRadioButton) radioButGroup.getSelection();
-					System.out.println(selected.getName());
-					// Detener la evolución
-					stepThread.cancel(true);
-				}
-			}
-		});
-		panelPruebas.add(boton, "dock south, gapleft 80, gapright 600");
-        
-        // botón para ejecutar la evolucion
-		boton = new JButton("Run");
-		boton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-											
-				// consigue los valores seleccionados por el radioBut
-				@SuppressWarnings("rawtypes")				
-				Enumeration elements = radioButGroup.getElements();
-				selectedRadio = 0;
-			    while (elements.hasMoreElements()) {
-			      AbstractButton button = (AbstractButton)elements.nextElement();
-			      selectedRadio++;
-			      if (button.isSelected()) {
-			        System.out.println("Selected radio: " + selectedRadio);
-			        break;
-			      }
-			    }
-			    			    
-			    switch (selectedRadio)
-			    {
-			    	case 0 : break;
-			    	case 1 : 
-			    		//currEvaluatedValue = (Integer)((GAAntEngine)gaEngine).getGroupSize();
-			    		selectedIncrement = (Integer) ((SpinnerNumberModel)tamGruposIncr.getModel()).getNumber(); 
-			    		selectedMaxVal=(Integer)(tamGruposText.getValue());
-			    		break;
-			    	case 2 : 	
-			    		currEvaluatedValue = (Integer)((GAAntEngine)gaEngine).getPopulation_Size();
-			    		selectedIncrement=(Integer)((SpinnerNumberModel)tamPobIncr.getModel()).getNumber(); 
-    					selectedMaxVal=(Integer)(tamPobText.getValue());
-    					break;
-			    	case 3 : 
-			    		currEvaluatedValue = (Integer)((GAAntEngine)gaEngine).getNum_Max_Gen();
-			    		selectedIncrement=(Integer)(numGenIncr.getValue()); 
-    					selectedMaxVal=(Integer)(numGenText.getValue());
-    					break;
-			    	case 4 : 
-			    		//currEvaluatedValue = ((GAAntEngine)gaEngine).getAlfaValue();
-			    		selectedIncrement=(Integer)(alfaIncr.getValue()); 
-    					selectedMaxVal=(Integer)(alfaText.getValue());
-    					break;
-			    	case 5 :
-			    		currEvaluatedValue = ((GAAntEngine)gaEngine).getSelecParams();
-			    		selectedIncrement=(Integer)(selecIncr.getValue()); 
-    					selectedMaxVal=(Integer)(selecText.getValue());
-    					break;
-			    	case 6 :
-			    		currEvaluatedValue = ((GAAntEngine)gaEngine).getCrossParams();
-			    		selectedIncrement=(Integer)(crossIncr.getValue()); 
-    					selectedMaxVal=(Integer)(crossText.getValue());
-    					break;
-			    	case 7 :
-			    		currEvaluatedValue = ((GAAntEngine)gaEngine).getMutParams();
-			    		selectedIncrement=(Integer)(mutIncr.getValue()); 
-						selectedMaxVal=(Integer)(mutText.getValue());
-						break;
-			    }
-			    
-			    oldEvaluatedValue = currEvaluatedValue;
-			    
-			    System.out.println("MaxVal: " + selectedMaxVal + " | Increment: " + selectedIncrement);
-		
-				pGraphicPruebsAuto.removeAllPlots();
-				
-				// vamos actualizando el valor hasta llegar al máximo
-				while (currEvaluatedValue <= selectedMaxVal){
-						int currGeneration = gaEngine.getCurrent_Generation();
-					
-						// creamos nuevos arrays donde guardar resultados de la evolución
-						dataAbsoluteBest = new double[gaEngine.getNum_Max_Gen()];
-						dataGenerationBest = new double[gaEngine.getNum_Max_Gen()];
-						dataGenerationAverage = new double[gaEngine.getNum_Max_Gen()];
-						dataGenerationCount = new double[gaEngine.getNum_Max_Gen()];
-						
-						// cargamos configuración adicional
-						gaEngine.loadConfig(configData);
-						
-						// inicializamos el motor genético
-						gaEngine.init();
-						
-						while (!gaEngine.isEvol_Complete() && currGeneration < gaEngine.getNum_Max_Gen()){
-								try {
-									gaEngine.runEvolutionStep();
-								} catch (InstantiationException e1) {
-									e1.printStackTrace();
-								} catch (IllegalAccessException e1) {
-									e1.printStackTrace();
-								}
-								dataAbsoluteBest[currGeneration] = gaEngine.getAbsoluteBest().getEvaluatedValue();
-								dataGenerationBest[currGeneration] = gaEngine.getGenerationBest().getEvaluatedValue();
-								dataGenerationAverage[currGeneration] = gaEngine.getPopulation_Average();
-								dataGenerationCount[currGeneration] = currGeneration;
-								currGeneration = gaEngine.getCurrent_Generation();
-						}
-						
-						pGraphicPruebsAuto.addLinePlot("Mejor Absoluto", Color.blue, dataGenerationCount,	dataAbsoluteBest);
-						pGraphicPruebsAuto.addLinePlot("Mejor de la Generación", Color.red, dataGenerationCount, dataGenerationBest);
-						pGraphicPruebsAuto.addLinePlot("Media de la Generación", Color.green, dataGenerationCount, dataGenerationAverage);
-						
-						// Actualizar el engine con el siguiente incremento
-						currEvaluatedValue += selectedIncrement;												
-						switch (selectedRadio)
-					    {
-					    	case 0 : break;
-					    	case 1 :
-					    		//((GAAntEngine)gaEngine).setGroupSize((int)currEvaluatedValue);
-					    		break;
-					    	case 2 :
-		    					((GAAntEngine)gaEngine).setPopulation_Size((int)currEvaluatedValue);
-		    					break;
-					    	case 3 :
-		    					((GAAntEngine)gaEngine).setNum_Max_Gen((int)currEvaluatedValue);
-		    					break;
-					    	case 4 :
-		    					//((GAAntEngine)gaEngine).setAlfaValue(currEvaluatedValue);
-		    					break;
-					    	case 5 : 	
-					    		((GAAntEngine)gaEngine).setSelecParams(currEvaluatedValue);
-		    					break;
-					    	case 6 : 	
-					    		((GAAntEngine)gaEngine).setCrossParams(currEvaluatedValue);
-		    					break;
-					    	case 7 : 	
-					    		((GAAntEngine)gaEngine).setMutParams(currEvaluatedValue);
-								break;
-					    }
-				}
-				// volvemos a colocar su valor inicial
-				switch (selectedRadio)
-			    {
-			    	case 0 : break;
-			    	case 1 :
-			    		//((GAAntEngine)gaEngine).setGroupSize((int)oldEvaluatedValue);
-			    		break;
-			    	case 2 :
-    					((GAAntEngine)gaEngine).setPopulation_Size((int)oldEvaluatedValue);
-    					break;
-			    	case 3 :
-    					((GAAntEngine)gaEngine).setNum_Max_Gen((int)oldEvaluatedValue);
-    					break;
-			    	case 4 :
-    					//((GAAntEngine)gaEngine).setAlfaValue(oldEvaluatedValue);
-    					break;
-			    	case 5 : 	
-			    		((GAAntEngine)gaEngine).setSelecParams(oldEvaluatedValue);
-    					break;
-			    	case 6 : 	
-			    		((GAAntEngine)gaEngine).setCrossParams(oldEvaluatedValue);
-    					break;
-			    	case 7 : 	
-			    		((GAAntEngine)gaEngine).setMutParams(oldEvaluatedValue);
-						break;
-			    }				
-			}
-		});
-		panelPruebas.add(boton, "dock south, gapleft 80, gapright 600");
 						
 		//***** Tabs ********//
 		
 		tabPanePrincipal.add(panelGenetics, "Algoritmo Genético");		
 		tabPanePrincipal.add(panelResultados, "Recorrido Resultado");
-		tabPanePrincipal.add(panelPruebas, "Pruebas Automáticas");
 		
 		add(tabPanePrincipal);
 		
@@ -863,38 +573,6 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 			"mutatorName",
 			mutatorNames);
 		config.addOption(functChoiceOpt);
-		
-		return config;
-	}
-	
-	public ConfigPanel<IGAEngine> creaPanelPruebasAuto() {
-		String[] selectorNames = new String[] { "Ruleta", "Torneo Det", "Torneo Prob", "Ranking", "Método Propio" };
-	
-		ConfigPanel<IGAEngine> config = new ConfigPanel<IGAEngine>();
-		
-		config.addOption(new IntegerOption<IGAEngine>(  // -- entero
-			"Tamaño población", 					// texto a usar como etiqueta del campo
-			"Número de individuos que forman la población",  // texto a usar como 'tooltip' cuando pasas el puntero
-			"population_Size",  						     // campo (espera que haya un getGrosor y un setGrosor)
-			1, 1000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
-		config.addOption(new IntegerOption<IGAEngine>(
-			"Num Generaciones", 					// texto a usar como etiqueta del campo
-			"Número de generaciones que dura la evolución",  // texto a usar como 'tooltip' cuando pasas el puntero
-			"num_Max_Gen",  						     // campo (espera que haya un getGrosor y un setGrosor)
-			1, 10000));							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
-	    
-		// Selection
-			
-		config.addOption(new ChoiceOption<IGAEngine>(
-				"Función de selección",
-				"Función selección",
-				"selectorName",
-				selectorNames));
-		
-		config.addOption(new DoubleOption<IGAEngine>(
-				"Parametros Seleccion",
-				"Parametros Seleccion",
-				"selecParams", 1.0, 100.0));
 		
 		return config;
 	}

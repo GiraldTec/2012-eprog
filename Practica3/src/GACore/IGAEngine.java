@@ -12,8 +12,8 @@ public abstract class IGAEngine {
 	protected int num_Max_Gen=100; 			// número máximo de generaciones
 	protected int pos_Best; 			// posición del mejor cromosoma
 	protected double population_Average;// media de la aptitud de la población
-	protected double prob_Cross=0.5;	// probabilidad de cruce
-	protected double prob_Mut=0.2;		// probabilidad de mutación
+	protected double prob_Cross=0.65;	// probabilidad de cruce
+	protected double prob_Mut=0.55;		// probabilidad de mutación
 	protected boolean evol_Complete;	// indica si se ha alcanzado el objetivo
 	protected int current_Generation;	// generación en la que estamos
 	protected IGASelector selector;		// método de selección
@@ -25,8 +25,6 @@ public abstract class IGAEngine {
 	protected boolean useElitism=true;  // si usamos elitismo o no (via GUI)
 	
 	protected double selecParams=1.0;
-	protected double crossParams=1.0;
-	protected double mutParams=1.0;
 	
 	public static Logger log = Logger.getLogger("Engine");
 	
@@ -148,18 +146,6 @@ public abstract class IGAEngine {
 	}
 	public void setSelecParams(double selecParams) {
 		this.selecParams = selecParams;
-	}
-	public double getCrossParams() {
-		return crossParams;
-	}
-	public void setCrossParams(double crossParams) {
-		this.crossParams = crossParams;
-	}
-	public double getMutParams() {
-		return mutParams;
-	}
-	public void setMutParams(double mutParams) {
-		this.mutParams = mutParams;
 	}
 	public String getMutatorName() {
 		return mutatorName;

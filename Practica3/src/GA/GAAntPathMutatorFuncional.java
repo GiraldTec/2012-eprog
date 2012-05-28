@@ -23,9 +23,9 @@ public class GAAntPathMutatorFuncional extends IGAMutator{
 	}
 
 	private GAProgramTree getNodoFuncionalAleatorio(GAProgramTree treeP) {
-		System.out.print("arbol" +  treeP.getOperator());
+		//System.out.print("arbol" +  treeP.getOperator());
 		HashSet<GAProgramTree> hashFuncionales = formHashFuncionales(treeP);
-		if(hashFuncionales.size()==0) System.out.print("hash vacio");
+		//if(hashFuncionales.size()==0) System.out.print("hash vacio");
 		Iterator<GAProgramTree> iterador= hashFuncionales.iterator();
 		int i=0;
 		int pto1= IGARandom.getRInt(hashFuncionales.size());
@@ -49,7 +49,7 @@ public class GAAntPathMutatorFuncional extends IGAMutator{
 					treeP.getRigthSon()==null){} // Si se trata de una hoja
 		else{// si es un nodo funcional
 			nodos.add(treeP);
-			System.out.print("añadido un "+ treeP.getOperator());
+			//System.out.print("añadido un "+ treeP.getOperator());
 			formHashFuncionalesR(nodos, treeP.getLeftSon());
 			if(treeP.getCenterSon()!=null)
 				formHashFuncionalesR(nodos, treeP.getCenterSon());
