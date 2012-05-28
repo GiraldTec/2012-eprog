@@ -41,7 +41,7 @@ public abstract class IGAEngine {
 		log.info("Engine: evaluatePopulation");	
 		
 		for (int i=0; i<population_Size; i++) {
-			population[i].evaluate(false);
+			population[i].evaluate(sim);
 			sum_EvaluatedValue = sum_EvaluatedValue + population[i].getEvaluatedValue();	
 			if (population[i].getEvaluatedValue() > best_EvaluatedValue){
 				pos_Best = i;
@@ -75,11 +75,11 @@ public abstract class IGAEngine {
 	public void runEvolutionStep() throws InstantiationException, IllegalAccessException {
 		log.info("Engine: runEvolutionStep");
 		
-		evaluatePopulation(false);	//evalúa los individuos y coge el mejor
+		evaluatePopulation(true);	//evalúa los individuos y coge el mejor
 		selectPopulation();  // selecciona los que van a cruce (permite repetidos)
 		reproducePopulation(); // cruza segun la probabilidad entre los seleccionados
 		mutate(); // suplanta segun la probabilidad
-		evaluatePopulation(true);
+		evaluatePopulation(false);
 		generationBest = population[pos_Best];
 		
 		log.info("Generation -> "+current_Generation+" <- Results");

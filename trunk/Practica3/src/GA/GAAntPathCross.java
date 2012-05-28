@@ -95,9 +95,4 @@ public class GAAntPathCross extends IGACross {
 		return iterador.next();
 
 	}
-	
-
-	
-	
-
 }
