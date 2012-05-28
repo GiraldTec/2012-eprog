@@ -50,7 +50,7 @@ public class GARankingSelection extends IGASelector{
     
     
     public static float nuevaProb(int numCroms, int pos){
-            float betta=(float) 1.5;
+            float betta=(float) 1.0;
             float res= (pos - 1);
             res = res /(numCroms - 1);
             res = 2*(betta - 1)* res;

@@ -291,29 +291,19 @@ public class AntBoardManager {
 	public void resetBoard(){
 		for (int i = 0; i < state.length; i++)
 			state[i] = PieceType.NOTHING;
-		setAntPosGoodCoord(0,0);
-		currentAntRot = AntRotation.RIGHT;
-		eatenFood = 0;
-		board.setFoodText(0);
+		resetAntPos();
 	}
 	
 	public void randomizeBoard(){
 		for (int i = 0; i < state.length; i++)
 			state[i] = IGARandom.getRDouble() > 0.9 ? PieceType.FOOD : PieceType.NOTHING;
 		setAntPosGoodCoord(0,0);
-		currentAntRot = AntRotation.RIGHT;
-		eatenFood = 0;
-		board.setFoodText(0);
+		resetAntPos();
 		System.arraycopy(state,0,initialState,0,state.length);
 	}
 	
 	public void restoreInitialState(){
 		System.arraycopy(initialState,0,state,0,initialState.length);
-		/*setAntPosGoodCoord(0,0);
-		currentAntRot = AntRotation.RIGHT;
-		eatenFood = 0;
-		board.setFoodText(0);*/
-		
 		resetAntPos();
 	}
 
