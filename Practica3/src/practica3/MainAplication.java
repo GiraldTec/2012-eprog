@@ -26,7 +26,9 @@ public class MainAplication {
 	};
 	
 	public static void main(String[] args) {
-		IGARandom.setSeed(55);					// damos valor a la semilla
+		long seed = System.currentTimeMillis();
+		System.out.println("Random seed: "+seed);
+		IGARandom.setSeed(seed);					// damos valor a la semilla
 		
 		gaEngine = new GAAntEngine();		// creamos el motor genético
 		gui = new GAGUI(gaEngine);				// creamos la interfaz
