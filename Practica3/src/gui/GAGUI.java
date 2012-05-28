@@ -152,7 +152,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 		panelGenetics.add(new JSeparator(), "growx, wrap, gaptop 10");
 		
 		// Slider prob mutación
-		JSlider mutationSlider = new JSlider(0,100,40);
+		JSlider mutationSlider = new JSlider(0,100,20);
 		mutationSlider.setMajorTickSpacing(20);
 		mutationSlider.setMinorTickSpacing(5);
 		mutationSlider.setPaintTicks(true);
@@ -271,6 +271,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 									panelEnEdicion.setText("Evolución completada");
 									((GAAntEngine)gaEngine).evaluateElite();
 									boardManager.forceUpdateBoard();
+									gaEngine.porPantalla();
 									pGraphic.addLinePlot("Mejor Absoluto", Color.blue, dataGenerationCount,	dataAbsoluteBest);
 									pGraphic.addLinePlot("Mejor de la Generación", Color.red, dataGenerationCount, dataGenerationBest);
 									pGraphic.addLinePlot("Media de la Generación", Color.green, dataGenerationCount, dataGenerationAverage);

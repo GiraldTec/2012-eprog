@@ -88,11 +88,9 @@ public abstract class IGAEngine {
 		current_Generation++;
 	}
 	
-	public void porPantalla(IGACromosome[] population){
-		for(int i=0;i<population.length;i++){
-			GAAntPathCromosome.porPantalla(((GAAntPathCromosome)population[i]).getTreeP());
+	public void porPantalla(){
+			GAAntPathCromosome.porPantalla(((GAAntPathCromosome)elite).getTreeP());
 			System.out.println("");
-		}
 	}
 //---- Getters & Setters ------------------------------------------------------//
 	
