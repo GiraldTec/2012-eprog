@@ -28,6 +28,7 @@ public class AntBoardManager {
 	private PieceType[] initialState;
 	private int antPosX=-1, antPosY=-1;
 	private int oldX=-1, oldY=-1;
+	private int oldFoodX=-1, oldFoodY=-1;
 	private AntRotation currentAntRot;
 	private int eatenFood = 0;
 	private boolean ateFood=false;
@@ -80,9 +81,9 @@ public class AntBoardManager {
 	public void setAntPosGoodCoord(int i, int j) {
 		// Clear old ant
 		if (antPosX != -1 && antPosY != -1){
-			if (oldX != -1){
-				move(oldX, oldY, PieceType.EATENFOOD);
-				oldX = -1;
+			if (oldFoodX != -1){
+				move(oldFoodX, oldFoodY, PieceType.EATENFOOD);
+				oldFoodX = -1;
 			}
 			else
 				move(antPosX, antPosY, PieceType.PATH);
@@ -92,6 +93,24 @@ public class AntBoardManager {
 		antPosX = i;
 		antPosY = j;
 	}	
+	
+	public void resetAntPos() {
+		// Clear old ant
+		move(0, 0, PieceType.ANT);
+		int i = Math.abs(oldX-(size-1));
+		i = (i * size) + oldY;
+		move(oldX, oldY, initialState[i]);
+		currentAntRot = AntRotation.RIGHT;
+		eatenFood = 0;
+		board.setFoodText(0);
+		
+		oldX = -1;
+		oldY = -1;
+		oldFoodX = -1;
+		oldFoodY = -1;
+		antPosX = 0;
+		antPosY = 0;
+	}
 	
 	public void rotateAnt(AntRotation rot){
 		int newRot=currentAntRot.id;
@@ -158,13 +177,16 @@ public class AntBoardManager {
 				System.err.println("Error avanzando hormiga");
 		}
 				
+		oldX = antPosX;
+		oldY = antPosY;
+
 		if (ateFood){
-			oldX = antPosX;
-			oldY = antPosY;
-			
+			oldFoodX = antPosX;
+			oldFoodY = antPosY;
 			eatenFood++;
 			board.setFoodText(eatenFood);
 		}
+
 	}
 	
 	public boolean foodInfront(){
@@ -287,10 +309,12 @@ public class AntBoardManager {
 	
 	public void restoreInitialState(){
 		System.arraycopy(initialState,0,state,0,initialState.length);
-		setAntPosGoodCoord(0,0);
+		/*setAntPosGoodCoord(0,0);
 		currentAntRot = AntRotation.RIGHT;
 		eatenFood = 0;
-		board.setFoodText(0);
+		board.setFoodText(0);*/
+		
+		resetAntPos();
 	}
 
 	public void setBoardRef(AntBoard antBoard) {

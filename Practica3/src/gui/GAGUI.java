@@ -464,6 +464,7 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 	            }
 	            antBoard.redraw();
 	            antBoard.refresh();
+	            System.out.println("Hay comida delante "+ boardManager.foodInfront());
 			}
 		});
 		                        
