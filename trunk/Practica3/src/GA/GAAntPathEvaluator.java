@@ -23,12 +23,13 @@ public class GAAntPathEvaluator {
 		steps = 0;
 		food = 0;
 		simOverride = sim;
-		
+				
 		boardMngr.restoreInitialState();
 		if (useSim && simOverride) System.out.println("Comenzando Evaluación de programa");
 		while (steps < maxSteps && food < maxFood){
 			executeStep(boardMngr, program);
 		}
+		
 		if (useSim && simOverride) System.out.println("Programa completado");
 		return food;
 	}
@@ -55,7 +56,10 @@ public class GAAntPathEvaluator {
 		}
 		
 		steps++;
+		//System.out.println("steps "+steps);
 		food = boardMngr.getEatenFood();
+		if (steps >= maxSteps || food >= maxFood)
+			return;		
 		
 		//acciones a realizar en función del nodo en el que estemos
 		//System.out.println("Operator: "+program.getOperator()+" ");

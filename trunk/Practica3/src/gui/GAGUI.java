@@ -62,6 +62,7 @@ import practica3.AntBoardManager.AntRotation;
 import practica3.AntBoardManager.PieceType;
 import GA.GAAntEngine;
 import GACore.IGAEngine;
+import GACore.IGARandom;
 import de.javasoft.plaf.synthetica.SyntheticaBlackEyeLookAndFeel;
 
 /**
@@ -321,7 +322,9 @@ public class GAGUI extends JFrame implements PropertyChangeListener, GInteractio
 					
 					pGraphic.addLinePlot("Mejor Absoluto", Color.blue, dataGenerationCount,	dataAbsoluteBest);
 					pGraphic.addLinePlot("Mejor de la Generación", Color.red, dataGenerationCount, dataGenerationBest);
-					pGraphic.addLinePlot("Media de la Generación", Color.green, dataGenerationCount, dataGenerationAverage);	
+					pGraphic.addLinePlot("Media de la Generación", Color.green, dataGenerationCount, dataGenerationAverage);
+					
+					IGARandom.setSeed(System.currentTimeMillis());
 				}
 			}
 		});
