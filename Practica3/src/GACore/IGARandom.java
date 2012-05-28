@@ -6,7 +6,7 @@ public class IGARandom {
 	private static Random rand = new Random();
 	
 	public static void setSeed(long seed) {
-		rand = new Random(seed);
+		rand.setSeed(seed);
 	}
 	
 	public static boolean getRBoolean() { return rand.nextBoolean();}
