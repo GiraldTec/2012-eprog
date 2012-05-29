@@ -33,6 +33,7 @@ public class AntBoardManager {
 	private int eatenFood = 0;
 	private boolean ateFood=false;
 	private AntBoard board;
+	private boolean snakeMode=false;
 
 	public AntBoardManager(int newSize) {
 		size = newSize;
@@ -151,25 +152,25 @@ public class AntBoardManager {
 		switch (currentAntRot){
 			case RIGHT :
 				if (antPosY == size-1)
-					return;
+					{if (snakeMode) setAntPosGoodCoord(antPosX, 0); else return;}
 				else
 					setAntPosGoodCoord(antPosX, antPosY+1);
 				break;
 			case DOWN :
 				if (antPosX == size-1)
-					return ;
+					{if (snakeMode) setAntPosGoodCoord(0, antPosY); else return;}
 				else
 					setAntPosGoodCoord(antPosX+1, antPosY);
 				break;
 			case LEFT :
 				if (antPosY == 0)
-					return ;
+					{if (snakeMode) setAntPosGoodCoord(antPosX, size-1);}
 				else
 					setAntPosGoodCoord(antPosX, antPosY-1);
 				break;
 			case UP :
 				if (antPosX == 0)
-					return;
+					{if (snakeMode) setAntPosGoodCoord(size-1, antPosY); else return;}					
 				else
 					setAntPosGoodCoord(antPosX-1, antPosY);
 				break;
